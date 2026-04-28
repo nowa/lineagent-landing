@@ -1,0 +1,11 @@
+{
+  "schema_version": "1",
+  "version": "0.0.0",
+  "published_at": "2026-04-28T00:00:00Z",
+  "channels": {
+    "homebrew": { "available": false, "install_command": "brew install nowa/lineage/lineage", "description": "Awaiting first release." },
+    "npm":      { "available": false, "install_command": "npm install -g @lineage/cli", "description": "Awaiting first release." },
+    "direct":   { "available": false, "install_command": "curl -fsSL https://www.lineagent.ai/install.sh | sh", "description": "Awaiting first release." }
+  },
+  "self_update_command": "lineage self-update"
+}
