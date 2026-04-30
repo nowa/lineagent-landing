@@ -299,128 +299,177 @@ lineage status</code></pre>
 <p lang="ja"><strong>Lineage が他のエージェント製品では実現できていない 8 つのこと：</strong></p>
 
 <ul lang="en">
-    <li><strong>Production-grade quality, day 0.</strong> Six built-in
-        Strains (<code>pal</code> / <code>explore</code> /
-        <code>founder</code> for users, plus <code>analyzer</code> /
-        <code>grader</code> / <code>comparator</code> for the evolution
-        pipeline) ship with seed genomes hand-tuned by an engineering
-        team and pre-validated against an offline eval harness — not
-        "here's a YAML, good luck."</li>
-    <li><strong>Improvements compound through evolution.</strong> A
-        better prompt or tighter tool-policy doesn't get re-discovered
-        every Monday — it's merged into the genome, evaluated, shipped.
-        Quality trends up over time without you babysitting it.</li>
-    <li><strong>Two evolution lanes, not one.</strong>
-        <strong>Genome</strong> (Darwinian — vertical inheritance,
-        eval-gated promotion) tunes the agent itself.
-        <strong>Meme Pool</strong> (Lamarckian — horizontal propagation
-        of learned how-tos) tunes what the agent knows. Different
-        timescales, both running at once.</li>
-    <li><strong>Personal + project modes.</strong> Each project gets
-        its own memory, trust state, and agent set; a Personal layer
-        carries cross-project habits. Working in two unrelated
-        codebases doesn't bleed between them.</li>
-    <li><strong>Agent Kernel = agentic reasoning that crosses
-        providers.</strong> Pure-compute Ports &amp; Adapters core
-        wires in context engineering, three-stage compaction, 4-tier
-        memory, long-task orchestration, prompt cache, and the advisor
-        pattern — all of it provider-neutral. (Detail in the Agent
-        Kernel section below.)</li>
-    <li><strong>Three-layer permission model.</strong> User / Project /
-        Local override snapshots, all auditable JSON. Tools are gated
-        by per-Strain genome weights — a Strain that doesn't list
-        <code>cli_execute</code> literally cannot shell out, and a
-        project-local override can tighten that further without
-        touching User defaults.</li>
-    <li><strong>Advisor pattern, no Anthropic lock-in.</strong> Run a
-        cost-balanced workhorse for routine work; the kernel
-        auto-escalates hard cases to a SOTA advisor on the same turn.
-        Previously a Claude-Code-only capability — Lineage offers it
-        across providers, including open-source local models.</li>
-    <li><strong>Coming: weakly-decentralized evolution via AMP.</strong>
-        Strains and proven genomes will propagate across user installs
-        through the Agent Marketplace Protocol — your evolution lane
-        benefits from the network without a central authority
-        controlling who lives. Public timeline: MVP-B Alpha.</li>
+    <li><strong>High-quality Agents from a fuzzy idea.</strong> Tell
+        Lineage roughly what you want — "I need an agent for SRE
+        incident triage" or "help me write better release notes."
+        Lineage's Founder Agent reads your codebase, designs the
+        spec, writes the prompts and tool policy, and runs an offline
+        evaluation before the new Agent is ever exposed to you. You
+        don't write YAML; you describe the job.</li>
+    <li><strong>Your agents get better the more you use them.</strong>
+        Every conversation leaves an evaluable trail. Lineage notices
+        what worked and what didn't, proposes refinements, safely
+        re-runs them against past traces, and only ships changes
+        that beat the current Agent. You don't tune prompts every
+        Friday — Lineage does, and you approve the result.</li>
+    <li><strong>Two ways your agents grow.</strong> The agent itself
+        gets sharper — better prompts, tighter tool policy — but
+        only after each change passes evaluation; only the proven
+        ones are passed down to the next generation. Separately,
+        the agent's <em>playbook</em> grows: hard-won lessons get
+        written down as reusable how-tos any future Agent in the
+        same domain inherits. The agent learning + the team's
+        collective knowledge growing, at the same time.</li>
+    <li><strong>Fits the way you already work.</strong> Two modes,
+        both on at once: a <strong>personal mode</strong> that
+        follows you everywhere (à la OpenClaw — your habits, your
+        memory, your shortcuts, regardless of which folder you're
+        in) and a <strong>project mode</strong> that respects
+        per-project boundaries (à la Claude Code — each codebase
+        has its own memory, trust state, and rules). No toggle to
+        flip.</li>
+    <li><strong>Agentic reasoning that holds up under real workloads.</strong>
+        Lineage's Agent Kernel handles the parts that make agents
+        flaky in practice: long conversations don't lose the goal,
+        multi-day tasks survive crashes and resumes, prompt caches
+        automatically save 70-90% of token cost on repeat work,
+        and the same Agent runs unchanged on Claude, GPT, DeepSeek,
+        Qwen, or a local open-source model.</li>
+    <li><strong>Permissions that match how you actually trust software.</strong>
+        Three layers of override that mirror real life: a global
+        default ("on this laptop, never let agents run sudo"), a
+        per-project tightening ("inside this client repo, also
+        never touch <code>.env</code>"), and a personal/local
+        layer ("on my own machine, allow X for testing"). All three
+        are plain JSON files you can read and revert — nothing
+        hidden in a settings UI.</li>
+    <li><strong>Advisor on tap, on any model.</strong> Run a fast,
+        cost-balanced workhorse day-to-day; when the kernel hits a
+        hard problem, it asks a stronger advisor on the same turn —
+        Claude Opus, GPT-5, or whichever you've configured. Until
+        now this was a Claude-Code-only superpower; Lineage delivers
+        it on top of any model, including open-source ones running
+        on your laptop.</li>
+    <li><strong>Coming soon: share evolved agents with people you trust.</strong>
+        AMP (Agent Marketplace Protocol) is a peer-to-peer way to
+        send your evolved Strains and Genomes to friends,
+        teammates, or family — like sharing a Spotify playlist of
+        agents you've trained. Their evaluation feedback flows back
+        to you. No central authority deciding which agents live;
+        the network grows by trust, not by leaderboard. Public
+        timeline: MVP-B Alpha.</li>
 </ul>
 <ul lang="zh">
-    <li><strong>一出厂就是生产级别。</strong>Lineage 出厂带 6 个内置
-        Strain（<code>pal</code> / <code>explore</code> /
-        <code>founder</code> 面向用户，<code>analyzer</code> /
-        <code>grader</code> / <code>comparator</code> 跑演化管线），
-        每个都有工程团队手工调过、并通过离线 eval harness 验证过的
-        seed genome —— 不是"给你一份 YAML，祝你好运"。</li>
-    <li><strong>改进通过演化沉淀下来。</strong>更好的 prompt、
-        更紧的 tool-policy，不需要每周一重新摸索一次 ——
-        它们被合进 genome、跑评估、发布出去。
-        质量随时间稳步往上走，不需要你盯着。</li>
-    <li><strong>两条演化通道。</strong><strong>Genome</strong>
-        （Darwinian —— 垂直继承、eval gate 通过才发版）调"Agent 本身"；
-        <strong>Meme Pool</strong>（Lamarckian ——
-        学到的方法横向传播）调"Agent 知道什么"。
-        两条同时在跑、时间尺度不同。</li>
-    <li><strong>同时支持 Personal + Project 模式。</strong>每个项目有
-        独立的 memory、trust 状态、Agent 集合；外层 Personal 一层
-        承载跨项目的习惯。两个不相关的代码仓不会互相污染。</li>
-    <li><strong>Agent Kernel = 跨 provider 的 agentic 推理能力。</strong>
-        纯计算的 Ports &amp; Adapters 内核把上下文工程、三级 compaction、
-        四层 memory、长任务编排、prompt cache、advisor 模式 ——
-        全部接成 provider 中立。（详见下方 Agent Kernel 章节。）</li>
-    <li><strong>三层权限模型。</strong>User / Project / Local 三层 override
-        快照，全部是可审计的 JSON。工具受 Strain genome 权重门控 ——
-        一个 Strain 没列 <code>cli_execute</code> 就字面上 shell 不出去，
-        project-local override 还能在不动 User 默认值的情况下进一步收紧。</li>
-    <li><strong>Advisor 模式，不被 Anthropic 锁住。</strong>性价比好的
-        主力模型跑日常活；kernel 在同一轮自动把难题升级到 SOTA advisor。
-        这之前是 Claude Code 独有的能力 ——
-        Lineage 把它带到任意 provider，含开源本地模型。</li>
-    <li><strong>即将到来：基于 AMP 的弱中心化演化网络。</strong>Strain 和
-        被证实有效的 genome 将通过 Agent Marketplace Protocol 在用户
-        装机之间传播 —— 你的演化通道会从整个网络里受益，
-        不需要任何中央权威决定谁活下去。计划：MVP-B Alpha。</li>
+    <li><strong>再模糊的想法，也能造出高质量 Agent。</strong>
+        告诉 Lineage 你大概想要什么 ——
+        "我需要一个处理 SRE 事故分级的 Agent"、
+        "帮我写更好的 release notes" —— Lineage 的 Founder Agent
+        会读你的代码库、设计这个 Agent 的规格、写好 prompt 和工具策略，
+        并在它出现在你面前之前先跑一次离线评估。
+        你不需要写 YAML，只需要描述这个 Agent 该做什么工作。</li>
+    <li><strong>越用越好用。</strong>每一次对话都留下可评估的痕迹。
+        Lineage 会注意到什么有效、什么没效，提出改进方案，
+        在历史 trace 上安全地复跑一遍评估，
+        只把"比当前版本更强"的改进发上去。
+        你不需要每周五去调一次 prompt —— Lineage 在调，你只需要 approve。</li>
+    <li><strong>两种方式让你的 Agent 成长。</strong>Agent 本身会变得更锋利 ——
+        prompt 更准、工具策略更紧 ——
+        但每个改动都得通过评估，只有被证实更好的那部分才会传到下一代。
+        另外，Agent 的"工作手册"也在变厚 ——
+        每次试错沉淀下来的方法被写成可复用的 how-to，
+        同领域的任何未来 Agent 都能继承。
+        既是 Agent 在学，也是团队集体知识在累积，两件事同时发生。</li>
+    <li><strong>按你已有的工作习惯来。</strong>两种模式同时在跑：
+        一个 <strong>personal 模式</strong>跟着你走
+        （类似 OpenClaw —— 你的习惯、你的记忆、你的快捷方式，
+        和你在哪个目录无关）；一个 <strong>project 模式</strong>
+        尊重每个项目的边界（类似 Claude Code ——
+        每个代码仓有自己的 memory、信任状态、规则）。
+        不需要你来回切，两边都开着。</li>
+    <li><strong>真实负载下撑得住的 agentic 推理。</strong>
+        Lineage 的 Agent Kernel 处理那些让 Agent 在实战中翻车的环节：
+        长对话不丢目标、跨天任务能在崩溃后续上、
+        重复工作上 prompt cache 自动省掉 70-90% 的 token 钱、
+        同一个 Agent 不改代码就能跑在
+        Claude / GPT / DeepSeek / Qwen / 本地开源模型上。</li>
+    <li><strong>像信任软件那样自然地控权限。</strong>三层 override，
+        和你日常的信任习惯对齐 ——
+        全局默认（"在这台电脑上，永远不允许 Agent 跑 sudo"）、
+        项目级再收紧（"在这个客户仓里，也别动 <code>.env</code>"）、
+        个人/本地层（"我自己机器上，让 X 通过用于测试"）。
+        三层都是你能看见、能回退的纯 JSON 文件 ——
+        没有什么藏在设置 UI 里的东西。</li>
+    <li><strong>任何模型都能用 advisor。</strong>日常跑一个快又便宜的主力模型，
+        遇到硬骨头，kernel 会在同一轮里问一个更强的 advisor ——
+        Claude Opus、GPT-5、或你配置的任何模型。
+        这之前是 Claude Code 自家产品独有的能力 ——
+        Lineage 把它加在任意底模上，含你笔记本上跑的开源模型。</li>
+    <li><strong>即将到来：把演化好的 Agent 分享给你信任的人。</strong>
+        AMP（Agent Marketplace Protocol）是一种点对点的方式，
+        让你把演化出来的 Strain 和 Genome 直接发给朋友、同事、家人 ——
+        就像分享一份你训出来的 Agent 歌单一样。
+        他们的评估反馈也会流回来。
+        没有中心权威决定哪个 Agent 该活下来 ——
+        网络靠信任长大，不靠排行榜。计划：MVP-B Alpha。</li>
 </ul>
 <ul lang="ja">
-    <li><strong>出荷時点で量産品質。</strong>Lineage には 6 つの内蔵
-        Strain（<code>pal</code> / <code>explore</code> /
-        <code>founder</code> ユーザー向け、<code>analyzer</code> /
-        <code>grader</code> / <code>comparator</code> 進化パイプライン用）が
-        同梱され、それぞれエンジニアリングチームが手作業で調整し
-        オフライン eval harness で事前検証された seed genome を持ちます ——
-        「YAML を渡されて幸運を祈る」状態ではありません。</li>
-    <li><strong>改善は進化を通じて積み上がる。</strong>より良いプロンプトや
-        より引き締まった tool-policy を毎週月曜に再発見し直す必要はありません ——
-        genome にマージされ、評価され、出荷されます。
-        品質は時間とともに上昇し、見張る必要はありません。</li>
-    <li><strong>進化レーンが 2 本。</strong><strong>Genome</strong>
-        （ダーウィン的 —— 垂直継承、eval gate を通過してリリース）は
-        「Agent 自体」を調整。<strong>Meme Pool</strong>
-        （ラマルク的 —— 学んだノウハウの水平伝搬）は
-        「Agent が知っていること」を調整。異なる時間スケールで両方が動きます。</li>
-    <li><strong>Personal + Project の両モードに対応。</strong>各プロジェクトは
-        独立した memory、信頼状態、Agent セットを持ち、Personal レイヤが
-        クロスプロジェクトの習慣を運びます。無関係な 2 つのコードベースで
-        作業しても、相互汚染しません。</li>
-    <li><strong>Agent Kernel = プロバイダ越えの agentic 推論能力。</strong>
-        純粋計算の Ports &amp; Adapters コアに、コンテキストエンジニアリング、
-        3 段階コンパクション、4 層メモリ、長時間タスクのオーケストレーション、
-        プロンプトキャッシュ、advisor パターンを配線済み ——
-        すべてプロバイダ中立です。（詳細は下の Agent Kernel セクション。）</li>
-    <li><strong>3 層の権限モデル。</strong>User / Project / Local の
-        3 層 override スナップショットはすべて監査可能な JSON。
-        ツールは Strain genome の重みでゲートされ ——
-        allowlist に <code>cli_execute</code> がない Strain は文字通り
-        shell を呼べず、プロジェクト・ローカルの override は
-        User デフォルトに触れずにさらに引き締められます。</li>
-    <li><strong>Advisor パターン、Anthropic ロックインなし。</strong>
-        コスト効率の良い主力モデルが日常作業をこなし、
-        kernel が同じターン内で難所を SOTA advisor に自動エスカレーション。
-        これは以前 Claude Code 専売の能力でしたが、Lineage は任意の
-        プロバイダ（オープンソースのローカルモデル含む）に広げます。</li>
-    <li><strong>近日：AMP ベースの弱中心化進化ネットワーク。</strong>
-        Strain と実績ある genome は Agent Marketplace Protocol を通じて
-        ユーザーインストール間に伝搬します ——
-        あなたの進化レーンは中央権威に統制されることなく、
-        ネットワーク全体の恩恵を受けます。予定：MVP-B Alpha。</li>
+    <li><strong>曖昧なアイデアからでも、最初から高品質な Agent。</strong>
+        Lineage に大まかな要望を伝えるだけ ——
+        「SRE インシデントトリアージを担う Agent が欲しい」
+        「リリースノートを上手く書きたい」など。
+        Lineage の Founder Agent があなたのコードベースを読み、
+        その Agent の仕様を設計し、プロンプトとツールポリシーを書き、
+        あなたに見せる前にオフライン評価を実行します。
+        YAML を書く必要はありません。仕事の内容を説明するだけです。</li>
+    <li><strong>使えば使うほど良くなる。</strong>すべての会話が評価可能な
+        痕跡を残します。Lineage は何が機能し何が機能しなかったかを観察し、
+        改善を提案し、過去のトレース上で安全に評価を再実行し、
+        現在の Agent を上回ったものだけを出荷します。
+        毎週金曜にプロンプトを調整する必要はありません ——
+        Lineage が調整し、あなたは承認するだけです。</li>
+    <li><strong>Agent が育つ 2 つの道筋。</strong>Agent 自体が鋭くなる ——
+        プロンプトは精度を増し、ツールポリシーは引き締まる ——
+        ただし各変更が評価を通過した場合のみ、次世代に受け継がれます。
+        さらに、Agent の「業務マニュアル」も厚くなる ——
+        試行錯誤の中で蓄積されたノウハウが再利用可能な how-to として
+        書き残され、同じドメインの将来のあらゆる Agent がそれを継承します。
+        Agent が学ぶことと、チームの集合知が積み上がることが、
+        同時に進行します。</li>
+    <li><strong>既存の作業スタイルにそのまま乗れる。</strong>
+        2 つのモードが同時に有効：<strong>personal モード</strong>は
+        あなたについて回る（OpenClaw に近い ——
+        あなたの習慣、あなたの記憶、あなたのショートカット、
+        どのディレクトリにいるかに関係なく）。
+        <strong>project モード</strong>はプロジェクト境界を尊重する
+        （Claude Code に近い —— 各コードベースは独自の memory、
+        信頼状態、ルールを持つ）。切り替え操作は不要です。</li>
+    <li><strong>実ワークロードに耐える agentic 推論。</strong>
+        Lineage の Agent Kernel は、Agent が実戦で崩れる箇所を引き受けます ——
+        長い会話でゴールを見失わない、複数日のタスクがクラッシュ後に再開できる、
+        反復作業ではプロンプトキャッシュがトークン費を 70-90% 自動削減、
+        同じ Agent が Claude / GPT / DeepSeek / Qwen / ローカル
+        オープンソースモデルで、書き換えなしに動作。</li>
+    <li><strong>ソフトウェアを信頼する自然な感覚で権限を制御。</strong>
+        3 層の override が日常の信頼感覚と一致 ——
+        グローバルデフォルト（「このノート PC では、Agent に sudo を絶対許さない」）、
+        プロジェクト単位の引き締め（「このクライアントリポジトリでは
+        <code>.env</code> にも触れさせない」）、
+        個人 / ローカル層（「自分のマシンではテスト用に X を許可」）。
+        3 層すべてが閲覧可能・ロールバック可能なプレーン JSON ファイル ——
+        設定 UI に隠された何かはありません。</li>
+    <li><strong>どのモデルでも advisor。</strong>日常は速くて安い主力モデルを
+        走らせ、難所に当たれば kernel が同じターン内でより強い advisor に
+        問い合わせる —— Claude Opus、GPT-5、あなたが設定した任意のモデル。
+        これまで Claude Code 専売だった能力を、Lineage は任意のベースモデル
+        （ノート PC で動くオープンソース含む）に提供します。</li>
+    <li><strong>近日：進化させた Agent を信頼する人と共有。</strong>
+        AMP（Agent Marketplace Protocol）は P2P 方式で、
+        進化させた Strain と Genome を友人・同僚・家族に送れる仕組み ——
+        訓練し上げた Agent のプレイリストを共有するような感覚です。
+        彼らの評価フィードバックも返ってきます。
+        どの Agent が生き残るかを中央権威が決めることはなく、
+        ネットワークはランキングではなく信頼で育ちます。
+        予定：MVP-B Alpha。</li>
 </ul>
 
 <p lang="en"><strong>The four primitives</strong> that make this work:</p>
