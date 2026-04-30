@@ -1504,10 +1504,20 @@ rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
         // mutating <html lang> on the current page (which
         // would leave the user on a page whose markup was
         // stripped to a single language anyway).
+        //
+        // Same-URL guard: if the requested lang corresponds
+        // to the page we are already on, do nothing. The
+        // earlier version always called location.href which
+        // browsers treat as a reload — and since init()
+        // calls setLang(pickLang()) on every load, that
+        // produced an infinite-reload loop on /zh/ and /ja/.
         if (SUPPORTED.indexOf(lang) === -1) lang = 'en';
         try { localStorage.setItem(STORAGE_KEY, lang); } catch (e) {}
         var URLS = { en: '/', zh: '/zh/', ja: '/ja/' };
-        if (URLS[lang]) location.href = URLS[lang];
+        var target = URLS[lang];
+        if (target && location.pathname !== target) {
+            location.href = target;
+        }
     }
 
     // Theme switcher — three states: 'auto' / 'light' / 'dark'.
