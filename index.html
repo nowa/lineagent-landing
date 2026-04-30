@@ -1052,23 +1052,46 @@ $ lineage chat
     <dt lang="en">Context engineering</dt>
     <dt lang="zh">上下文工程</dt>
     <dt lang="ja">コンテキストエンジニアリング</dt>
-    <dd lang="en">Every prompt is a deterministic build, not a guess.
-        System rules, project profile, recalled memory, tool state, and
-        live conversation are assembled to a fixed token budget — so the
-        Agent never silently drops the part it needed most. Conversations
-        stream straight to JSONL on disk, so a crash mid-turn resumes
-        mid-turn instead of starting over.</dd>
-    <dd lang="zh">每个 prompt 都是一次确定性的编译，不是凭感觉拼出来的。
-        System 规则、项目 profile、recall 出来的 memory、当前工具状态、
-        实时会话内容，都按一个固定的 token 预算装进去 ——
-        Agent 不会"悄悄丢掉它最需要的那块"。会话直接流式落到磁盘 JSONL 里，
-        中途崩了，从崩的那一秒继续跑，不是从头开始。</dd>
-    <dd lang="ja">すべてのプロンプトは決定論的な組み立てであり、当て推量ではありません。
-        システムルール、プロジェクトプロファイル、再取得したメモリ、
-        ツール状態、ライブ会話を、固定のトークン予算に収めて構成します ——
-        Agent が「一番必要だった部分を黙って落とす」ことはありません。
-        会話はそのままディスクの JSONL にストリームされ、ターンの途中で
-        クラッシュしても、その途中から再開します。最初からやり直しになりません。</dd>
+    <dd lang="en">Context engineering — fitting only the highest-signal
+        tokens into the model's finite attention window — is what
+        separates an Agent that stays sharp over weeks from one that
+        rots after lunch. Lineage treats the full canonical scope as
+        first-class building blocks: <strong>system instructions,
+        project profile, recalled memory, conversation history, tool
+        state, and few-shot exemplars</strong> — each with an explicit
+        token budget. A deterministic <code>PromptCompiler</code>
+        assembles them on every turn (same inputs → same prompt),
+        retrieval is just-in-time per turn rather than pre-loaded,
+        and the active conversation streams straight to JSONL on disk
+        — so a crash or restart resumes mid-turn instead of starting
+        over. Anthropic-grade context discipline, as a runtime
+        primitive — not something you implement on top.</dd>
+    <dd lang="zh">上下文工程 —— 把"高信号 token"装进模型有限注意力窗口的工程纪律 ——
+        才是决定一个 Agent 是越跑越锋利、还是越跑越糊的关键。
+        Lineage 把这个领域公认的 6 类槽位全部当成头等公民处理：
+        <strong>system 指令、项目 profile、recall 出来的 memory、
+        会话历史、工具状态、few-shot 范例</strong> ——
+        每一类都有显式的 token 预算。一个确定性的
+        <code>PromptCompiler</code> 在每轮按同一规则组装它们
+        （同样的输入 → 同样的 prompt），检索是 just-in-time 的（不预加载），
+        活跃会话直接流式落到磁盘 JSONL —— 中途崩了，从崩的那一秒继续跑，
+        不是从头开始。Anthropic 那套上下文工程纪律，
+        在 Lineage 里是运行时原语，不是你在外面拼一层补丁。</dd>
+    <dd lang="ja">コンテキストエンジニアリング ——
+        モデルの有限な注意ウィンドウに「高シグナルなトークン」だけを収める
+        工学規律 —— こそが、Agent が数週間にわたって冴えたままでいるか、
+        それとも昼食後には劣化しているかを分けます。Lineage はこの領域で
+        標準的な 6 種のスロットすべてをファーストクラスの構成要素として
+        扱います：<strong>システム指令、プロジェクトプロファイル、
+        再取得メモリ、会話履歴、ツール状態、few-shot 例示</strong> ——
+        それぞれに明示的なトークン予算が割り当てられます。
+        決定論的な <code>PromptCompiler</code> が毎ターン同じ規則で組み立て
+        （同じ入力 → 同じプロンプト）、取得は事前ロードではなく
+        ターンごとの just-in-time、稼働中の会話はそのままディスクの
+        JSONL にストリームされます —— ターンの途中でクラッシュしても
+        その瞬間から再開でき、最初からやり直しにはなりません。
+        Anthropic 級のコンテキスト工学規律を、外付けの実装ではなく
+        ランタイムのプリミティブとして提供します。</dd>
 
     <dt lang="en">Compaction</dt>
     <dt lang="zh">智能压缩 Compaction</dt>
