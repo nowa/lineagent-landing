@@ -1166,29 +1166,41 @@ $ lineage chat
         通常 1 トークンあたり 70-90% 削減 ——
         アプリ側のコード変更なしに自動で効きます。</dd>
 
-    <dt lang="en">Native advisor pattern</dt>
-    <dt lang="zh">原生 Advisor 模式</dt>
-    <dt lang="ja">ネイティブ advisor パターン</dt>
-    <dd lang="en">One Agent. Nine providers. Zero rewrites. Per-provider
-        advisors translate the kernel's neutral request into each
-        vendor's best-practice call — Anthropic thinking blocks +
-        cache control, OpenAI Responses reasoning + structured outputs,
-        Codex subscription with native attribution headers. Switch
-        providers Tuesday morning; your Agent runs the same Tuesday
-        afternoon.</dd>
-    <dd lang="zh">一个 Agent，九家 provider，零次改写。每家 provider 都配了一个
-        专门的 advisor，把 kernel 这边的中性请求翻译成那家最佳实践 ——
-        Anthropic 用 thinking block + cache control；OpenAI Responses
-        用 reasoning + structured outputs；Codex 订阅带 native
-        attribution header。周二上午换 provider，周二下午你的 Agent
-        照常跑。</dd>
-    <dd lang="ja">1 つの Agent、9 つのプロバイダ、書き換え 0。プロバイダごとに
-        専用の advisor が、kernel 側の中立リクエストを各社のベストプラクティス
-        呼び出しに翻訳します —— Anthropic は thinking block + cache control、
-        OpenAI Responses は reasoning + structured outputs、Codex
-        サブスクリプションはネイティブ帰属ヘッダ付き。
-        火曜の朝にプロバイダを切り替えても、火曜の午後の Agent は
-        同じように動きます。</dd>
+    <dt lang="en">Advisor pattern — without the Anthropic lock-in</dt>
+    <dt lang="zh">Advisor 模式 — 不再被 Anthropic 锁定</dt>
+    <dt lang="ja">Advisor パターン — Anthropic 専売の解放</dt>
+    <dd lang="en">Until now, the advisor pattern — a fast, cost-balanced
+        model running routine work and delegating only the hard cases
+        to a stronger model — has effectively been an Anthropic-only
+        capability, baked into Claude Code and unavailable elsewhere.
+        Lineage brings it to any provider, including open-source
+        local models. Run a cost-effective workhorse like
+        <code>qwen-coder</code> or <code>deepseek-v3</code> for the
+        90% of everyday turns; when the kernel detects a hard case,
+        it auto-escalates to a SOTA advisor (Claude Opus, GPT-5,
+        etc.) on the same turn — no manual model swap, no agent
+        hand-off. You get Claude-Code-class reasoning quality at
+        non-Claude-Code economics.</dd>
+    <dd lang="zh">在 Lineage 之前，advisor 模式 ——
+        用一个性价比好、速度快的模型跑日常工作，只把难题交给更强的模型 ——
+        基本是 Anthropic 自家的能力（写死在 Claude Code 里），别家用不了。
+        Lineage 把这套能力带到任何 provider 上，包括开源本地模型。
+        日常 90% 的轮次跑一个性价比平衡的主力模型
+        （比如 <code>qwen-coder</code> 或 <code>deepseek-v3</code>）；
+        当 kernel 判断遇到难题，它会在同一轮自动升级到 SOTA advisor
+        （Claude Opus、GPT-5 等）—— 不用你手动换模型、也不用切 Agent。
+        拿到 Claude-Code 级别的推理质量，但不用付 Claude-Code 的成本。</dd>
+    <dd lang="ja">これまで advisor パターン ——
+        コスト効率の良い高速モデルが日常作業をこなし、難所だけより強いモデルに
+        委譲する仕組み —— は事実上 Anthropic 専売の能力でした
+        （Claude Code に組み込まれており、他では使えない）。
+        Lineage はこれを任意のプロバイダ、オープンソースのローカルモデルでも
+        動くようにします。日常の 90% のターンはコスト効率の良い主力モデル
+        （<code>qwen-coder</code> や <code>deepseek-v3</code> など）で走らせ、
+        kernel が難所を検出するとその場で SOTA advisor
+        （Claude Opus、GPT-5 など）に自動エスカレーション ——
+        手動でのモデル切替も Agent の引き継ぎも不要です。
+        Claude Code 級の推論品質を、Claude Code とは違うコスト構造で。</dd>
 </dl>
 
 <p lang="en">
