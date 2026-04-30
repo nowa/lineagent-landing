@@ -258,77 +258,169 @@ lineage status</code></pre>
 <h2 lang="ja">Lineage とは？<a class="headerlink" href="#what">#</a></h2>
 
 <p lang="en">
-    Most coding agents are throwaway prompts — run one, get an answer,
-    lose the trail. <strong>Lineage is the agent runtime where the
-    agent itself is the product.</strong> Every Agent is a node in a
-    measurable lineage: parents, children, an immutable genome, and a
-    live fitness history. Improvements survive past the conversation
-    that produced them, regressions get rolled back automatically, and
-    the entire history sits as plain files on your own disk. Built in
-    Rust. Multi-provider. Local-first by default.
+    Most agent products ship a fixed prompt and a single workflow ——
+    run, get an answer, lose the trail.
+    <strong>Lineage is an agent runtime where the agent itself is the
+    product.</strong> Every Agent is a node in a measurable lineage:
+    parents, children, an immutable genome, and a live fitness history.
+    The runtime ships six battle-tested built-in Strains, evolves them
+    based on real evidence, runs across nine providers, and persists
+    every byte that matters as plain files on your disk. Built in Rust.
+    Local-first by default. Personal- and project-aware. No SaaS holds
+    your agent hostage.
 </p>
 <p lang="zh">
-    大多数 coding agent 是一次性的 prompt —— 跑一次、拿到答案、线索就断了。
+    大多数 agent 产品给你一个固定 prompt 和一条工作流 ——
+    跑一次、拿到答案、线索就断了。
     <strong>Lineage 是把 Agent 本身当作产品的 agent 运行时。</strong>
-    每个 Agent 都是可量化谱系上的一个节点：有父代、有子代、有不可变的 genome，
-    还有持续记录的 fitness 历史。改进不会随对话结束消失、回归会被自动回滚、
-    完整的演化历史以纯文件的形式留在你自己的磁盘上。Rust 构建，多 provider 支持，
-    默认 local-first。
+    每个 Agent 都是可量化谱系上的一个节点：有父代、有子代、
+    有不可变的 genome、有持续记录的 fitness 历史。Lineage 出厂带
+    6 个经过实战验证的内置 Strain，基于真实证据演化它们，
+    在 9 家 provider 上都能跑，重要的每一个字节都以纯文件形式
+    存在你自己的磁盘上。Rust 构建、默认 local-first、
+    Personal 和 project 模式同时支持，没有 SaaS 把你的 Agent 攥在手里。
 </p>
 <p lang="ja">
-    ほとんどのコーディング・エージェントは使い捨てのプロンプトです ——
-    一度実行して答えを得たら、軌跡は途切れる。
-    <strong>Lineage は Agent そのものをプロダクトとして扱うランタイム</strong>です。
-    すべての Agent は計測可能な系譜上のノード ——
-    親、子、不変な genome、そして稼働中の fitness 履歴を持ちます。
-    改善は会話の終了とともに失われず、リグレッションは自動でロールバックされ、
-    進化の全履歴はあなた自身のディスクにプレーンファイルとして残ります。
-    Rust 製。マルチプロバイダ。デフォルトでローカルファースト。
+    多くのエージェント製品は固定プロンプトと単一ワークフローを提供します ——
+    実行して答えを得たら、軌跡は途切れる。
+    <strong>Lineage は Agent そのものをプロダクトとして扱うランタイム</strong>
+    です。すべての Agent は計測可能な系譜上のノード ——
+    親、子、不変な genome、稼働中の fitness 履歴を持ちます。
+    Lineage は実戦検証済みの内蔵 Strain を 6 つ同梱し、
+    実証データに基づいて進化させ、9 つのプロバイダで動作し、
+    重要なバイトはすべてあなたのディスク上にプレーンファイルとして残します。
+    Rust 製。デフォルトでローカルファースト。Personal と
+    Project の両モードに対応。SaaS にあなたの Agent を人質に
+    取られることはありません。
 </p>
 
-<p lang="en"><strong>Why this matters:</strong></p>
-<p lang="zh"><strong>为什么这件事重要：</strong></p>
-<p lang="ja"><strong>なぜこれが重要か：</strong></p>
+<p lang="en"><strong>Eight things Lineage does that most agent products don't:</strong></p>
+<p lang="zh"><strong>Lineage 做了八件别家产品没做的事：</strong></p>
+<p lang="ja"><strong>Lineage が他のエージェント製品では実現できていない 8 つのこと：</strong></p>
 
 <ul lang="en">
-    <li><strong>Improvements compound.</strong> A better prompt or a tighter
-        tool-policy doesn't get re-discovered every Monday — it gets
-        merged into the genome, evaluated, and shipped.</li>
-    <li><strong>Quality regressions are caught, not endured.</strong> A
-        CUSUM trigger watches live fitness signal; bad releases auto-rollback
-        in the Blue-Green observation window.</li>
-    <li><strong>You own everything that matters.</strong> Genomes, traces,
-        memories, conversations — all JSON / JSONL on your disk. No
-        vendor SaaS holds your agent hostage.</li>
-    <li><strong>One agent, nine providers.</strong> Anthropic, OpenAI
-        (including the Codex subscription), DeepSeek, Qwen, Moonshot,
-        Groq, OpenRouter, MiniMax, Fireworks. Switch tomorrow without rewrites.</li>
+    <li><strong>Production-grade quality, day 0.</strong> Six built-in
+        Strains (<code>pal</code> / <code>explore</code> /
+        <code>founder</code> for users, plus <code>analyzer</code> /
+        <code>grader</code> / <code>comparator</code> for the evolution
+        pipeline) ship with seed genomes hand-tuned by an engineering
+        team and pre-validated against an offline eval harness — not
+        "here's a YAML, good luck."</li>
+    <li><strong>Improvements compound through evolution.</strong> A
+        better prompt or tighter tool-policy doesn't get re-discovered
+        every Monday — it's merged into the genome, evaluated, shipped.
+        Quality trends up over time without you babysitting it.</li>
+    <li><strong>Two evolution lanes, not one.</strong>
+        <strong>Genome</strong> (Darwinian — vertical inheritance,
+        eval-gated promotion) tunes the agent itself.
+        <strong>Meme Pool</strong> (Lamarckian — horizontal propagation
+        of learned how-tos) tunes what the agent knows. Different
+        timescales, both running at once.</li>
+    <li><strong>Personal + project modes.</strong> Each project gets
+        its own memory, trust state, and agent set; a Personal layer
+        carries cross-project habits. Working in two unrelated
+        codebases doesn't bleed between them.</li>
+    <li><strong>Agent Kernel = agentic reasoning that crosses
+        providers.</strong> Pure-compute Ports &amp; Adapters core
+        wires in context engineering, three-stage compaction, 4-tier
+        memory, long-task orchestration, prompt cache, and the advisor
+        pattern — all of it provider-neutral. (Detail in the Agent
+        Kernel section below.)</li>
+    <li><strong>Three-layer permission model.</strong> User / Project /
+        Local override snapshots, all auditable JSON. Tools are gated
+        by per-Strain genome weights — a Strain that doesn't list
+        <code>cli_execute</code> literally cannot shell out, and a
+        project-local override can tighten that further without
+        touching User defaults.</li>
+    <li><strong>Advisor pattern, no Anthropic lock-in.</strong> Run a
+        cost-balanced workhorse for routine work; the kernel
+        auto-escalates hard cases to a SOTA advisor on the same turn.
+        Previously a Claude-Code-only capability — Lineage offers it
+        across providers, including open-source local models.</li>
+    <li><strong>Coming: weakly-decentralized evolution via AMP.</strong>
+        Strains and proven genomes will propagate across user installs
+        through the Agent Marketplace Protocol — your evolution lane
+        benefits from the network without a central authority
+        controlling who lives. Public timeline: MVP-B Alpha.</li>
 </ul>
 <ul lang="zh">
-    <li><strong>改进会累积。</strong>一条更好的 prompt 或一份更紧的 tool-policy
-        不需要每周一重新摸索一次 —— 它会被合进 genome、跑评估、发出去。</li>
-    <li><strong>回归被抓住，而不是被忍。</strong>CUSUM 触发器在线监控 fitness
-        信号；糟糕的发布会在 Blue-Green 观察窗里自动回滚。</li>
-    <li><strong>真正重要的东西归你所有。</strong>Genome、trace、memory、conversation ——
-        都是你磁盘上的 JSON / JSONL。没有 SaaS 把你的 Agent 攥在手里。</li>
-    <li><strong>一个 Agent 跑九家 provider。</strong>Anthropic、OpenAI
-        （含 Codex 订阅）、DeepSeek、Qwen、Moonshot、Groq、OpenRouter、
-        MiniMax、Fireworks。明天换底模也不用改写代码。</li>
+    <li><strong>一出厂就是生产级别。</strong>Lineage 出厂带 6 个内置
+        Strain（<code>pal</code> / <code>explore</code> /
+        <code>founder</code> 面向用户，<code>analyzer</code> /
+        <code>grader</code> / <code>comparator</code> 跑演化管线），
+        每个都有工程团队手工调过、并通过离线 eval harness 验证过的
+        seed genome —— 不是"给你一份 YAML，祝你好运"。</li>
+    <li><strong>改进通过演化沉淀下来。</strong>更好的 prompt、
+        更紧的 tool-policy，不需要每周一重新摸索一次 ——
+        它们被合进 genome、跑评估、发布出去。
+        质量随时间稳步往上走，不需要你盯着。</li>
+    <li><strong>两条演化通道。</strong><strong>Genome</strong>
+        （Darwinian —— 垂直继承、eval gate 通过才发版）调"Agent 本身"；
+        <strong>Meme Pool</strong>（Lamarckian ——
+        学到的方法横向传播）调"Agent 知道什么"。
+        两条同时在跑、时间尺度不同。</li>
+    <li><strong>同时支持 Personal + Project 模式。</strong>每个项目有
+        独立的 memory、trust 状态、Agent 集合；外层 Personal 一层
+        承载跨项目的习惯。两个不相关的代码仓不会互相污染。</li>
+    <li><strong>Agent Kernel = 跨 provider 的 agentic 推理能力。</strong>
+        纯计算的 Ports &amp; Adapters 内核把上下文工程、三级 compaction、
+        四层 memory、长任务编排、prompt cache、advisor 模式 ——
+        全部接成 provider 中立。（详见下方 Agent Kernel 章节。）</li>
+    <li><strong>三层权限模型。</strong>User / Project / Local 三层 override
+        快照，全部是可审计的 JSON。工具受 Strain genome 权重门控 ——
+        一个 Strain 没列 <code>cli_execute</code> 就字面上 shell 不出去，
+        project-local override 还能在不动 User 默认值的情况下进一步收紧。</li>
+    <li><strong>Advisor 模式，不被 Anthropic 锁住。</strong>性价比好的
+        主力模型跑日常活；kernel 在同一轮自动把难题升级到 SOTA advisor。
+        这之前是 Claude Code 独有的能力 ——
+        Lineage 把它带到任意 provider，含开源本地模型。</li>
+    <li><strong>即将到来：基于 AMP 的弱中心化演化网络。</strong>Strain 和
+        被证实有效的 genome 将通过 Agent Marketplace Protocol 在用户
+        装机之间传播 —— 你的演化通道会从整个网络里受益，
+        不需要任何中央权威决定谁活下去。计划：MVP-B Alpha。</li>
 </ul>
 <ul lang="ja">
-    <li><strong>改善は積み上がる。</strong>より良いプロンプトや、より引き締まった
-        tool-policy を毎週月曜に再発見し直す必要はない ——
-        genome にマージされ、評価され、出荷されます。</li>
-    <li><strong>品質リグレッションは耐えるものではなく、捕まえるもの。</strong>
-        CUSUM トリガがライブの fitness シグナルを監視し、不良リリースは
-        Blue-Green 観察窓内で自動ロールバックされます。</li>
-    <li><strong>本当に重要なものはすべて、あなたの手元に。</strong>Genome、
-        トレース、メモリ、会話 —— すべて自分のディスク上の JSON / JSONL。
-        SaaS にあなたの Agent を人質にされることはありません。</li>
-    <li><strong>1 つの Agent で 9 つのプロバイダ。</strong>Anthropic、OpenAI
-        （Codex サブスクリプション含む）、DeepSeek、Qwen、Moonshot、Groq、
-        OpenRouter、MiniMax、Fireworks。明日プロバイダを切り替えても、
-        書き換えは不要です。</li>
+    <li><strong>出荷時点で量産品質。</strong>Lineage には 6 つの内蔵
+        Strain（<code>pal</code> / <code>explore</code> /
+        <code>founder</code> ユーザー向け、<code>analyzer</code> /
+        <code>grader</code> / <code>comparator</code> 進化パイプライン用）が
+        同梱され、それぞれエンジニアリングチームが手作業で調整し
+        オフライン eval harness で事前検証された seed genome を持ちます ——
+        「YAML を渡されて幸運を祈る」状態ではありません。</li>
+    <li><strong>改善は進化を通じて積み上がる。</strong>より良いプロンプトや
+        より引き締まった tool-policy を毎週月曜に再発見し直す必要はありません ——
+        genome にマージされ、評価され、出荷されます。
+        品質は時間とともに上昇し、見張る必要はありません。</li>
+    <li><strong>進化レーンが 2 本。</strong><strong>Genome</strong>
+        （ダーウィン的 —— 垂直継承、eval gate を通過してリリース）は
+        「Agent 自体」を調整。<strong>Meme Pool</strong>
+        （ラマルク的 —— 学んだノウハウの水平伝搬）は
+        「Agent が知っていること」を調整。異なる時間スケールで両方が動きます。</li>
+    <li><strong>Personal + Project の両モードに対応。</strong>各プロジェクトは
+        独立した memory、信頼状態、Agent セットを持ち、Personal レイヤが
+        クロスプロジェクトの習慣を運びます。無関係な 2 つのコードベースで
+        作業しても、相互汚染しません。</li>
+    <li><strong>Agent Kernel = プロバイダ越えの agentic 推論能力。</strong>
+        純粋計算の Ports &amp; Adapters コアに、コンテキストエンジニアリング、
+        3 段階コンパクション、4 層メモリ、長時間タスクのオーケストレーション、
+        プロンプトキャッシュ、advisor パターンを配線済み ——
+        すべてプロバイダ中立です。（詳細は下の Agent Kernel セクション。）</li>
+    <li><strong>3 層の権限モデル。</strong>User / Project / Local の
+        3 層 override スナップショットはすべて監査可能な JSON。
+        ツールは Strain genome の重みでゲートされ ——
+        allowlist に <code>cli_execute</code> がない Strain は文字通り
+        shell を呼べず、プロジェクト・ローカルの override は
+        User デフォルトに触れずにさらに引き締められます。</li>
+    <li><strong>Advisor パターン、Anthropic ロックインなし。</strong>
+        コスト効率の良い主力モデルが日常作業をこなし、
+        kernel が同じターン内で難所を SOTA advisor に自動エスカレーション。
+        これは以前 Claude Code 専売の能力でしたが、Lineage は任意の
+        プロバイダ（オープンソースのローカルモデル含む）に広げます。</li>
+    <li><strong>近日：AMP ベースの弱中心化進化ネットワーク。</strong>
+        Strain と実績ある genome は Agent Marketplace Protocol を通じて
+        ユーザーインストール間に伝搬します ——
+        あなたの進化レーンは中央権威に統制されることなく、
+        ネットワーク全体の恩恵を受けます。予定：MVP-B Alpha。</li>
 </ul>
 
 <p lang="en"><strong>The four primitives</strong> that make this work:</p>
@@ -1055,116 +1147,198 @@ $ lineage chat
     <dd lang="en">Context engineering — fitting only the highest-signal
         tokens into the model's finite attention window — is what
         separates an Agent that stays sharp over weeks from one that
-        rots after lunch. Lineage treats the full canonical scope as
-        first-class building blocks: <strong>system instructions,
-        project profile, recalled memory, conversation history, tool
-        state, and few-shot exemplars</strong> — each with an explicit
-        token budget. A deterministic <code>PromptCompiler</code>
-        assembles them on every turn (same inputs → same prompt),
-        retrieval is just-in-time per turn rather than pre-loaded,
-        and the active conversation streams straight to JSONL on disk
-        — so a crash or restart resumes mid-turn instead of starting
-        over. Anthropic-grade context discipline, as a runtime
-        primitive — not something you implement on top.</dd>
+        rots after lunch. Lineage covers the full canonical scope as
+        first-class slots (<strong>system instructions, project
+        profile, recalled memory, conversation history, tool state,
+        few-shot exemplars</strong>) with explicit per-slot token
+        budgets, all assembled by a deterministic
+        <code>PromptCompiler</code> — same inputs always produce the
+        same prompt. Three field-recognized techniques are wired in
+        by default: <strong>progressive disclosure</strong> — tools
+        and memory enter as name + stub; the Agent calls
+        <code>tool_search</code> / <code>memory_search</code> to
+        expand on demand (typically 90%+ token savings on a fat
+        catalog); <strong>just-in-time retrieval</strong> per turn
+        instead of pre-loaded snapshots; and <strong>context
+        offloading</strong> — bulky tool outputs and pre-compact
+        history get persisted to disk and referenced by ID, so the
+        live window stays lean. Conversations stream straight to
+        JSONL on disk — a crash mid-turn resumes mid-turn instead
+        of starting over.</dd>
     <dd lang="zh">上下文工程 —— 把"高信号 token"装进模型有限注意力窗口的工程纪律 ——
         才是决定一个 Agent 是越跑越锋利、还是越跑越糊的关键。
-        Lineage 把这个领域公认的 6 类槽位全部当成头等公民处理：
+        Lineage 把领域公认的 6 类槽位全部当成头等公民处理：
         <strong>system 指令、项目 profile、recall 出来的 memory、
         会话历史、工具状态、few-shot 范例</strong> ——
-        每一类都有显式的 token 预算。一个确定性的
-        <code>PromptCompiler</code> 在每轮按同一规则组装它们
-        （同样的输入 → 同样的 prompt），检索是 just-in-time 的（不预加载），
-        活跃会话直接流式落到磁盘 JSONL —— 中途崩了，从崩的那一秒继续跑，
-        不是从头开始。Anthropic 那套上下文工程纪律，
-        在 Lineage 里是运行时原语，不是你在外面拼一层补丁。</dd>
+        每一类都有显式的 token 预算，由一个确定性的
+        <code>PromptCompiler</code> 按同一规则组装
+        （同样的输入 → 同样的 prompt）。
+        默认开三项业内公认的高阶技巧：<strong>渐进式披露
+        （progressive disclosure）</strong> ——
+        工具和 memory 先以"名字 + 简介"形式进窗口，Agent 通过
+        <code>tool_search</code> / <code>memory_search</code> 按需展开
+        （工具池一胖，token 一般能省 90%+）；<strong>just-in-time 检索</strong> ——
+        每轮临时拉，不预加载快照；<strong>上下文卸载（context offloading）</strong> ——
+        体量大的工具输出和压缩前的历史落到磁盘上，窗口里只留引用。
+        会话直接流式落到磁盘 JSONL ——
+        中途崩了，从崩的那一秒继续跑，不是从头开始。</dd>
     <dd lang="ja">コンテキストエンジニアリング ——
         モデルの有限な注意ウィンドウに「高シグナルなトークン」だけを収める
         工学規律 —— こそが、Agent が数週間にわたって冴えたままでいるか、
-        それとも昼食後には劣化しているかを分けます。Lineage はこの領域で
-        標準的な 6 種のスロットすべてをファーストクラスの構成要素として
-        扱います：<strong>システム指令、プロジェクトプロファイル、
-        再取得メモリ、会話履歴、ツール状態、few-shot 例示</strong> ——
-        それぞれに明示的なトークン予算が割り当てられます。
-        決定論的な <code>PromptCompiler</code> が毎ターン同じ規則で組み立て
-        （同じ入力 → 同じプロンプト）、取得は事前ロードではなく
-        ターンごとの just-in-time、稼働中の会話はそのままディスクの
-        JSONL にストリームされます —— ターンの途中でクラッシュしても
-        その瞬間から再開でき、最初からやり直しにはなりません。
-        Anthropic 級のコンテキスト工学規律を、外付けの実装ではなく
-        ランタイムのプリミティブとして提供します。</dd>
+        それとも昼食後には劣化しているかを分けます。Lineage は領域で
+        標準的な 6 種のスロットすべてをファーストクラスとして扱います：
+        <strong>システム指令、プロジェクトプロファイル、再取得メモリ、
+        会話履歴、ツール状態、few-shot 例示</strong> ——
+        それぞれに明示的なトークン予算が割り当てられ、決定論的な
+        <code>PromptCompiler</code> が毎ターン同じ規則で組み立てます
+        （同じ入力 → 同じプロンプト）。さらに業界で確立された
+        3 つの高度技法をデフォルトで配線済み：
+        <strong>プログレッシブ・ディスクロージャ</strong> ——
+        ツールとメモリは名前 + スタブとして窓に入り、Agent は
+        <code>tool_search</code> / <code>memory_search</code> で
+        必要に応じて展開（ツールカタログが厚いほど効果大、通常 90% 以上の
+        トークン削減）；<strong>just-in-time 検索</strong> ——
+        事前ロードのスナップショットではなく、ターンごとに必要分だけ取得；
+        <strong>コンテキスト・オフロード</strong> ——
+        大きなツール出力やコンパクト前の履歴はディスクに永続化し、
+        窓には参照だけ残します。稼働中の会話はそのままディスクの
+        JSONL にストリームされ —— ターン途中でクラッシュしても
+        その瞬間から再開でき、最初からやり直しにはなりません。</dd>
 
-    <dt lang="en">Compaction</dt>
-    <dt lang="zh">智能压缩 Compaction</dt>
-    <dt lang="ja">コンパクション</dt>
-    <dd lang="en">Long conversations cost real money and lose accuracy.
-        Lineage compacts on its own terms: when the context window
-        fills, older turns collapse into a structured summary while
-        the raw history goes to disk. Every tool call also writes
-        a 3-tier trace — minimal metadata always, full payloads
-        sampled on success — giving you replayable evidence without
-        paying the token cost on every turn.</dd>
-    <dd lang="zh">长会话既花钱又掉准确率。Lineage 主动压缩 ——
-        context window 一旦撑满，更早的 turn 折成结构化摘要，
-        原始历史落盘备查。每次工具调用同时写一份三层 trace ——
-        始终保留最小元数据、成功时采样完整 payload ——
-        证据可回放，但不为此在每一轮里掏 token 钱。</dd>
-    <dd lang="ja">長い会話はお金がかかり、精度も落ちます。Lineage は能動的に
-        圧縮します —— context window が埋まると、古いターンは構造化サマリへ
-        折り畳まれ、生履歴はディスクへ。すべてのツール呼び出しは同時に
-        3 層トレースを残します —— 最小メタデータは常時、フルペイロードは
-        成功時のみサンプリング ——
-        毎ターンのトークンコストを払わずに、再生可能な証拠が手に入ります。</dd>
+    <dt lang="en">Compaction — three operations, three timescales</dt>
+    <dt lang="zh">智能压缩 — 三种操作，三种时间尺度</dt>
+    <dt lang="ja">コンパクション — 3 つの操作、3 つの時間スケール</dt>
+    <dd lang="en">In most products, compaction is binary: when the
+        window fills, summarize the past or fail. Lineage runs three
+        distinct operations at three different cadences ——
+        <strong>Prune</strong> on every turn (zero-cost, replaces
+        stale successful tool results with placeholders);
+        <strong>Compact</strong> when the window approaches budget
+        (LLM-assisted structured summary preserving goal /
+        constraints / decisions / next-step; full conversation
+        archived as JSONL + Markdown before compaction so nothing
+        is lost); <strong>Distill</strong> at section boundaries
+        (LLM-assisted extraction into reusable knowledge artifacts).
+        Cut points respect message boundaries — never mid-tool-result,
+        never mid-tool-call-batch. The granularity is what lets a
+        single Agent run a multi-day task without losing the goal
+        it was given on turn one.</dd>
+    <dd lang="zh">大部分产品的 compaction 是二值的：窗口一满，要么摘要、要么挂掉。
+        Lineage 在三个不同时间尺度上各跑一种操作 ——
+        <strong>Prune</strong>（每轮都跑、零 LLM 成本，
+        把陈旧的成功 tool result 折成占位符）、
+        <strong>Compact</strong>（窗口接近预算时跑、LLM 辅助结构化摘要，
+        保留目标 / 约束 / 决策 / 下一步；完整对话在压缩前归档为 JSONL +
+        Markdown，原始证据不丢）、<strong>Distill</strong>
+        （在段落边界跑，把通用知识蒸馏成可复用条目）。
+        切点严格走消息边界 —— 永不在 tool_result 里截断、
+        永不切散 tool_call 批次。这种切分粒度，
+        正是让一个 Agent 能跑一个跨天的长任务、
+        到最后还记得最初被交代的目标的关键。</dd>
+    <dd lang="ja">多くの製品ではコンパクションは二値的です ——
+        窓が埋まれば要約するか、失敗するか。Lineage は 3 つの異なる
+        タイムスケールで 3 つの操作を実行します ——
+        <strong>Prune</strong>（毎ターン、LLM コストゼロ、
+        古い成功ツール結果をプレースホルダに置換）、
+        <strong>Compact</strong>（窓が予算に近づいた時、
+        LLM 支援の構造化サマリ、ゴール / 制約 / 決定 / 次ステップを保持、
+        圧縮前にフル会話を JSONL + Markdown でアーカイブし原典は失われない）、
+        <strong>Distill</strong>（節境界で、汎用知識を再利用可能な
+        アイテムに蒸留）。カットポイントはメッセージ境界を厳守 ——
+        tool_result の途中、tool_call バッチの途中で切ることはありません。
+        この粒度こそが、1 つの Agent が複数日にわたる長タスクを、
+        ターン 1 で受け取ったゴールを忘れずに走り切れる理由です。</dd>
 
-    <dt lang="en">Memory — 4 tiers</dt>
-    <dt lang="zh">四层 Memory</dt>
-    <dt lang="ja">メモリ（4 層）</dt>
-    <dd lang="en">Four memory tiers keep the right information at the
-        right scope. <strong>Conversation</strong> holds your live
-        working set. <strong>Project</strong> remembers the codebase
-        you're in. <strong>Strain</strong> carries domain expertise
-        across projects. <strong>Genome</strong> enshrines what survived
-        evolution. Information promotes upward through evidence,
-        never by leakage; lower tiers are write-rate-bounded so a
-        noisy session can't drown the signal.</dd>
-    <dd lang="zh">四层 memory 把"对的信息"放在"对的作用域"。
-        <strong>Conversation</strong> 装当前的 working set；
-        <strong>Project</strong> 记你所在的代码仓；
-        <strong>Strain</strong> 跨项目沉淀领域专长；
-        <strong>Genome</strong> 把演化筛选下来的精华固化。
-        信息只能凭证据向上走，不会"无意中漏到上层"；
-        低层写入有速率上限 —— 一场吵闹的会话淹不掉信号。</dd>
-    <dd lang="ja">4 層のメモリが、適切な情報を適切なスコープに保ちます。
-        <strong>Conversation</strong> はライブ・ワーキングセット、
-        <strong>Project</strong> は今いるコードベースの記憶、
-        <strong>Strain</strong> はプロジェクトを跨ぐドメイン知見、
-        <strong>Genome</strong> は進化を生き残ったものの結晶。
-        情報は証拠を伴ってのみ上位に昇格し、漏洩で上がることはありません。
-        下位層には書き込みレート上限があるので、騒がしいセッションが
-        シグナルを押し流すことはありません。</dd>
+    <dt lang="en">Memory — 4 tiers, on your disk</dt>
+    <dt lang="zh">四层 Memory — 全部在你磁盘上</dt>
+    <dt lang="ja">メモリ — 4 層、すべてあなたのディスク上に</dt>
+    <dd lang="en">Anthropic's April-2026 Managed Agents release pitched
+        "memory as a filesystem" as the breakthrough; Lineage has
+        shipped that idea since day one — and goes further. Four
+        tiers, not one: <strong>Conversation</strong> (this turn's
+        live working set) → <strong>Project</strong> (per-project
+        knowledge, <code>data/projects/{key}/memory.jsonl</code>) →
+        <strong>Strain</strong> (cross-project domain expertise,
+        <code>data/memory/{strain_id}.jsonl</code>) →
+        <strong>Genome</strong> (immutable, fortified only by
+        evolution). State-based promotion (mem0-aligned): information
+        moves up only on evidence, never by leakage. Lower tiers
+        are write-rate-bounded so a noisy session can't drown the
+        signal. Every byte is plain JSONL on your disk — view it,
+        edit it, delete it, version-control it. No vendor SaaS holds
+        memory of your work for you.</dd>
+    <dd lang="zh">Anthropic 在 2026 年 4 月把 "memory = 文件系统" 当 Managed
+        Agents 的卖点发布 —— Lineage 从第一天就是这么做的，而且做得更彻底。
+        四层而非一层：<strong>Conversation</strong>（这轮 live working set）→
+        <strong>Project</strong>（项目级知识，
+        <code>data/projects/{key}/memory.jsonl</code>）→
+        <strong>Strain</strong>（跨项目领域专长，
+        <code>data/memory/{strain_id}.jsonl</code>）→
+        <strong>Genome</strong>（不可变，只能通过演化被加固）。
+        状态化层级晋升（mem0 同思路）：信息只能凭证据向上走，
+        不会"无意中漏到上层"。低层有写入速率上限 ——
+        一场吵闹的会话淹不掉信号。每一字节 memory 都是你磁盘上的纯
+        JSONL —— 能看、能改、能删、能 git。不需要任何 SaaS 替你保管。</dd>
+    <dd lang="ja">Anthropic が 2026 年 4 月の Managed Agents リリースで
+        「memory = ファイルシステム」をブレイクスルーとして打ち出しましたが ——
+        Lineage は初日からそのアイデアを実装しており、さらに先まで踏み込んでいます。
+        1 階ではなく 4 階：<strong>Conversation</strong>
+        （このターンのライブ・ワーキングセット）→
+        <strong>Project</strong>（プロジェクト単位の知識、
+        <code>data/projects/{key}/memory.jsonl</code>）→
+        <strong>Strain</strong>（クロスプロジェクトのドメイン知見、
+        <code>data/memory/{strain_id}.jsonl</code>）→
+        <strong>Genome</strong>（不変、進化によってのみ強化される）。
+        状態ベースの階層昇格（mem0 と同じ思想）—— 情報は証拠を伴ってのみ
+        上位に昇格し、漏洩で上がることはありません。下位層には書き込みレート
+        上限があり、騒がしいセッションがシグナルを押し流すことはありません。
+        memory のすべてはあなたのディスク上のプレーン JSONL ——
+        閲覧・編集・削除・バージョン管理が可能。ベンダー SaaS に
+        保管を委ねる必要はありません。</dd>
 
     <dt lang="en">Long-running tasks</dt>
     <dt lang="zh">长任务执行</dt>
     <dt lang="ja">長時間タスク</dt>
     <dd lang="en">Real work outlives one chat turn. Lineage models
-        multi-step plans as <strong>Task → Step → Job</strong> —
-        state lives on disk first, not in the agent's head. A Step
-        can pause for review, resume after a break, or hand off
-        between agents. A background watchdog raises any Step that
-        hasn't moved in N minutes, so plans don't quietly die in
-        the middle and surface as "wait, what happened to that
-        thing I asked for?" three days later.</dd>
+        multi-step plans as <strong>Task → Step → Job</strong> ——
+        the Task is your goal, Steps are individually-checkpointable
+        units of work, Jobs run inside Steps. Task state lives on
+        disk first (<code>data/tasks/{id}/task.json</code>), not in
+        the agent's head, so a Step can pause for human review,
+        resume after a break, or hand off between Agents. A
+        background watchdog raises any Step that hasn't moved in
+        N minutes — plans don't quietly die in the middle and
+        surface as "wait, what happened to that thing I asked for?"
+        three days later. Anthropic's Managed Agents shipped persistent
+        memory in public beta to handle exactly this; Lineage has
+        the equivalent shape on your local disk, no managed-cloud
+        dependency.</dd>
     <dd lang="zh">真正有价值的工作不会在一轮对话里结束。Lineage 把多步骤计划建模为
-        <strong>Task → Step → Job</strong> —— 状态先写盘，不放在 Agent 脑子里。
-        一个 Step 可以暂停等审核、休息后接续、或者在 Agent 之间转手。
-        后台 watchdog 会把"N 分钟没动"的 Step 拎出来 ——
-        计划不会在中间静悄悄地死掉、然后三天后才被你想起来"诶那件事呢？"。</dd>
+        <strong>Task → Step → Job</strong>：Task 是你定的目标、Step 是
+        逐个 checkpoint 的工作单元、Job 在 Step 内部跑。
+        Task 状态先写盘（<code>data/tasks/{id}/task.json</code>），
+        不放在 Agent 脑子里 —— 所以一个 Step 可以暂停等人工 review、
+        休息后接续、或者在 Agent 之间转手。后台 watchdog 会把
+        "N 分钟没动" 的 Step 拎出来 ——
+        计划不会在中间静悄悄地死掉、然后三天后才被你想起来
+        "诶那件事呢？"。Anthropic 在 2026 年 4 月把 Managed Agents
+        的持久 memory 做成 public beta 来处理同一类问题；
+        Lineage 在你自己的本地盘上提供了同样形状的东西，
+        不依赖任何托管云。</dd>
     <dd lang="ja">本当の仕事は 1 ターンでは終わりません。Lineage は多段階計画を
         <strong>Task → Step → Job</strong> としてモデル化します ——
-        状態は Agent の頭の中ではなく、まずディスクに置かれます。
-        Step はレビューのために一時停止、休憩後に再開、Agent 間での
+        Task はあなたが定めたゴール、Step は個別にチェックポイント可能な
+        作業単位、Job は Step 内部で実行されます。Task 状態は Agent の
+        頭の中ではなく、まずディスクに置かれます
+        （<code>data/tasks/{id}/task.json</code>）—— だから Step は
+        人間レビューのために一時停止、休憩後に再開、Agent 間での
         引き継ぎが可能です。バックグラウンド watchdog が N 分動いていない
         Step を拾い上げるので、計画が途中で静かに死に、3 日後に
-        「ところで、あれどうなった？」と気づくことはありません。</dd>
+        「ところで、あれどうなった？」と気づくことはありません。
+        Anthropic はまさにこの問題を扱うため Managed Agents の永続
+        memory を 2026 年 4 月にパブリック・ベータで出しましたが、
+        Lineage は同等の形をあなたのローカルディスク上で提供し、
+        マネージドクラウドへの依存はありません。</dd>
 
     <dt lang="en">Prompt cache</dt>
     <dt lang="zh">Prompt Cache 自动命中</dt>
