@@ -80,15 +80,25 @@
                 <span lang="zh">Lineage 是什么？</span>
                 <span lang="ja">Lineage とは？</span>
             </a></li>
+            <li><a href="#quickstart">
+                <span lang="en">Quick start</span>
+                <span lang="zh">快速开始</span>
+                <span lang="ja">クイックスタート</span>
+            </a></li>
             <li><a href="#models">
                 <span lang="en">Models &amp; Strains</span>
                 <span lang="zh">模型与 Strain</span>
                 <span lang="ja">モデルと Strain</span>
             </a></li>
-            <li><a href="#quickstart">
-                <span lang="en">Quick start</span>
-                <span lang="zh">快速开始</span>
-                <span lang="ja">クイックスタート</span>
+            <li><a href="#tools">
+                <span lang="en">Tools</span>
+                <span lang="zh">Tools</span>
+                <span lang="ja">Tools</span>
+            </a></li>
+            <li><a href="#kernel">
+                <span lang="en">Agent Kernel</span>
+                <span lang="zh">Agent Kernel</span>
+                <span lang="ja">Agent Kernel</span>
             </a></li>
             <li><a href="#self-update">
                 <span lang="en">Self-update</span>
@@ -326,24 +336,50 @@ lineage status</code></pre>
 </div>
 
 <p lang="en">
-    The runtime is four planes: Control (Gateway + ChannelAdapter),
-    Execution (AgentKernel + Composition), Capability (Skills +
-    browser), and Evolution (CUSUM + Blue-Green promotion). Files
-    are the Source of Truth; the SQLite DB is a materialized index
-    that can be rebuilt from <code>data/</code> at any time.
+    The runtime is organized into four subsystems. User input enters
+    through Control, executes inside the AgentKernel, draws on
+    Capability for tools and skills, and is observed by the
+    Evolution loop:
 </p>
 <p lang="zh">
-    运行时分四个平面：Control（Gateway + ChannelAdapter）、
-    Execution（AgentKernel + Composition）、
-    Capability（Skills + 浏览器）、
-    Evolution（CUSUM + Blue-Green 提升）。
+    运行时分为四个子系统。用户输入从 Control 进来，在 AgentKernel 里执行，
+    向 Capability 取工具和技能，由 Evolution 循环观察：
+</p>
+<p lang="ja">
+    ランタイムは 4 つのサブシステムで構成されます。ユーザー入力は Control から入り、
+    AgentKernel で実行され、Capability からツールとスキルを取得し、
+    Evolution ループによって観察されます：
+</p>
+
+<pre class="arch-diagram" aria-hidden="true">             user · IM · API · CLI
+                       │
+                       ▼
+         ┌──────────────────────────────┐
+         │           Control            │
+         │  Gateway · Adapters · Auth   │
+         └───────────────┬──────────────┘
+                         ▼
+         ┌──────────────────────────────┐
+         │          Execution           │
+         │  AgentKernel · Compose       │
+         │  PEO loop · Streaming        │
+         └───────┬──────────────────┬───┘
+                 ▼                  ▼
+    ┌──────────────────────┐  ┌─────────────────────┐
+    │      Capability      │  │      Evolution      │
+    │   Tools · Skills     │  │   Eval · CUSUM      │
+    │   Browser · Memory   │  │   Blue-Green swap   │
+    └──────────────────────┘  └─────────────────────┘</pre>
+
+<p lang="en">
+    Files are the Source of Truth; the SQLite DB is a materialized
+    index that can be rebuilt from <code>data/</code> at any time.
+</p>
+<p lang="zh">
     文件是 Source of Truth；SQLite DB 只是物化索引，
     任何时候都可以从 <code>data/</code> 重建。
 </p>
 <p lang="ja">
-    ランタイムは 4 つのプレーンで構成されます：Control（Gateway + ChannelAdapter）、
-    Execution（AgentKernel + Composition）、Capability（Skills + ブラウザ）、
-    Evolution（CUSUM + Blue-Green プロモーション）。
     ファイルが Source of Truth で、SQLite DB はマテリアライズドなインデックスであり、
     いつでも <code>data/</code> から再構築できます。
 </p>
@@ -351,7 +387,92 @@ lineage status</code></pre>
 </section>
 
 
-<!-- Models & built-in Agents ─────────────────────────────────────── -->
+<!-- Quick start ──────────────────────────────────────────────────── -->
+<section id="quickstart">
+<h2 lang="en">Quick start<a class="headerlink" href="#quickstart">#</a></h2>
+<h2 lang="zh">快速开始<a class="headerlink" href="#quickstart">#</a></h2>
+<h2 lang="ja">クイックスタート<a class="headerlink" href="#quickstart">#</a></h2>
+
+<p lang="en">
+    Lineage is a TUI-first product. Drop into a project directory
+    and run <code>lineage chat</code>:
+</p>
+<p lang="zh">
+    Lineage 是 TUI 优先的产品。进到一个项目目录，跑 <code>lineage chat</code>：
+</p>
+<p lang="ja">
+    Lineage は TUI ファーストのプロダクトです。プロジェクトディレクトリに移動して
+    <code>lineage chat</code> を実行します：
+</p>
+
+<pre><code>$ cd ~/your-project
+$ lineage chat
+∴ lineage 0.117.x — pal ready
+
+&gt; review the auth middleware for timing-attack risks
+
+  ● filesystem.read    crates/auth/src/middleware.rs
+  ● filesystem.grep    "compare|hmac|verify"  crates/auth/
+
+  Found one — line 47 compares HMAC tags with `==`, which short-
+  circuits on first byte mismatch. A sufficiently noisy attacker
+  can recover the tag byte-by-byte from response timing.
+
+  Constant-time compare via `subtle::ConstantTimeEq` would fix it.
+  Want me to write the patch and run the test suite?
+
+&gt; yes, patch it
+
+  ● filesystem.edit    crates/auth/src/middleware.rs   (1 hunk)
+  ● cli.execute        cargo test -p auth --lib
+                       passed  17/17  in  3.4s
+
+  Done. Diff is ready to commit.</code></pre>
+
+<p lang="en">
+    The first run walks you through provider setup
+    (Anthropic / OpenAI / OpenAI-compat / Codex subscription),
+    asks you to trust the project directory, and then drops into
+    the three-pane chat layout — conversation in the middle,
+    status bar at the bottom, optional context pane on the side.
+</p>
+<p lang="zh">
+    首次运行会引导你完成 provider 配置
+    （Anthropic / OpenAI / OpenAI-compat / Codex 订阅），
+    询问是否信任当前项目目录，然后进入三栏聊天布局 ——
+    中间是会话，底部是状态栏，侧边可选上下文面板。
+</p>
+<p lang="ja">
+    初回起動時はプロバイダ設定
+    （Anthropic / OpenAI / OpenAI 互換 / Codex サブスクリプション）の
+    ウィザードに誘導され、プロジェクトディレクトリを信頼するか確認したのち、
+    3 ペインのチャットレイアウトに入ります ——
+    中央が会話、下部がステータスバー、サイドにコンテキストペイン（任意）。
+</p>
+
+<p lang="en">
+    Sessions are persistent. Run <code>lineage chat --resume</code>
+    to pick up where you left off. Run <code>lineage agents</code>
+    to list lineage trees, <code>lineage cost</code> to see token
+    spend, <code>lineage soul</code> to edit the active strain's
+    personality.
+</p>
+<p lang="zh">
+    会话是持久化的。<code>lineage chat --resume</code> 接续上次对话。
+    <code>lineage agents</code> 列出系谱树；
+    <code>lineage cost</code> 查看 token 花费；
+    <code>lineage soul</code> 编辑当前 strain 的人格设定。
+</p>
+<p lang="ja">
+    セッションは永続化されます。<code>lineage chat --resume</code> で続きから再開できます。
+    <code>lineage agents</code> で系譜ツリーの一覧、
+    <code>lineage cost</code> でトークン使用量、
+    <code>lineage soul</code> で現在の strain のパーソナリティ編集ができます。
+</p>
+</section>
+
+
+<!-- Models & built-in Strains ─────────────────────────────────────── -->
 <section id="models">
 <h2 lang="en">Models &amp; built-in Strains<a class="headerlink" href="#models">#</a></h2>
 <h2 lang="zh">支持的模型与内置 Strain<a class="headerlink" href="#models">#</a></h2>
@@ -530,70 +651,343 @@ lineage status</code></pre>
 </section>
 
 
-<!-- Quick start ──────────────────────────────────────────────────── -->
-<section id="quickstart">
-<h2 lang="en">Quick start<a class="headerlink" href="#quickstart">#</a></h2>
-<h2 lang="zh">快速开始<a class="headerlink" href="#quickstart">#</a></h2>
-<h2 lang="ja">クイックスタート<a class="headerlink" href="#quickstart">#</a></h2>
+<!-- Tools ────────────────────────────────────────────────────────── -->
+<section id="tools">
+<h2 lang="en">Tools<a class="headerlink" href="#tools">#</a></h2>
+<h2 lang="zh">Tools<a class="headerlink" href="#tools">#</a></h2>
+<h2 lang="ja">Tools<a class="headerlink" href="#tools">#</a></h2>
 
 <p lang="en">
-    Lineage is a TUI-first product. Drop into a project directory
-    and run <code>lineage chat</code>:
+    Tools are how Agents act on the world. Lineage ships a Rust-native
+    toolbox covering the moves a coding-and-ops agent actually needs:
+    read &amp; edit files, run shell, drive a browser, fetch web pages,
+    delegate to other Agents, schedule background work. Every tool is
+    gated by per-Strain genome weights — a Strain that doesn't
+    declare a tool simply can't call it. No external runtime, no
+    Node sidecar, no MCP-only fallback.
 </p>
 <p lang="zh">
-    Lineage 是 TUI 优先的产品。进到一个项目目录，跑 <code>lineage chat</code>：
+    Tools 是 Agent 作用于世界的手段。Lineage 自带一套 Rust 原生工具箱，
+    覆盖一个 coding/ops Agent 真正需要的动作：读写文件、跑 shell、操控浏览器、
+    抓网页、委派给其他 Agent、调度后台任务。每一个 tool 都按 Strain 的 genome
+    权重门控 —— Strain 没声明的 tool 就调不到。不需要外部运行时、不需要 Node
+    sidecar，不强制走 MCP fallback。
 </p>
 <p lang="ja">
-    Lineage は TUI ファーストのプロダクトです。プロジェクトディレクトリに移動して
-    <code>lineage chat</code> を実行します：
+    Tools は Agent が世界に働きかける手段です。Lineage には Rust ネイティブの
+    ツールボックスが同梱され、コーディング/オプス用エージェントに必要な動作を
+    カバーします —— ファイルの読み書き、シェル実行、ブラウザ制御、Web 取得、
+    他 Agent への委譲、バックグラウンドジョブのスケジュール。すべてのツールは
+    Strain の genome 重みでゲートされ、宣言していない Strain は呼び出せません。
+    外部ランタイムも Node サイドカーも MCP 必須のフォールバックもありません。
 </p>
 
-<pre><code>$ cd ~/your-project
-$ lineage chat
-∴ lineage 0.117.x — pal ready
+<dl class="provider-list">
+    <dt><code>filesystem</code></dt>
+    <dd lang="en">read · write · edit · grep · glob · multi-edit, scoped to
+        the current <code>project_dir</code>. Edits are diff-tracked.</dd>
+    <dd lang="zh">read · write · edit · grep · glob · multi-edit，作用域限定在
+        当前 <code>project_dir</code>。改动记 diff。</dd>
+    <dd lang="ja">read · write · edit · grep · glob · multi-edit。
+        現在の <code>project_dir</code> にスコープされ、編集は差分で追跡されます。</dd>
 
-Type a message to begin (Ctrl-C to exit).
-&gt; help me understand the auth flow in this codebase</code></pre>
+    <dt><code>cli</code></dt>
+    <dd lang="en">execute shell commands. Per-Strain allowlist (regex), per
+        run sandbox tier, optional human-in-the-loop confirmation for
+        write-class commands.</dd>
+    <dd lang="zh">执行 shell 命令。Strain 级 allowlist（正则）、按运行选沙箱档位、
+        写类命令可选 human-in-the-loop 确认。</dd>
+    <dd lang="ja">シェルコマンドを実行。Strain ごとの allowlist（正規表現）、
+        実行ごとのサンドボックス階層選択、書き込み系コマンドには任意で
+        human-in-the-loop 確認。</dd>
+
+    <dt><code>delegate</code></dt>
+    <dd lang="en">spawn or call another Agent — sync wait, async fire,
+        or polling check. Sub-conversation is its own ExecutionTrace
+        for replay.</dd>
+    <dd lang="zh">起一个新 Agent 或调用另一个 Agent —— 同步等、异步开、轮询查。
+        子会话有独立的 ExecutionTrace，可回放。</dd>
+    <dd lang="ja">別の Agent を起動または呼び出します —— 同期 wait、非同期 fire、
+        ポーリングチェック。サブ会話は独立した ExecutionTrace を持ち、
+        再生可能です。</dd>
+
+    <dt><code>browser</code></dt>
+    <dd lang="en">navigate · click · type · evaluate · screenshot via the
+        bundled <code>agent-browser</code> CDP client. Dedicated Chromium
+        profile, loopback-only control, no shared cookies.</dd>
+    <dd lang="zh">navigate · click · type · evaluate · screenshot，
+        走自带的 <code>agent-browser</code> CDP 客户端。
+        独立 Chromium profile，控制端口只绑 loopback，不共享 cookie。</dd>
+    <dd lang="ja">navigate · click · type · evaluate · screenshot を、
+        同梱の <code>agent-browser</code> CDP クライアント経由で実行します。
+        専用 Chromium プロファイル、制御はループバック限定、cookie は共有しません。</dd>
+
+    <dt><code>web</code></dt>
+    <dd lang="en">fetch URL → Markdown (htmd), search via configured search
+        provider, RSS pull. No headless browser fallback by default.</dd>
+    <dd lang="zh">URL 抓取 → Markdown（htmd 转换）、走配置的搜索 provider、RSS 拉取。
+        默认不回落到 headless 浏览器。</dd>
+    <dd lang="ja">URL を取得して Markdown に変換（htmd）、設定済み検索プロバイダ経由の
+        検索、RSS プル。既定では headless ブラウザにフォールバックしません。</dd>
+
+    <dt><code>memory</code></dt>
+    <dd lang="en">strain-scoped JSONL memory: <code>save</code> ·
+        <code>recall</code> · <code>forget</code>. Project memory is
+        per-<code>project_key</code>, separate from cross-project strain memory.</dd>
+    <dd lang="zh">Strain 范围内的 JSONL 记忆：<code>save</code> ·
+        <code>recall</code> · <code>forget</code>。
+        Project memory 按 <code>project_key</code> 分桶，跟跨项目的 strain memory 分开。</dd>
+    <dd lang="ja">Strain スコープの JSONL メモリ：<code>save</code> ·
+        <code>recall</code> · <code>forget</code>。プロジェクトメモリは
+        <code>project_key</code> 単位で、クロスプロジェクトの strain メモリとは分離されます。</dd>
+
+    <dt><code>task</code></dt>
+    <dd lang="en">create &amp; manage long-running multi-step tasks
+        (Task → Step → Job, ADR-053). File-first state with a stuck-detection
+        watchdog.</dd>
+    <dd lang="zh">创建/管理长任务（Task → Step → Job，参考 ADR-053）。
+        File-first 状态，带 stuck 检测看门狗。</dd>
+    <dd lang="ja">マルチステップの長時間タスクを作成・管理
+        （Task → Step → Job、ADR-053）。File-first 状態 +
+        スタック検出ウォッチドッグ付き。</dd>
+
+    <dt><code>system</code></dt>
+    <dd lang="en">introspect the runtime — agent list, lineage tree,
+        evolution status (CUSUM signal, candidates in flight),
+        cost ledger.</dd>
+    <dd lang="zh">运行时自省 —— Agent 列表、系谱树、演化状态
+        （CUSUM 信号、在飞 candidate）、成本台账。</dd>
+    <dd lang="ja">ランタイムの自己検査 —— エージェント一覧、系譜ツリー、
+        進化ステータス（CUSUM シグナル、進行中の候補）、コスト台帳。</dd>
+
+    <dt><code>schedule</code> / <code>file_watch</code></dt>
+    <dd lang="en">cron-style scheduled triggers and filesystem-change
+        triggers. Both feed the background queue, not the interactive
+        chat path.</dd>
+    <dd lang="zh">cron 风格的定时触发器和文件系统变化触发器。
+        都进后台队列，不会插队到 interactive chat。</dd>
+    <dd lang="ja">cron スタイルの定期トリガとファイルシステム変更トリガ。
+        どちらもバックグラウンドキューに流れ、インタラクティブ chat には割り込みません。</dd>
+
+    <dt><code>email</code> / <code>calendar</code> / <code>channel</code></dt>
+    <dd lang="en">side-effect tools, idempotency-keyed at the DB level —
+        re-running the same call won't double-send.</dd>
+    <dd lang="zh">副作用类工具，DB 层用 idempotency key 去重 —— 同一调用重跑不会重发。</dd>
+    <dd lang="ja">副作用系ツール。DB レイヤで idempotency key による重複排除を行い、
+        同一呼び出しの再実行で二重送信になりません。</dd>
+
+    <dt><code>ask_user</code> / <code>checklist</code> / <code>progress</code></dt>
+    <dd lang="en">conversational utilities — pause for user input, render
+        checklists in the TUI, stream progress markers.</dd>
+    <dd lang="zh">对话辅助工具 —— 暂停等用户输入、TUI 里渲染 checklist、流进度标记。</dd>
+    <dd lang="ja">会話補助ツール —— ユーザー入力待ち、TUI 内 checklist 表示、
+        進捗マーカーのストリーミング。</dd>
+</dl>
 
 <p lang="en">
-    The first run walks you through provider setup
-    (Anthropic / OpenAI / OpenAI-compat / Codex subscription),
-    asks you to trust the project directory, and then drops into
-    the three-pane chat layout — conversation in the middle,
-    status bar at the bottom, optional context pane on the side.
+    There is no MCP wall here: every tool above is a Rust function
+    behind a typed schema. MCP servers can be loaded as additional
+    surfaces, but the core tools don't depend on them.
 </p>
 <p lang="zh">
-    首次运行会引导你完成 provider 配置
-    （Anthropic / OpenAI / OpenAI-compat / Codex 订阅），
-    询问是否信任当前项目目录，然后进入三栏聊天布局 ——
-    中间是会话，底部是状态栏，侧边可选上下文面板。
+    这里没有 MCP 围墙：上面每一个 tool 都是一个带类型 schema 的 Rust 函数。
+    你可以再挂 MCP server 当作额外面，但核心 tool 不依赖它们。
 </p>
 <p lang="ja">
-    初回起動時はプロバイダ設定
-    （Anthropic / OpenAI / OpenAI 互換 / Codex サブスクリプション）の
-    ウィザードに誘導され、プロジェクトディレクトリを信頼するか確認したのち、
-    3 ペインのチャットレイアウトに入ります ——
-    中央が会話、下部がステータスバー、サイドにコンテキストペイン（任意）。
+    ここには「MCP の壁」はありません ——
+    上記のすべてのツールは型付き schema 付きの Rust 関数です。
+    MCP サーバーを追加面として読み込むこともできますが、コアツールはそれに依存しません。
 </p>
+</section>
+
+
+<!-- Agent Kernel ─────────────────────────────────────────────────── -->
+<section id="kernel">
+<h2 lang="en">Agent Kernel<a class="headerlink" href="#kernel">#</a></h2>
+<h2 lang="zh">Agent Kernel<a class="headerlink" href="#kernel">#</a></h2>
+<h2 lang="ja">Agent Kernel<a class="headerlink" href="#kernel">#</a></h2>
 
 <p lang="en">
-    Sessions are persistent. Run <code>lineage chat --resume</code>
-    to pick up where you left off. Run <code>lineage agents</code>
-    to list lineage trees, <code>lineage cost</code> to see token
-    spend, <code>lineage soul</code> to edit the active strain's
-    personality.
+    The Agent Kernel is the part of Lineage that turns a chat turn
+    into a stream of tool calls and tokens. It is a pure-computation
+    core (Ports &amp; Adapters) — no I/O, no database, no provider
+    coupling — wrapped by the runtime that does. Five capabilities
+    are baked in; together they're what makes Lineage hold up across
+    long sessions.
 </p>
 <p lang="zh">
-    会话是持久化的。<code>lineage chat --resume</code> 接续上次对话。
-    <code>lineage agents</code> 列出系谱树；
-    <code>lineage cost</code> 查看 token 花费；
-    <code>lineage soul</code> 编辑当前 strain 的人格设定。
+    Agent Kernel 是 Lineage 把"一轮对话"转成"工具调用流 + token 流"的那块。
+    它是纯计算核心（Ports &amp; Adapters 模式）—— 不做 I/O、不碰 DB、不绑定 provider ——
+    外面包着真正做 I/O 的 runtime。它内置五项能力，组合起来让 Lineage 能在长会话里撑住：
 </p>
 <p lang="ja">
-    セッションは永続化されます。<code>lineage chat --resume</code> で続きから再開できます。
-    <code>lineage agents</code> で系譜ツリーの一覧、
-    <code>lineage cost</code> でトークン使用量、
-    <code>lineage soul</code> で現在の strain のパーソナリティ編集ができます。
+    Agent Kernel は Lineage が「1 ターンの対話」を「ツール呼び出しストリーム +
+    トークンストリーム」に変換するコアです。純粋計算コア（Ports &amp; Adapters）——
+    I/O なし、DB アクセスなし、プロバイダ結合なし —— で、I/O を担うランタイムが
+    周囲を取り囲みます。次の 5 つの能力が組み込まれており、長セッションでの
+    持続性を支えます：
+</p>
+
+<dl class="provider-list">
+    <dt lang="en">Context engineering</dt>
+    <dt lang="zh">上下文工程（Context engineering）</dt>
+    <dt lang="ja">コンテキストエンジニアリング</dt>
+    <dd lang="en">Every prompt is built by a deterministic
+        <code>PromptCompiler</code> — system prompt, project profile,
+        memory recall, conversation history, current tool state,
+        all assembled with explicit budget caps. Conversations are
+        JSONL-persisted (<code>data/conversations/{id}/active.jsonl</code>),
+        so a crash or restart resumes mid-turn instead of losing context.</dd>
+    <dd lang="zh">每个 prompt 都由确定性的 <code>PromptCompiler</code> 编译 ——
+        system prompt、项目 profile、memory recall、会话历史、当前工具状态，
+        按显式预算上限组装好。会话用 JSONL 持久化
+        （<code>data/conversations/{id}/active.jsonl</code>），
+        崩溃或重启不会丢上下文，可以从断点续上。</dd>
+    <dd lang="ja">すべてのプロンプトは決定論的な
+        <code>PromptCompiler</code> によって組み立てられます ——
+        system プロンプト、プロジェクトプロファイル、メモリリコール、会話履歴、
+        現在のツール状態を明示的な予算上限で組み合わせます。
+        会話は JSONL で永続化され
+        （<code>data/conversations/{id}/active.jsonl</code>）、
+        クラッシュや再起動でも途中から再開でき、コンテキストは失われません。</dd>
+
+    <dt lang="en">Compaction</dt>
+    <dt lang="zh">Compaction（压缩）</dt>
+    <dt lang="ja">コンパクション（圧縮）</dt>
+    <dd lang="en">Three-layer trace storage. Level 0 (always: metadata
+        + tool names) and Level 1 (always: input + output preview)
+        are unconditional. Level 2 (full payloads) is sampled only
+        on success for regression mining. When the live conversation
+        approaches the model's context window, the kernel compacts
+        older turns into a structured summary; raw history stays on
+        disk for replay.</dd>
+    <dd lang="zh">三层 trace 存储。Level 0（始终：元数据 + 工具名）和
+        Level 1（始终：input + output 预览）都是无条件记录的；
+        Level 2（完整 payload）只在成功时采样，用于回归挖掘。
+        活跃会话接近模型 context window 时，kernel 把更早的 turn 压成结构化摘要 ——
+        原始历史还在磁盘上，可回放。</dd>
+    <dd lang="ja">3 層のトレース保存。Level 0（常時：メタデータ + ツール名）と
+        Level 1（常時：入出力プレビュー）は無条件で記録され、
+        Level 2（完全ペイロード）は成功時のみサンプリングされ、
+        リグレッション分析に使われます。アクティブ会話がモデルの
+        context window に近づくと、kernel は古いターンを構造化サマリへ圧縮します ——
+        生履歴はディスクに残り、再生可能です。</dd>
+
+    <dt lang="en">Memory (4 layers)</dt>
+    <dt lang="zh">Memory（四层）</dt>
+    <dt lang="ja">メモリ（4 層）</dt>
+    <dd lang="en"><strong>Conversation</strong> (this turn's working set) →
+        <strong>Project</strong> (per <code>project_key</code>:
+        <code>data/projects/{key}/memory.jsonl</code>) →
+        <strong>Strain</strong> (cross-project domain knowledge:
+        <code>data/memory/{strain_id}.jsonl</code>) →
+        <strong>Genome</strong> (immutable, lifts only via evolution).
+        Higher layers don't pollute lower ones; lower-layer write rate
+        is bounded.</dd>
+    <dd lang="zh"><strong>Conversation</strong>（这轮 working set）→
+        <strong>Project</strong>（按 <code>project_key</code>：
+        <code>data/projects/{key}/memory.jsonl</code>）→
+        <strong>Strain</strong>（跨项目的领域知识：
+        <code>data/memory/{strain_id}.jsonl</code>）→
+        <strong>Genome</strong>（不可变，只通过演化路径下沉）。
+        高层不污染低层；低层写入速率有上限。</dd>
+    <dd lang="ja"><strong>Conversation</strong>（このターンのワーキングセット）→
+        <strong>Project</strong>（<code>project_key</code> 単位：
+        <code>data/projects/{key}/memory.jsonl</code>）→
+        <strong>Strain</strong>（クロスプロジェクトのドメイン知識：
+        <code>data/memory/{strain_id}.jsonl</code>）→
+        <strong>Genome</strong>（不変、進化経由でのみ下層に降りる）。
+        上位層が下位層を汚染することはなく、下位層の書き込みレートには上限があります。</dd>
+
+    <dt lang="en">Long-running tasks</dt>
+    <dt lang="zh">长任务（Long-running tasks）</dt>
+    <dt lang="ja">長時間タスク</dt>
+    <dd lang="en">Multi-step plans live as <code>Task → Step → Job</code>
+        (ADR-053). Task state is file-first
+        (<code>data/tasks/{id}/task.json</code>), each Step is its own
+        <code>compose_turn</code> with its own conversation, and a
+        background watchdog raises Steps that haven't progressed in
+        N minutes — so plans don't quietly die in the middle.</dd>
+    <dd lang="zh">多步骤计划走 <code>Task → Step → Job</code> 三层（ADR-053）。
+        Task 状态 file-first（<code>data/tasks/{id}/task.json</code>），
+        每个 Step 是一次独立的 <code>compose_turn</code>，自带会话；
+        后台 watchdog 把 N 分钟没进展的 Step 拎出来 ——
+        计划不会在中间静默地死掉。</dd>
+    <dd lang="ja">マルチステップ計画は <code>Task → Step → Job</code>
+        として実行されます（ADR-053）。Task 状態は file-first
+        （<code>data/tasks/{id}/task.json</code>）、各 Step は独立した
+        <code>compose_turn</code>（独自の会話）、N 分間進捗のない Step は
+        バックグラウンド watchdog に拾われます ——
+        計画が途中で静かに死ぬことはありません。</dd>
+
+    <dt lang="en">Prompt cache</dt>
+    <dt lang="zh">Prompt cache（提示缓存）</dt>
+    <dt lang="ja">プロンプトキャッシュ</dt>
+    <dd lang="en">Lineage uses provider-side caching wherever
+        available — Anthropic <code>cache_control</code>,
+        OpenAI cached input, DeepSeek cached prompt prefix. The
+        kernel structures the prompt prefix to be cache-friendly
+        (system + project profile pinned, memory near the bottom),
+        so repeat turns of a long session land at cache-hit pricing
+        instead of full prefill.</dd>
+    <dd lang="zh">能命中 provider cache 的就命中 ——
+        Anthropic <code>cache_control</code>、OpenAI cached input、
+        DeepSeek cached prompt prefix。
+        kernel 在编译 prompt 时就把前缀做成 cache-friendly 的形状
+        （system + 项目 profile 固定在前，memory 拉到后面），
+        长会话的重复轮次按 cache-hit 价格走，不是 full prefill。</dd>
+    <dd lang="ja">利用可能な場面ではプロバイダ側キャッシュを使います ——
+        Anthropic <code>cache_control</code>、OpenAI cached input、
+        DeepSeek cached prompt prefix。kernel はプロンプト前置部を
+        キャッシュフレンドリな形に構成し（system + プロジェクトプロファイルを
+        前段に固定、memory は後段）、長セッションの繰り返しターンは
+        full prefill ではなく cache-hit 価格で実行されます。</dd>
+
+    <dt lang="en">Native advisor pattern</dt>
+    <dt lang="zh">原生 advisor 模式</dt>
+    <dt lang="ja">ネイティブ advisor パターン</dt>
+    <dd lang="en">Per-provider advisors translate the kernel's
+        provider-neutral request into provider-best-practice calls —
+        Anthropic gets thinking blocks + cache_control + tool_use
+        streaming; OpenAI Responses API gets reasoning + structured
+        outputs; Codex subscription gets native attribution headers.
+        The same Agent runs on any of nine providers without rewrites.</dd>
+    <dd lang="zh">每个 provider 都有专门的 advisor，把 kernel 的 provider-neutral
+        请求翻译成各家的 best practice ——
+        Anthropic 用 thinking block + cache_control + tool_use 流式；
+        OpenAI Responses API 用 reasoning + structured outputs；
+        Codex 订阅带 native attribution header。
+        同一个 Agent 跑在 9 家 provider 上不用改写。</dd>
+    <dd lang="ja">プロバイダごとに advisor があり、kernel のプロバイダ非依存
+        リクエストを各社のベストプラクティス呼び出しに翻訳します ——
+        Anthropic は thinking block + cache_control + tool_use ストリーミング、
+        OpenAI Responses API は reasoning + structured outputs、Codex
+        サブスクリプションはネイティブ帰属ヘッダ付き。同一 Agent が
+        9 つのプロバイダのどれでも書き換えなしに動きます。</dd>
+</dl>
+
+<p lang="en">
+    Where this lands competitively: most coding-agent products give
+    you context engineering only inside their own UI, route a single
+    provider, and stop the trail at the conversation boundary.
+    Lineage stores every turn as a replayable artifact, evolves the
+    Agent that ran it based on those replays, and lets you swap the
+    underlying model the next morning. The kernel is what makes that
+    cross-session, cross-provider continuity possible.
+</p>
+<p lang="zh">
+    在竞品里的位置：大多数 coding agent 产品只在自家 UI 里给你 context
+    engineering，只对接一家 provider，对话边界一过线索就断。
+    Lineage 把每轮 turn 存成可回放的 artifact，基于这些回放演化跑出它的 Agent，
+    第二天还允许你换底模。kernel 是让"跨会话、跨 provider 的连续性"成立的那块。
+</p>
+<p lang="ja">
+    競合との位置取り：大半のコーディング・エージェント製品はコンテキスト
+    エンジニアリングを自社 UI 内に閉じ込め、単一プロバイダにルーティングし、
+    会話境界で痕跡が途切れます。Lineage はすべてのターンを再生可能な
+    アーティファクトとして保存し、その再生に基づいて Agent を進化させ、
+    翌日には基盤モデルを差し替えることもできます。kernel は
+    「セッション越え・プロバイダ越えの連続性」を成立させる中核です。
 </p>
 </section>
 
@@ -703,8 +1097,6 @@ check_interval_minutes = 30</code></pre>
     <li>Turn durations, session lengths, error counts.</li>
     <li>Strain keys (which agents you used).</li>
     <li>Lineage version + OS/arch.</li>
-    <li>An anonymous UUID v4 client id, generated locally, resettable
-        by deleting <code>$XDG_STATE_HOME/lineage/telemetry/client_id</code>.</li>
 </ul>
 <ul lang="zh">
     <li>工具调用名和次数（<code>filesystem.read</code>、<code>delegate_wait</code> 等 ——
@@ -712,8 +1104,6 @@ check_interval_minutes = 30</code></pre>
     <li>每轮时长、会话长度、错误次数。</li>
     <li>Strain key（你用了哪些 Agent）。</li>
     <li>Lineage 版本号 + OS / 架构。</li>
-    <li>一个本地生成的匿名 UUID v4 client id —— 删除
-        <code>$XDG_STATE_HOME/lineage/telemetry/client_id</code> 即可重置。</li>
 </ul>
 <ul lang="ja">
     <li>ツール呼び出し名と回数（<code>filesystem.read</code>、
@@ -721,8 +1111,6 @@ check_interval_minutes = 30</code></pre>
     <li>各ターンの所要時間、セッション長、エラー回数。</li>
     <li>Strain キー（どの Agent を使ったか）。</li>
     <li>Lineage バージョン + OS / アーキテクチャ。</li>
-    <li>ローカル生成の匿名 UUID v4 client id ——
-        <code>$XDG_STATE_HOME/lineage/telemetry/client_id</code> を削除すればリセットできます。</li>
 </ul>
 
 <p lang="en"><strong>What is NEVER collected:</strong></p>
@@ -781,20 +1169,16 @@ LINEAGE_DISABLE_LOCAL_TELEMETRY=1</code></pre>
 <p lang="en">
     Telemetry uploads land in our own self-hosted PostHog instance
     at <code>telemetry.lineagent.ai</code> — not PostHog Cloud, not
-    a third party. The PII boundary is a hard contract — adding a
-    field that violates it is a stop-ship event.
+    a third party.
 </p>
 <p lang="zh">
     遥测上传到的是我们自己自托管的 PostHog 实例（<code>telemetry.lineagent.ai</code>），
     不是 PostHog Cloud，也不是任何第三方。
-    PII 边界是硬契约 —— 任何字段一旦违反它，就是 stop-ship 级事件。
 </p>
 <p lang="ja">
     テレメトリ送信先は自社ホストの PostHog インスタンス
     （<code>telemetry.lineagent.ai</code>）です ——
     PostHog Cloud ではなく、サードパーティでもありません。
-    PII 境界はハードコントラクトであり、
-    これに違反するフィールドが追加されることはリリース停止級の事案です。
 </p>
 </section>
 
@@ -956,24 +1340,6 @@ rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
     必要なのが「このファイルを編集、このバグを修正、このテストを書く」だけなら、
     Lineage は不要です。「どのエージェント人格がどんなタスクで週単位で安定して勝つか」を
     機械的に（直感ではなく）選別したい場合、そこから Lineage が真価を発揮します。</dd>
-
-<dt lang="en">Can I run my own Lineage instance with my own telemetry?</dt>
-<dt lang="zh">我可以自己跑一份 Lineage + 自己的遥测后端吗？</dt>
-<dt lang="ja">独自の Lineage インスタンスを独自テレメトリで動かせますか？</dt>
-<dd lang="en">Yes — point <code>[telemetry.usage].endpoint</code> in
-    <code>lineage.toml</code> at your own PostHog instance.
-    PostHog is open-source; PostHog's Hobby docker-compose stack
-    works fine. Lineage clients will upload to the endpoint you
-    configure.</dd>
-<dd lang="zh">可以 —— 把 <code>lineage.toml</code> 里
-    <code>[telemetry.usage].endpoint</code> 指向你自己的 PostHog 即可。
-    PostHog 是开源的；用它官方的 Hobby docker-compose 即可。
-    Lineage 客户端会上传到你配置的 endpoint。</dd>
-<dd lang="ja">はい ——
-    <code>lineage.toml</code> の <code>[telemetry.usage].endpoint</code> を
-    自前の PostHog インスタンスに向けるだけです。
-    PostHog はオープンソースで、公式の Hobby 用 docker-compose で十分動きます。
-    Lineage クライアントは設定したエンドポイントへアップロードします。</dd>
 
 </dl>
 </section>

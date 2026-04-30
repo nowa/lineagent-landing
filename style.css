@@ -609,6 +609,32 @@ pre code {
 }
 .callout--warn::before { background: #F59E0B; }
 
+/* ── ASCII architecture diagram ──────────────────────────────────────
+ * Used in the "What is Lineage?" subsystem diagram. Rendered as
+ * <pre> for monospace + box-drawing-char alignment, but transparent
+ * background + zero padding so it reads as a diagram, not a code
+ * block. Smaller font-size than the global pre so the box-drawing
+ * characters stay crisp at the page width. */
+.arch-diagram {
+    font-family: var(--font-mono);
+    background: transparent;
+    color: var(--fg);
+    font-size: calc(var(--scaling) * 11px);
+    line-height: 1.35;
+    padding: 0;
+    margin: var(--text-height) 0;
+    border-radius: 0;
+    overflow-x: auto;
+    white-space: pre;
+}
+
+/* The subsystem name lines render slightly bolder so the boxes
+ * stand out from the connector lines. Uses currentColor + no
+ * extra weight to stay subtle. */
+@media (prefers-color-scheme: dark) {
+    .arch-diagram { color: var(--fg); }
+}
+
 /* ── Provider + strain definition lists ──────────────────────────────
  * Used in the Models & Strains section. Compact dt/dd pairing with
  * the dt rendered as a code chip (model prefix or strain id) and
