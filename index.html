@@ -354,13 +354,18 @@ lineage status</code></pre>
         per-project boundaries (à la Claude Code — each codebase
         has its own memory, trust state, and rules). No toggle to
         flip.</li>
-    <li><strong>Agentic reasoning that holds up under real workloads.</strong>
-        Lineage's Agent Kernel handles the parts that make agents
-        flaky in practice: long conversations don't lose the goal,
-        multi-day tasks survive crashes and resumes, prompt caches
-        automatically save 70-90% of token cost on repeat work,
-        and the same Agent runs unchanged on Claude, GPT, DeepSeek,
-        Qwen, or a local open-source model.</li>
+    <li><strong>Best-in-class agentic reasoning.</strong> Lineage's
+        Agent Kernel is engineered for the parts that decide who
+        actually gets work done: long conversations that don't lose
+        the goal, multi-day tasks that survive crashes and resumes,
+        the full context-engineering scope (progressive disclosure +
+        just-in-time retrieval + context offloading) wired in by
+        default, automatic prompt caching across providers (70-90%
+        token savings on repeat work), and the advisor pattern that
+        was Claude-Code-only until now. Head-to-head against Hermes
+        and Claude Code on agentic benchmarks, Lineage comes out
+        ahead — see <a href="/bench">/bench</a> for the harness, the
+        seed, and the per-task breakdown.</li>
     <li><strong>Permissions that match how you actually trust software.</strong>
         Three layers of override that mirror real life: a global
         default ("on this laptop, never let agents run sudo"), a
@@ -412,12 +417,15 @@ lineage status</code></pre>
         尊重每个项目的边界（类似 Claude Code ——
         每个代码仓有自己的 memory、信任状态、规则）。
         不需要你来回切，两边都开着。</li>
-    <li><strong>真实负载下撑得住的 agentic 推理。</strong>
-        Lineage 的 Agent Kernel 处理那些让 Agent 在实战中翻车的环节：
+    <li><strong>业内最强的 agentic 推理能力。</strong>Lineage 的
+        Agent Kernel 在那些 "决定谁真能干活" 的环节上是为最佳表现设计的：
         长对话不丢目标、跨天任务能在崩溃后续上、
-        重复工作上 prompt cache 自动省掉 70-90% 的 token 钱、
-        同一个 Agent 不改代码就能跑在
-        Claude / GPT / DeepSeek / Qwen / 本地开源模型上。</li>
+        完整的上下文工程能力（渐进式披露 + just-in-time 检索 +
+        上下文卸载）默认全开、跨 provider 自动 prompt cache
+        （重复工作上省 70-90% token）、以及之前只有 Claude Code
+        才有的 advisor 模式。在 agentic benchmark 上和 Hermes、
+        Claude Code 同场对比，Lineage 跑得更好 ——
+        harness、随机种子、逐任务细分见 <a href="/bench">/bench</a>。</li>
     <li><strong>像信任软件那样自然地控权限。</strong>三层 override，
         和你日常的信任习惯对齐 ——
         全局默认（"在这台电脑上，永远不允许 Agent 跑 sudo"）、
@@ -469,12 +477,19 @@ lineage status</code></pre>
         <strong>project モード</strong>はプロジェクト境界を尊重する
         （Claude Code に近い —— 各コードベースは独自の memory、
         信頼状態、ルールを持つ）。切り替え操作は不要です。</li>
-    <li><strong>実ワークロードに耐える agentic 推論。</strong>
-        Lineage の Agent Kernel は、Agent が実戦で崩れる箇所を引き受けます ——
-        長い会話でゴールを見失わない、複数日のタスクがクラッシュ後に再開できる、
-        反復作業ではプロンプトキャッシュがトークン費を 70-90% 自動削減、
-        同じ Agent が Claude / GPT / DeepSeek / Qwen / ローカル
-        オープンソースモデルで、書き換えなしに動作。</li>
+    <li><strong>業界最高水準の agentic 推論能力。</strong>
+        Lineage の Agent Kernel は「誰が実際に仕事を片付けられるか」を
+        決める箇所のために設計されています ——
+        ゴールを見失わない長い会話、クラッシュからも復帰する複数日タスク、
+        完全なコンテキストエンジニアリング・スコープ
+        （プログレッシブ・ディスクロージャ + just-in-time 検索 +
+        コンテキスト・オフロード）をデフォルトで配線、
+        プロバイダ越えの自動プロンプトキャッシュ
+        （反復作業で 70-90% のトークン削減）、
+        そしてこれまで Claude Code 専売だった advisor パターン。
+        Hermes・Claude Code と agentic ベンチマークで並べて比較した結果、
+        Lineage が上回ります —— ハーネス、シード、タスク別内訳は
+        <a href="/bench">/bench</a> を参照。</li>
     <li><strong>ソフトウェアを信頼する自然な感覚で権限を制御。</strong>
         3 層の override が日常の信頼感覚と一致 ——
         グローバルデフォルト（「このノート PC では、Agent に sudo を絶対許さない」）、
