@@ -258,66 +258,40 @@ lineage status</code></pre>
 <h2 lang="ja">Lineage とは？<a class="headerlink" href="#what">#</a></h2>
 
 <p lang="en">
-    Today's agent products are static: every chat starts from zero,
-    good runs leave no replicable trail, and the agent is no smarter
-    on day 90 than on day 1. <strong>Lineage flips it — agents are
-    products that compound.</strong> You describe a fuzzy goal in
-    plain language; Lineage's Founder Agent reads your codebase and
-    ships you a validated Agent — no YAML, no prompt-engineering
-    homework. From there, every conversation becomes evidence: the
-    agent itself sharpens, its playbook of hard-won lessons grows
-    alongside, and only changes that beat the current version are
-    promoted to the next generation. Runs unchanged on nine
-    providers (Claude, GPT, DeepSeek, Qwen, local open-source).
-    <strong>Personal</strong> mode follows you everywhere (à la
-    OpenClaw); <strong>project</strong> mode respects per-project
-    boundaries (à la Claude Code); both on at once. Soon: share
-    your evolved Agents peer-to-peer with people you trust.
-    Built in Rust. Local-first by default. Every byte that matters
-    lives as plain files on your own disk — not held hostage by SaaS.
+    Most agent products ship a fixed prompt and a single workflow ——
+    run, get an answer, lose the trail.
+    <strong>Lineage is an agent runtime where the agent itself is the
+    product.</strong> Every Agent is a node in a measurable lineage:
+    parents, children, an immutable genome, and a live fitness history.
+    The runtime ships six battle-tested built-in Strains, evolves them
+    based on real evidence, runs across nine providers, and persists
+    every byte that matters as plain files on your disk. Built in Rust.
+    Local-first by default. Personal- and project-aware. No SaaS holds
+    your agent hostage.
 </p>
 <p lang="zh">
-    今天的 agent 产品是静态的：每次对话从零开始、跑得好的会话留不下
-    可复现的痕迹、第 90 天的 Agent 并不比第 1 天更聪明。
-    <strong>Lineage 反过来 —— Agent 是会随时间累积价值的产品。</strong>
-    你用大白话描述一个模糊目标，Lineage 的 Founder Agent
-    会读你的代码、给你交付一个已经过验证的 Agent ——
-    不用写 YAML、不用做 prompt 调参作业。
-    之后每一次对话都成为证据：Agent 本身会变得更锋利，
-    它的"工作手册"也会越来越厚，
-    只有"比当前版本更好"的改动才会传到下一代。
-    同一个 Agent 不改代码就能在九家 provider 上跑
-    （Claude、GPT、DeepSeek、Qwen、本地开源模型）。
-    <strong>Personal</strong> 模式跟着你走（类似 OpenClaw），
-    <strong>project</strong> 模式尊重项目边界（类似 Claude Code），
-    两种同时开着。即将到来：把演化好的 Agent
-    点对点分享给你信任的人。Rust 构建。默认 local-first。
-    重要的每一个字节都以纯文件形式存在你自己的磁盘上 ——
-    不被任何 SaaS 攥在手里。
+    大多数 agent 产品给你一个固定 prompt 和一条工作流 ——
+    跑一次、拿到答案、线索就断了。
+    <strong>Lineage 是把 Agent 本身当作产品的 agent 运行时。</strong>
+    每个 Agent 都是可量化谱系上的一个节点：有父代、有子代、
+    有不可变的 genome、有持续记录的 fitness 历史。Lineage 出厂带
+    6 个经过实战验证的内置 Strain，基于真实证据演化它们，
+    在 9 家 provider 上都能跑，重要的每一个字节都以纯文件形式
+    存在你自己的磁盘上。Rust 构建、默认 local-first、
+    Personal 和 project 模式同时支持，没有 SaaS 把你的 Agent 攥在手里。
 </p>
 <p lang="ja">
-    今のエージェント製品は静的です ——
-    すべての会話がゼロから始まり、良い実行は再現可能な軌跡を残さず、
-    90 日目の Agent は 1 日目の Agent と同じ賢さしかありません。
-    <strong>Lineage はこれを反転させます ——
-    Agent は時間とともに価値を積み上げるプロダクトです。</strong>
-    曖昧なゴールを平易な言葉で説明すれば、
-    Lineage の Founder Agent があなたのコードベースを読み、
-    検証済みの Agent を納品します ——
-    YAML もプロンプトエンジニアリングの宿題も不要。
-    そこからは、すべての会話が証拠になります ——
-    Agent 自体が鋭くなり、その「業務マニュアル」も厚みを増し、
-    現状を上回ったと証明された変更だけが次世代に受け継がれます。
-    同じ Agent が 9 つのプロバイダで書き換えなしに動作
-    （Claude、GPT、DeepSeek、Qwen、ローカルのオープンソースモデル）。
-    <strong>Personal</strong> モードはあなたについて回り
-    （OpenClaw に近い）、<strong>project</strong> モードは
-    プロジェクト境界を尊重する（Claude Code に近い）——
-    両方が同時に有効です。近日：進化させた Agent を、
-    信頼する人と P2P で共有可能に。Rust 製。
-    デフォルトでローカルファースト。
-    重要なバイトはすべてあなた自身のディスク上にプレーンファイルとして残ります ——
-    SaaS に人質に取られることはありません。
+    多くのエージェント製品は固定プロンプトと単一ワークフローを提供します ——
+    実行して答えを得たら、軌跡は途切れる。
+    <strong>Lineage は Agent そのものをプロダクトとして扱うランタイム</strong>
+    です。すべての Agent は計測可能な系譜上のノード ——
+    親、子、不変な genome、稼働中の fitness 履歴を持ちます。
+    Lineage は実戦検証済みの内蔵 Strain を 6 つ同梱し、
+    実証データに基づいて進化させ、9 つのプロバイダで動作し、
+    重要なバイトはすべてあなたのディスク上にプレーンファイルとして残します。
+    Rust 製。デフォルトでローカルファースト。Personal と
+    Project の両モードに対応。SaaS にあなたの Agent を人質に
+    取られることはありません。
 </p>
 
 <p lang="en"><strong>Eight things Lineage does that most agent products don't:</strong></p>
