@@ -57,8 +57,10 @@
                 ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
                 : t;
             document.documentElement.setAttribute('data-theme', resolved);
+            document.documentElement.setAttribute('data-theme-choice', t);
         } catch (e) {
             document.documentElement.setAttribute('data-theme', 'light');
+            document.documentElement.setAttribute('data-theme-choice', 'auto');
         }
     })();
     </script>
@@ -80,19 +82,80 @@
         </a>
     </header>
 
-    <!-- Language switcher — three buttons, click sets document lang. -->
-    <div class="lang-switcher" role="group" aria-label="Language">
-        <button type="button" data-lang="en" lang="en">EN</button>
-        <button type="button" data-lang="zh" lang="zh">中</button>
-        <button type="button" data-lang="ja" lang="ja">日</button>
-    </div>
+    <!-- Sidebar dropdowns: language + theme.
+         Two pill triggers in a row, each opens a popover menu. The
+         language pill shows a globe icon (no per-language letter).
+         The theme pill shows the *current* mode's icon (sun / moon /
+         monitor). Active option in each menu shows brand-mint text
+         + a small brand-mint dot on the right.
+         Default language: English. Default theme: Auto / System. -->
+    <div class="dropdown-row">
 
-    <!-- Theme switcher — Light / Auto / Dark. Auto follows OS pref
-         and listens for live system-theme changes. -->
-    <div class="theme-switcher" role="group" aria-label="Theme">
-        <button type="button" data-theme-set="light" aria-label="Light theme" title="Light">☀</button>
-        <button type="button" data-theme-set="auto" aria-label="Auto / system theme" title="Auto">◐</button>
-        <button type="button" data-theme-set="dark" aria-label="Dark theme" title="Dark">☾</button>
+        <div class="dropdown" data-dropdown="lang">
+            <button class="dropdown-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Language">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M2 12h20"/>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li><button type="button" data-lang-set="en" role="menuitem"><span class="label">English</span></button></li>
+                <li><button type="button" data-lang-set="zh" role="menuitem"><span class="label">简体中文</span></button></li>
+                <li><button type="button" data-lang-set="ja" role="menuitem"><span class="label">日本語</span></button></li>
+            </ul>
+        </div>
+
+        <div class="dropdown" data-dropdown="theme">
+            <button class="dropdown-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Theme">
+                <svg class="icon icon-theme-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4"/>
+                    <path d="M12 2v2"/><path d="M12 20v2"/>
+                    <path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/>
+                    <path d="M2 12h2"/><path d="M20 12h2"/>
+                    <path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+                </svg>
+                <svg class="icon icon-theme-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+                <svg class="icon icon-theme-auto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect width="20" height="14" x="2" y="3" rx="2"/>
+                    <path d="M8 21h8"/><path d="M12 17v4"/>
+                </svg>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li><button type="button" data-theme-set="light" role="menuitem">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="4"/>
+                        <path d="M12 2v2"/><path d="M12 20v2"/>
+                        <path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/>
+                        <path d="M2 12h2"/><path d="M20 12h2"/>
+                        <path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+                    </svg>
+                    <span class="label">Light</span>
+                </button></li>
+                <li><button type="button" data-theme-set="dark" role="menuitem">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                    <span class="label">Dark</span>
+                </button></li>
+                <li><button type="button" data-theme-set="auto" role="menuitem">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect width="20" height="14" x="2" y="3" rx="2"/>
+                        <path d="M8 21h8"/><path d="M12 17v4"/>
+                    </svg>
+                    <span class="label">System</span>
+                </button></li>
+            </ul>
+        </div>
+
     </div>
 
     <nav class="sidebar-nav">
@@ -1889,25 +1952,19 @@ rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
     var STORAGE_KEY = 'lineage-lang';
 
     function pickLang() {
-        // 1. URL hash (e.g. #zh) takes precedence — bookmark / share
+        // 1. URL hash (e.g. #zh) takes precedence — bookmark / share.
         var hash = (location.hash || '').replace('#', '').toLowerCase();
         if (SUPPORTED.indexOf(hash) !== -1) return hash;
 
-        // 2. Honor in-page anchor links — if hash is a section id
-        //    (#install, #faq) we shouldn't change language; fall through
-        //    to other signals.
-
-        // 3. localStorage (user's prior choice)
+        // 2. localStorage (user's prior choice)
         try {
             var saved = localStorage.getItem(STORAGE_KEY);
             if (SUPPORTED.indexOf(saved) !== -1) return saved;
         } catch (e) { /* private mode, fall through */ }
 
-        // 4. navigator.language — pick first matching prefix
-        var nav = (navigator.language || 'en').toLowerCase();
-        if (nav.indexOf('zh') === 0) return 'zh';
-        if (nav.indexOf('ja') === 0) return 'ja';
-
+        // 3. Default English (was: navigator.language match — removed
+        //    so first-time visitors all land on English regardless of
+        //    OS locale; per-Lang switcher remains one click away).
         return 'en';
     }
 
@@ -1916,9 +1973,9 @@ rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
         document.documentElement.lang = lang;
         try { localStorage.setItem(STORAGE_KEY, lang); } catch (e) {}
 
-        // Update active state on switcher buttons.
-        document.querySelectorAll('.lang-switcher button').forEach(function(btn) {
-            if (btn.dataset.lang === lang) {
+        // Update active state on dropdown menu items.
+        document.querySelectorAll('[data-dropdown="lang"] [data-lang-set]').forEach(function(btn) {
+            if (btn.dataset.langSet === lang) {
                 btn.setAttribute('aria-current', 'true');
             } else {
                 btn.removeAttribute('aria-current');
@@ -1952,13 +2009,22 @@ rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
     function applyTheme(choice) {
         if (THEME_SUPPORTED.indexOf(choice) === -1) choice = 'auto';
         document.documentElement.setAttribute('data-theme', resolveTheme(choice));
+        document.documentElement.setAttribute('data-theme-choice', choice);
         try { localStorage.setItem(THEME_KEY, choice); } catch (e) {}
-        document.querySelectorAll('.theme-switcher button').forEach(function(btn) {
+        document.querySelectorAll('[data-dropdown="theme"] [data-theme-set]').forEach(function(btn) {
             if (btn.dataset.themeSet === choice) {
                 btn.setAttribute('aria-current', 'true');
             } else {
                 btn.removeAttribute('aria-current');
             }
+        });
+    }
+
+    function closeAllDropdowns() {
+        document.querySelectorAll('.dropdown[data-open="true"]').forEach(function(d) {
+            d.removeAttribute('data-open');
+            var t = d.querySelector('.dropdown-trigger');
+            if (t) t.setAttribute('aria-expanded', 'false');
         });
     }
 
@@ -1983,12 +2049,49 @@ rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
         if (darkMq.addEventListener) darkMq.addEventListener('change', onSystemChange);
         else if (darkMq.addListener) darkMq.addListener(onSystemChange); /* Safari < 14 */
 
-        // Wire up switcher buttons.
-        document.querySelectorAll('.lang-switcher button').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                setLang(btn.dataset.lang);
-                // Don't push to URL hash — leave hash for in-page anchors.
+        // Wire dropdown triggers (open / close + ARIA).
+        document.querySelectorAll('.dropdown-trigger').forEach(function(trigger) {
+            trigger.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var dropdown = trigger.closest('.dropdown');
+                var isOpen = dropdown.dataset.open === 'true';
+                // Close any other open dropdown first.
+                document.querySelectorAll('.dropdown[data-open="true"]').forEach(function(d) {
+                    if (d !== dropdown) {
+                        d.removeAttribute('data-open');
+                        d.querySelector('.dropdown-trigger').setAttribute('aria-expanded', 'false');
+                    }
+                });
+                if (isOpen) {
+                    dropdown.removeAttribute('data-open');
+                    trigger.setAttribute('aria-expanded', 'false');
+                } else {
+                    dropdown.setAttribute('data-open', 'true');
+                    trigger.setAttribute('aria-expanded', 'true');
+                }
             });
+        });
+
+        // Wire menu items.
+        document.querySelectorAll('[data-dropdown="lang"] [data-lang-set]').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                setLang(btn.dataset.langSet);
+                closeAllDropdowns();
+            });
+        });
+        document.querySelectorAll('[data-dropdown="theme"] [data-theme-set]').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                applyTheme(btn.dataset.themeSet);
+                closeAllDropdowns();
+            });
+        });
+
+        // Click outside / Escape closes any open dropdown.
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown')) closeAllDropdowns();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeAllDropdowns();
         });
 
         // Wire copy buttons.

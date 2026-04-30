@@ -259,52 +259,6 @@ main {
     line-height: 1.4;
 }
 
-/* Language switcher — sits between sidebar header and nav.
- * Three small buttons (EN / 中 / 日), pill-grouped, no border.
- * Active language gets the brand color background. */
-.lang-switcher {
-    display: flex;
-    gap: 4px;
-    margin: 0 0 calc(1.2 * var(--text-height)) 0;
-    padding: 4px;
-    background: var(--bg);
-    border-radius: var(--radius);
-    width: fit-content;
-}
-
-:root[data-theme="dark"] .lang-switcher {
-    background: var(--bg-inv);
-}
-
-.lang-switcher button {
-    background: transparent;
-    color: var(--fg-dim);
-    border: 0;
-    padding: 4px 10px;
-    font-family: var(--font-mono);
-    font-size: 13px;
-    font-weight: bold;
-    border-radius: calc(var(--radius) - 1px);
-    cursor: pointer;
-    transition: background var(--transition), color var(--transition);
-    line-height: 1.2;
-}
-
-.lang-switcher button:hover {
-    color: var(--fg);
-    background: var(--bg-dim);
-}
-
-.lang-switcher button[aria-current="true"] {
-    background: var(--brand);
-    color: #00362A;        /* dark-mint text on bright-mint bg, AA */
-}
-
-.lang-switcher button[aria-current="true"]:hover {
-    background: var(--brand-strong);
-    color: var(--fg-inv);
-}
-
 /* Sidebar nav — Toltec style: body-sized sans-serif text, classical
  * underlined links, no chrome. Each item on its own line with
  * line-height = text-height so spacing matches the rest of the
@@ -906,50 +860,148 @@ footer.page-footer p { margin: 0.4em 0; }
 }
 
 
-/* ── Theme switcher (☀ Auto ☾) ─────────────────────────────────────
- * Sits next to the language switcher in the sidebar. Three buttons:
- * Light / Auto / Dark. JS resolves "auto" against the OS preference
- * via matchMedia('(prefers-color-scheme: dark)') and listens for
- * changes — so when a user picks Auto, switching the system theme
- * updates the page live. The choice is stored in localStorage; an
- * inline <head> script applies it before paint to avoid FOUC. */
-.theme-switcher {
+
+/* ── Sidebar dropdowns: language + theme ──────────────────────────
+ * Two pill-shaped triggers in a row. Each pill opens a small menu
+ * with icon + label rows. Active row shows brand color + a small
+ * brand-color dot at the right (dot = the "currently selected"
+ * affordance from the reference design). Replaces the earlier
+ * inline two-row .lang-switcher + .theme-switcher pattern. */
+.dropdown-row {
     display: flex;
-    gap: 4px;
+    gap: 8px;
     margin: 0 0 calc(1.2 * var(--text-height)) 0;
-    padding: 4px;
-    background: var(--bg);
-    border-radius: var(--radius);
-    width: fit-content;
 }
 
-:root[data-theme="dark"] .theme-switcher { background: var(--bg-inv); }
+.dropdown {
+    position: relative;
+}
 
-.theme-switcher button {
-    background: transparent;
+.dropdown-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg);
     color: var(--fg-dim);
     border: 0;
-    padding: 4px 10px;
-    font-family: var(--font-sans);
-    font-size: 14px;
-    border-radius: calc(var(--radius) - 1px);
+    border-radius: 999px;       /* full pill */
+    padding: 6px 12px;
     cursor: pointer;
+    font-family: inherit;
     transition: background var(--transition), color var(--transition);
-    line-height: 1.2;
-    min-width: 28px;
+    line-height: 1;
 }
 
-.theme-switcher button:hover {
+:root[data-theme="dark"] .dropdown-trigger { background: var(--bg-inv); }
+
+.dropdown-trigger:hover { color: var(--fg); }
+
+.dropdown-trigger .icon {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 auto;
+}
+
+.dropdown-trigger .chevron {
+    width: 12px;
+    height: 12px;
+    flex: 0 0 auto;
+    transition: transform var(--transition);
+}
+
+.dropdown-trigger[aria-expanded="true"] .chevron {
+    transform: rotate(180deg);
+}
+
+/* Trigger icon swap: show only the active theme's icon. */
+.dropdown-trigger .icon-theme-light,
+.dropdown-trigger .icon-theme-dark,
+.dropdown-trigger .icon-theme-auto {
+    display: none;
+}
+:root[data-theme-choice="light"] .dropdown-trigger .icon-theme-light { display: inline-block; }
+:root[data-theme-choice="dark"]  .dropdown-trigger .icon-theme-dark  { display: inline-block; }
+:root[data-theme-choice="auto"]  .dropdown-trigger .icon-theme-auto  { display: inline-block; }
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    background: var(--bg);
     color: var(--fg);
+    border-radius: 12px;
+    padding: 6px;
+    margin: 0;
+    list-style: none;
+    min-width: 180px;
+    z-index: 100;
+    box-shadow: 0 6px 20px rgba(17, 22, 26, 0.08),
+                0 1px 2px rgba(17, 22, 26, 0.04);
+    display: none;
+}
+
+:root[data-theme="dark"] .dropdown-menu {
     background: var(--bg-dim);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.40),
+                0 1px 2px rgba(0, 0, 0, 0.20);
 }
 
-.theme-switcher button[aria-current="true"] {
-    background: var(--brand);
-    color: #00362A;
+.dropdown[data-open="true"] .dropdown-menu { display: block; }
+
+.dropdown-menu li { margin: 0; }
+
+.dropdown-menu li button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    background: transparent;
+    color: var(--fg);
+    border: 0;
+    padding: 8px 12px;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.2;
+    cursor: pointer;
+    border-radius: 8px;
+    text-align: left;
+    transition: background var(--transition), color var(--transition);
 }
 
-.theme-switcher button[aria-current="true"]:hover {
+.dropdown-menu li button:hover { background: var(--bg-dim); }
+
+:root[data-theme="dark"] .dropdown-menu li button:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.dropdown-menu li button .icon {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
+}
+
+.dropdown-menu li button .label { flex: 1 1 auto; }
+
+.dropdown-menu li button[aria-current="true"] {
+    color: var(--brand-strong);
+    background: var(--brand-soft);
+}
+
+:root[data-theme="dark"] .dropdown-menu li button[aria-current="true"] {
+    color: var(--brand);
+    background: rgba(0, 223, 154, 0.10);
+}
+
+.dropdown-menu li button[aria-current="true"]::after {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
     background: var(--brand-strong);
-    color: var(--fg-inv);
+    margin-left: auto;
+    flex: 0 0 auto;
+}
+
+:root[data-theme="dark"] .dropdown-menu li button[aria-current="true"]::after {
+    background: var(--brand);
 }
