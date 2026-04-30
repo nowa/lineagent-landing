@@ -48,14 +48,15 @@
 
 <!-- ─── Sidebar ─────────────────────────────────────────────────── -->
 <aside class="sidebar">
+    <!-- Header is one flex row: [mark] [sitename] (Toltec parity).
+         The bilingual tagline drops to a second row underneath. -->
     <header class="sidebar-header">
         <a href="#home" aria-label="Lineage home">
 <pre class="sidebar-mark" aria-hidden="true">  ███████
  ██ █ █ ██
 ███████████
   ███████
-  █  █  █  </pre>
-            <span class="sidebar-sitename">lineage</span>
+  █  █  █  </pre><span class="sidebar-sitename">lineage</span>
             <span class="sidebar-tagline">谱系系统 · lineage system · 系譜システム</span>
         </a>
     </header>
@@ -100,53 +101,29 @@
                 <span lang="ja">FAQ</span>
             </a></li>
         </ul>
-
-        <p class="sidebar-section">
-            <span lang="en">Resources</span>
-            <span lang="zh">资源</span>
-            <span lang="ja">リソース</span>
-        </p>
-        <ul>
-            <li><a class="external" href="https://github.com/nowa/lineage">GitHub</a></li>
-            <li><a class="external" href="https://github.com/nowa/lineage/blob/main/CLAUDE.md">
-                <span lang="en">Architecture</span>
-                <span lang="zh">架构</span>
-                <span lang="ja">アーキテクチャ</span>
-            </a></li>
-            <li><a class="external" href="https://github.com/nowa/lineage/tree/main/specs/adr">ADRs</a></li>
-            <li><a class="external" href="https://github.com/nowa/lineage/blob/main/ROADMAP.md">
-                <span lang="en">Roadmap</span>
-                <span lang="zh">路线图</span>
-                <span lang="ja">ロードマップ</span>
-            </a></li>
-            <li><a class="external" href="https://github.com/nowa/lineage/releases/latest">
-                <span lang="en">Releases</span>
-                <span lang="zh">发布版本</span>
-                <span lang="ja">リリース</span>
-            </a></li>
-        </ul>
     </nav>
 
     <footer class="sidebar-footer">
-        <p>MIT-licensed.</p>
-        <p>© 2026 Lineage Contributors.</p>
+        <p>© 2026 Lineage. <span lang="en">All rights reserved.</span><span lang="zh">保留所有权利。</span><span lang="ja">All rights reserved.</span></p>
     </footer>
 </aside>
 
 <!-- ─── Main content ────────────────────────────────────────────── -->
 <main>
 
-<!-- Hero ─────────────────────────────────────────────────────────── -->
+<!-- Hero — title first, then brand mark below, then sub-prose, then
+     install one-liner. The two former CTA buttons are gone — the
+     sidebar nav already covers Install / What is this navigation. -->
 <section id="home" class="hero">
+    <h1 class="hero-tagline" lang="en">An evolution-native multi-agent runtime.</h1>
+    <h1 class="hero-tagline" lang="zh">一个原生支持演化的多 Agent 运行时。</h1>
+    <h1 class="hero-tagline" lang="ja">進化をネイティブに扱うマルチエージェント・ランタイム。</h1>
+
 <pre class="hero-mark" aria-hidden="true">  ███████
  ██ █ █ ██
 ███████████
   ███████
   █  █  █  </pre>
-
-    <h1 class="hero-tagline" lang="en">An evolution-native multi-agent runtime.</h1>
-    <h1 class="hero-tagline" lang="zh">一个原生支持演化的多 Agent 运行时。</h1>
-    <h1 class="hero-tagline" lang="ja">進化をネイティブに扱うマルチエージェント・ランタイム。</h1>
 
     <p class="hero-sub" lang="en">
         Agents in Lineage are not disposable config files — they have
@@ -185,19 +162,6 @@
             <span lang="en">copy</span><span lang="zh">复制</span><span lang="ja">コピー</span>
         </button>
     </div>
-
-    <p>
-        <a class="button" href="#install">
-            <span lang="en">Install options</span>
-            <span lang="zh">安装方式</span>
-            <span lang="ja">インストール方法</span>
-        </a>
-        <a class="button button--ghost" href="#what">
-            <span lang="en">What is this?</span>
-            <span lang="zh">这是什么？</span>
-            <span lang="ja">これは何？</span>
-        </a>
-    </p>
 </section>
 
 
@@ -879,33 +843,26 @@ rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
 <!-- Footer ──────────────────────────────────────────────────────── -->
 <footer class="page-footer">
     <p lang="en">
-        Source: <a href="https://github.com/nowa/lineage">github.com/nowa/lineage</a> ·
-        License: MIT ·
-        Discussions: <a href="https://github.com/nowa/lineage/discussions">GitHub Discussions</a>
+        © 2026 Lineage. All rights reserved.
     </p>
     <p lang="zh">
-        源代码：<a href="https://github.com/nowa/lineage">github.com/nowa/lineage</a> ·
-        许可证：MIT ·
-        讨论：<a href="https://github.com/nowa/lineage/discussions">GitHub Discussions</a>
+        © 2026 Lineage。保留所有权利。
     </p>
     <p lang="ja">
-        ソース：<a href="https://github.com/nowa/lineage">github.com/nowa/lineage</a> ·
-        ライセンス：MIT ·
-        ディスカッション：<a href="https://github.com/nowa/lineage/discussions">GitHub Discussions</a>
+        © 2026 Lineage. All rights reserved.
     </p>
 
     <p lang="en">
         Telemetry endpoint: <code>https://telemetry.lineagent.ai</code>
-        (self-hosted, capture-only, allowlist-restricted at edge —
-        see ADR-066 §D6).
+        (self-hosted, capture-only, allowlist-restricted at edge).
     </p>
     <p lang="zh">
         遥测端点：<code>https://telemetry.lineagent.ai</code>
-        （自托管，仅采集端点，边缘 allowlist 限制 —— 详见 ADR-066 §D6）。
+        （自托管，仅采集端点，边缘 allowlist 限制）。
     </p>
     <p lang="ja">
         テレメトリエンドポイント：<code>https://telemetry.lineagent.ai</code>
-        （セルフホスト、capture 専用、エッジで allowlist 制限 —— ADR-066 §D6 参照）。
+        （セルフホスト、capture 専用、エッジで allowlist 制限）。
     </p>
 </footer>
 
