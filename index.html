@@ -27,22 +27,40 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Lineage — evolution-native agent runtime</title>
-    <meta name="description" content="Lineage is an evolution-native multi-agent runtime. Agents have parents, generations, and fitness histories. Self-hosted, local-first, evaluation-driven.">
+    <title>Lineage — Self-Hosted Multi-Agent Runtime in Rust</title>
+    <meta name="description" content="Self-hosted multi-agent runtime where Agents evolve over time. Founder Agent designs from fuzzy ideas. Rust core, 9 LLM providers, local-first, files on disk.">
 
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="style.css">
+
+    <!-- Canonical URL — content lives at the root regardless of the
+         active language (trilingual gating happens client-side). -->
+    <link rel="canonical" href="https://www.lineagent.ai/">
+
+    <!-- Crawler hints. /llms.txt is a markdown summary aimed at AI
+         assistants (ChatGPT / Claude / Perplexity); /sitemap.xml is
+         the standard machine-readable URL list. -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
     <link rel="alternate" hreflang="en" href="https://www.lineagent.ai/#en">
     <link rel="alternate" hreflang="zh" href="https://www.lineagent.ai/#zh">
     <link rel="alternate" hreflang="ja" href="https://www.lineagent.ai/#ja">
     <link rel="alternate" hreflang="x-default" href="https://www.lineagent.ai/">
 
-    <meta property="og:title" content="Lineage — evolution-native agent runtime">
-    <meta property="og:description" content="Agents with parents, generations, and fitness histories. Self-hosted, local-first, evaluation-driven.">
+    <meta property="og:title" content="Lineage — Self-Hosted Multi-Agent Runtime in Rust">
+    <meta property="og:description" content="Agents that evolve over time. Founder Agent designs from a fuzzy idea. Runs across 9 LLM providers including local open-source models.">
     <meta property="og:url" content="https://www.lineagent.ai/">
     <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary">
+    <meta property="og:site_name" content="Lineage">
+    <meta property="og:image" content="https://www.lineagent.ai/og-image.svg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Lineage — Self-Hosted Multi-Agent Runtime in Rust. ASCII brand mark in mint on a dark background, with the install one-liner: curl -fsSL lineagent.ai/install.sh | sh">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Lineage — Self-Hosted Multi-Agent Runtime in Rust">
+    <meta name="twitter:description" content="Agents that evolve over time. Founder Agent designs from a fuzzy idea. Runs across 9 LLM providers including local open-source models.">
+    <meta name="twitter:image" content="https://www.lineagent.ai/og-image.svg">
+    <meta name="twitter:image:alt" content="Lineage — Self-Hosted Multi-Agent Runtime in Rust">
 
     <!-- FOUC-prevention: resolve theme synchronously before stylesheet
          applies. Reads localStorage (lineage-theme: 'auto' | 'light' |
@@ -63,6 +81,116 @@
             document.documentElement.setAttribute('data-theme-choice', 'auto');
         }
     })();
+    </script>
+
+    <!-- Structured data: SoftwareApplication for product surfacing,
+         FAQPage for SERP rich-result eligibility on the FAQ section.
+         Both schemas are schema.org-spec'd and Google-validated. -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Lineage",
+        "alternateName": ["Lineage Agent Runtime", "lineagent"],
+        "applicationCategory": "DeveloperApplication",
+        "applicationSubCategory": "AI Agent Runtime",
+        "operatingSystem": "macOS, Linux",
+        "description": "Self-hosted multi-agent runtime where Agents evolve over time through evaluation. Founder Agent designs new Agents from a fuzzy goal, runs an offline evaluation, and ships a validated Agent. Each conversation produces evidence; only proven changes are promoted to the next generation. Rust core, 9 LLM providers, local-first.",
+        "url": "https://www.lineagent.ai/",
+        "downloadUrl": "https://www.lineagent.ai/install.sh",
+        "softwareVersion": "0.117.x",
+        "programmingLanguage": "Rust",
+        "license": "https://github.com/nowa/lineage/blob/main/COPYRIGHT.md",
+        "image": "https://www.lineagent.ai/og-image.svg",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock"
+        },
+        "featureList": [
+            "Evolution-driven Agent improvement (CUSUM trigger, offline eval, Blue-Green swap, auto-rollback)",
+            "Multi-provider LLM (Anthropic Claude, OpenAI GPT, DeepSeek, Qwen, Moonshot Kimi, Groq, OpenRouter, MiniMax, Fireworks)",
+            "Self-hosted, local-first storage (files are Source of Truth, SQLite as index)",
+            "Six built-in Strains: pal, explore, founder, analyzer, grader, comparator",
+            "Agent Kernel: context engineering, three-stage compaction, four-tier memory, long-running tasks, prompt cache, advisor pattern",
+            "Personal mode + project mode, both on at once",
+            "Three-layer permission control (User / Project / Local)",
+            "Rust-native browser automation (agent-browser, loopback-only)",
+            "Multi-step task orchestration (Task → Step → Job)",
+            "Three-channel install: brew, npm, curl"
+        ],
+        "author": {
+            "@type": "Organization",
+            "name": "Lineage",
+            "url": "https://www.lineagent.ai"
+        }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Why Rust?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The Control / Execution / Capability planes need predictable latency and zero GC pauses on the hot path. Tooling is mature enough to get these without paying in productivity. The TUI specifically benefits — Ratatui is extremely fast, and streaming-tokens-into-three-panes rendering would be hard to keep tear-free in a GC'd runtime."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Where does my data live?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "On your machine. Conversation history is JSONL under data/conversations/. Genomes and Strains are YAML/JSON under data/. Memory is JSONL under data/memory/. The SQLite DB is purely an index and can be rebuilt from these files via lineage rebuild-index at any time. Files are the Source of Truth."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Is the agent autonomous? What about safety?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The Capability Plane runs in a tiered sandbox — Wasm/WASI in MVP, Linux namespace + seccomp + cgroups in Phase 1, MicroVM in Phase 2. Tool policy is per-Strain via genome weights: a Strain that doesn't list cli_execute in its allowlist literally cannot shell out. Browser automation goes through a dedicated Chromium profile and binds loopback-only."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What is a genome in Lineage?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "An immutable JSON snapshot of an Agent's prompts, planner config, and tool-policy weights. Genome is content-addressed by SHA-256; editing one creates a new Agent (a child) and the old one stays archived for replay. This makes the lineage auditable: you can always answer 'what changed?' by diffing parent vs child genomes."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Linux and macOS only?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes for now. Path/sandbox conventions assume POSIX (XDG dirs, flock, atomic-rename semantics). Windows lands in Phase 1 if there is demand. WSL 2 works today."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How do I delete everything Lineage stored?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Run: lineage telemetry disable usage --purge ; rm -rf $XDG_DATA_HOME/lineage $XDG_STATE_HOME/lineage $XDG_CONFIG_HOME/lineage $HOME/.local/bin/lineage. The first command deletes any uploaded events from the central PostHog and disables future uploads. The rm wipes your entire local install (data, state, config, binary) without leaving a single artifact."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Why not just use Claude Code, Cursor, or Copilot directly?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "You can, and you should — they are great. Lineage is for when you want the agents themselves to evolve over time based on evaluation. Claude Code is a tool; a Lineage Agent is a lineage node with a fitness history. If your only need is 'edit this file, fix this bug, write this test,' you don't need Lineage. If you want to tune which agent personalities succeed at which tasks across weeks, and have that selection happen mechanically rather than by gut, that is where Lineage starts to pay off."
+                }
+            }
+        ]
+    }
     </script>
 </head>
 <body>

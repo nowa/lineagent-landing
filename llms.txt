@@ -1,0 +1,335 @@
+# Lineage
+
+> Self-hosted multi-agent runtime where Agents evolve over time. You
+> describe a fuzzy goal in plain language; Lineage's Founder Agent
+> reads your codebase, designs the spec, writes the prompts, configures
+> the tool policy, and runs an offline evaluation before delivery.
+> Every conversation leaves an evaluable trail; only changes proven to
+> beat the current version are promoted to the next generation.
+> Built in Rust. Local-first by default. Files on your disk. Runs
+> across nine LLM providers including local open-source models.
+
+This file is a structured summary of Lineage for LLM ingest, following
+the [llms.txt convention](https://llmstxt.org). For the full marketing
+site, see https://www.lineagent.ai. For the source repository (license:
+proprietary, source-available), see https://github.com/nowa/lineage.
+
+## What Lineage is
+
+Lineage is a continuously-evolving multi-agent runtime built around
+four primitives:
+
+- **Strain** — a reusable agent template (e.g. coding, email,
+  browser-ops). Defines the eval contract and the boundary of which
+  tools an Agent in the family is allowed to use.
+- **Agent** — a working instance within a Strain. Each carries an
+  immutable genome snapshot, a parent reference, a generation number,
+  and a live fitness history. 4-state lifecycle:
+  `candidate → stable → deprecated → extinct`.
+- **Genome** — the agent's "source code" (prompts, planner config,
+  tool-policy weights), frozen as content-addressed JSON. Editing a
+  genome creates a new child Agent, never mutates the parent.
+- **Evolution** — CUSUM-triggered candidate generation → offline
+  evaluation → human-gate approval → Blue-Green swap → 7-day or
+  20-session observation window → auto-rollback on regression.
+
+Files are the Source of Truth; the SQLite DB is a materialized index
+that can be rebuilt from `data/` at any time via `lineage rebuild-index`.
+
+## Why Lineage exists
+
+Most agent products are static: every chat starts from zero, good runs
+leave no replicable trail, and the agent is no smarter on day 90 than
+on day 1. Lineage flips it — agents are products that compound.
+
+## What Lineage is NOT
+
+- Not a managed cloud service. Lineage is local-first; you self-host.
+- Not a closed agent ecosystem. Strain definitions, genomes, and
+  traces are JSON / YAML / JSONL on your disk — you can fork, share,
+  and re-import.
+- Not Windows-native (yet). Linux and macOS only as of MVP-A; WSL 2
+  works today; Windows native lands in Phase 1 if there's demand.
+- Not a thin wrapper around one LLM. Multi-provider by default with
+  the kernel doing the cross-provider work.
+
+## Install
+
+Pick whichever package manager you already use; all three channels
+ship the same release.
+
+```bash
+# Homebrew (macOS / Linux)
+brew install nowa/lineage/lineage
+
+# npm
+npm install -g @lineage/cli
+
+# Direct (curl)
+curl -fsSL https://www.lineagent.ai/install.sh | sh
+```
+
+Then verify:
+
+```bash
+lineage --version
+lineage status
+```
+
+## Quick start
+
+```bash
+$ cd ~/your-project
+$ lineage chat
+∴ lineage 0.117.x — pal ready
+
+> review the auth middleware for timing-attack risks
+
+  ● filesystem.read    crates/auth/src/middleware.rs
+  ● filesystem.grep    "compare|hmac|verify"  crates/auth/
+
+  Found one — line 47 compares HMAC tags with `==`, which short-
+  circuits on first byte mismatch. A sufficiently noisy attacker
+  can recover the tag byte-by-byte from response timing.
+
+  Constant-time compare via `subtle::ConstantTimeEq` would fix it.
+  Want me to write the patch and run the test suite?
+
+> yes, patch it
+
+  ● filesystem.edit    crates/auth/src/middleware.rs   (1 hunk)
+  ● cli.execute        cargo test -p auth --lib
+                       passed  17/17  in  3.4s
+
+  Done. Diff is ready to commit.
+```
+
+The first run walks you through provider setup
+(Anthropic / OpenAI / OpenAI-compat / Codex subscription), asks you
+to trust the project directory, and drops into the three-pane TUI.
+
+## Built-in Strains
+
+Lineage ships with six built-in Strains. Three are user-facing; three
+live inside the evolution pipeline.
+
+User-facing:
+- `pal` — your primary agent. Every request flows through pal first.
+- `explore` — read-only codebase navigator. Finds patterns, generates
+  reports, never modifies anything.
+- `founder` — system engineer. Designs new Strains, bootstraps Agents,
+  imports Skills. Use to extend the agent ecosystem itself.
+
+Evolution pipeline:
+- `analyzer` — diagnostic engine. Examines eval results, attributes
+  failures, decides which mutation operators to apply next.
+- `grader` — scores Agent outputs against EvalContract dimensions
+  with cited evidence.
+- `comparator` — blind judge. Compares two Agent outputs without
+  knowing which is the champion vs candidate.
+
+## Supported model providers (9)
+
+| Prefix | Provider |
+|---|---|
+| `claude-*` | Anthropic — Opus / Sonnet / Haiku 4.x |
+| `gpt-*` / `o3-*` / `o4-*` | OpenAI — Chat Completions, Responses API, Codex subscription with native attribution |
+| `deepseek-*` | DeepSeek — V3 / R1 |
+| `qwen*` | Qwen via DashScope — Qwen 3 / Max / Coder |
+| `moonshot-*` / `kimi-*` | Moonshot — Kimi K2 / Latest |
+| `groq` / `llama-*` / `mixtral-*` | Groq — LPU-hosted Llama / Mixtral / DeepSeek |
+| `openrouter/*` | OpenRouter — meta-router for 200+ models |
+| `minimax-*` | MiniMax — M2, abab |
+| `fireworks-*` | Fireworks AI — DeepSeek / Llama / Qwen on Fireworks infra |
+
+The same Agent runs unchanged on any of nine providers — kernel-level
+advisor pattern translates to each vendor's best-practice call
+(thinking blocks + cache_control on Anthropic, reasoning + structured
+outputs on OpenAI Responses, native attribution headers on Codex).
+
+## Agent Kernel — what makes it agentic
+
+Pure-computation Ports & Adapters core. Six capabilities wired in:
+
+- **Context engineering** — full canonical scope (system instructions,
+  project profile, recalled memory, conversation history, tool state,
+  few-shot exemplars) with explicit per-slot token budgets, assembled
+  by a deterministic `PromptCompiler`. Three field-recognized
+  techniques wired in by default: progressive disclosure
+  (`tool_search` / `memory_search` weight-tiering, ~90% token savings
+  on a fat catalog); just-in-time retrieval (per turn, not pre-loaded);
+  context offloading (bulky outputs persist to disk, window keeps a
+  reference). Conversations stream straight to JSONL on disk — a
+  crash mid-turn resumes mid-turn instead of starting over.
+
+- **Compaction** — three operations at three timescales:
+  Prune (every turn, zero LLM cost); Compact (window-near-budget,
+  LLM-assisted structured summary preserving goal / constraints /
+  decisions / next-step; full conversation archived as JSONL +
+  Markdown before compaction); Distill (section boundaries,
+  knowledge extraction). Cut points respect message boundaries —
+  never mid-tool-result, never mid-tool-call-batch.
+
+- **Memory — 4 tiers** — Conversation (live working set) → Project
+  (per-`project_key`) → Strain (cross-project domain expertise) →
+  Genome (immutable, fortified only by evolution). State-based
+  promotion (mem0-aligned): information moves up only on evidence,
+  never by leakage. Lower tiers are write-rate-bounded so a noisy
+  session can't drown the signal. All plain JSONL on your disk.
+
+- **Long-running tasks** — Task → Step → Job (ADR-053). Task state
+  lives on disk first (`data/tasks/{id}/task.json`), not in the
+  agent's head. A Step can pause for human review, resume after a
+  break, or hand off between Agents. A background watchdog raises
+  any Step that hasn't moved in N minutes.
+
+- **Prompt cache** — provider-side caching wired in by default
+  (Anthropic, OpenAI, DeepSeek, and any backend that exposes one).
+  Stable system prefix at the top, volatile context at the bottom.
+  Long sessions hit cache-read pricing on every repeat turn —
+  typically 70-90% off the per-token cost — automatic, no app code
+  changes.
+
+- **Advisor pattern, no Anthropic lock-in** — until now this was an
+  Anthropic-only capability baked into Claude Code. Lineage brings
+  it to any provider including open-source local models. Run a
+  cost-effective workhorse like `qwen-coder` or `deepseek-v3` for
+  the 90% of routine work; the kernel auto-escalates the hard cases
+  to a SOTA advisor (Claude Opus, GPT-5, etc.) on the same turn —
+  no manual model swap, no agent hand-off.
+
+## Tools shipped in the runtime
+
+- `filesystem` — read · write · edit · grep · glob · multi-edit,
+  scoped to the current `project_dir`.
+- `cli` — execute shell commands. Per-Strain allowlist (regex),
+  per-run sandbox tier, optional human-in-the-loop confirmation.
+- `delegate` — spawn or call another Agent (sync wait, async fire,
+  polling check). Sub-conversation has its own ExecutionTrace.
+- `browser` — Rust-native CDP client (agent-browser). Dedicated
+  Chromium profile, loopback-only control, no shared cookies.
+- `web` — fetch URL → Markdown (htmd), search via configured search
+  provider, RSS pull.
+- `memory` — strain-scoped JSONL memory: save · recall · forget.
+- `task` — create & manage long-running multi-step tasks.
+- `system` — introspect runtime: agent list, lineage tree, evolution
+  status (CUSUM signal, candidates in flight), cost ledger.
+- `schedule` / `file_watch` — cron-style scheduled triggers and
+  filesystem-change triggers.
+- `email` / `calendar` / `channel` — side-effect tools, idempotency-
+  keyed at the DB level — re-running the same call won't double-send.
+- `ask_user` / `checklist` / `progress` — conversational utilities.
+
+There is no MCP wall: every tool above is a Rust function behind a
+typed schema. MCP servers can be loaded as additional surfaces.
+
+## Telemetry & privacy
+
+Lineage ships anonymous usage telemetry default-on. We deliberately
+skipped the first-run consent prompt — every consent dialog you've
+seen in a CLI tool taught you to tap "no" on reflex, which means
+default-off telemetry measures only a self-selected sub-population
+and biases every product decision. Default-on with a kill-switch
+gives a representative sample while keeping you in control.
+
+What is collected: tool-call counts and names (never their arguments),
+turn durations, session lengths, error counts, Strain keys, Lineage
+version + OS/arch.
+
+What is never collected: filesystem paths, prompts, LLM responses,
+any tool input/output, source IPs (stripped at the Cloudflare edge
+before reaching PostHog), anything resembling personal data.
+
+Three opt-out paths:
+
+```bash
+# 1. Per-process env var (hot-disable for one invocation)
+LINEAGE_DISABLE_TELEMETRY=1 lineage chat
+
+# 2. Per-install (writes to lineage.toml)
+lineage telemetry disable usage
+
+# 3. Disable the local JSONL audit log specifically
+LINEAGE_DISABLE_LOCAL_TELEMETRY=1
+```
+
+Telemetry uploads land in our self-hosted PostHog instance at
+telemetry.lineagent.ai — not PostHog Cloud, not a third party.
+
+## How to delete everything
+
+```bash
+lineage telemetry disable usage --purge
+rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
+       "$XDG_CONFIG_HOME/lineage" "$HOME/.local/bin/lineage"
+```
+
+## FAQ snippets
+
+**Where does my data live?** On your machine. Conversation history is
+JSONL under `data/conversations/`. Genomes and Strains are YAML/JSON
+under `data/`. Memory is JSONL under `data/memory/`. SQLite DB is
+purely an index — rebuild with `lineage rebuild-index`. Files are
+the Source of Truth.
+
+**Why Rust?** Predictable latency, zero GC pauses on the hot path,
+mature tooling. The TUI especially benefits — Ratatui is fast and
+streaming-tokens-into-three-panes rendering would be hard to keep
+tear-free in a GC'd runtime.
+
+**Is the agent autonomous? What about safety?** The Capability Plane
+runs in a tiered sandbox — Wasm/WASI in MVP, Linux namespace +
+seccomp + cgroups in Phase 1, MicroVM in Phase 2. Tool policy is
+per-Strain via genome weights: a Strain that doesn't list `cli_execute`
+in its allowlist literally cannot shell out. Browser automation goes
+through a dedicated Chromium profile and binds loopback-only.
+
+**What's a "genome"?** An immutable JSON snapshot of an Agent's
+prompts, planner config, and tool-policy weights. Genome is content-
+addressed by SHA-256; editing one creates a new Agent (a child) and
+the old one stays archived for replay.
+
+**Linux / macOS only?** Yes for now. POSIX path/sandbox conventions
+(XDG dirs, flock, atomic-rename semantics). Windows lands in Phase 1
+if there's demand. WSL 2 works today.
+
+**Why not just use Claude Code / Cursor / Copilot directly?** You can,
+and you should — they're great. Lineage is for when you want the
+agents themselves to evolve over time based on evaluation. Claude
+Code is a tool; a Lineage Agent is a lineage node with a fitness
+history. If your only need is "edit this file, fix this bug, write
+this test," you don't need Lineage. If you want to tune which agent
+personalities succeed at which tasks across weeks, and have that
+selection happen mechanically rather than by gut, that's where
+Lineage starts to pay off.
+
+## Roadmap (April 2026)
+
+- **MVP-A** (current, 0.x.y): Single-user, SQLite (WAL), Three-Ring
+  composition, full Ratatui TUI, multi-provider LLM, 6 system Strains.
+- **MVP-B** (planned): Alpha for 50-200 users. AMP federation, Strain
+  publish/discover, DID identity, binary distribution. Includes the
+  weakly-decentralized evolution network — share evolved Strains and
+  Genomes peer-to-peer with friends, teammates, family.
+- **Phase 1**: Eval factory + Blue-Green promotion (ADR-060), Linux
+  namespace sandbox, Capability Node separation, TUI richer
+  visualizations (genome diff, trace viewer, fitness sparklines).
+- **Phase 2**: PostgreSQL, MicroVM sandbox, full Web UI, Skill
+  Marketplace, multi-user.
+
+## License
+
+Proprietary — source-available for transparency, audit, and
+contribution discussions, but not licensed for redistribution,
+modification, or derivative works without explicit written agreement.
+You may freely run the official Lineage binaries (Homebrew / npm /
+install.sh direct), self-host the telemetry stack (PostHog), and
+submit issues / PRs (which become licensed to the project under
+contribution terms).
+
+## Contact
+
+- Source: https://github.com/nowa/lineage
+- Issues: https://github.com/nowa/lineage/issues
+- Releases: https://github.com/nowa/lineage/releases
+- Site: https://www.lineagent.ai

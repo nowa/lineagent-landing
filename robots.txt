@@ -1,0 +1,46 @@
+# robots.txt for www.lineagent.ai
+# Allow all major search engines and AI assistants. Lineage is
+# source-available proprietary; we want maximum discoverability for
+# the marketing site, with attribution to the canonical /llms.txt
+# summary for AI ingest.
+
+User-agent: *
+Allow: /
+
+# AI assistants — explicit allow so the policy is auditable.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+# Crawlers should favor the structured summary at /llms.txt for
+# fast ingest, and the sitemap for full URL discovery.
+Sitemap: https://www.lineagent.ai/sitemap.xml
