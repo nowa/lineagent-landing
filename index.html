@@ -237,34 +237,74 @@
   █  █  █  </pre>
 
     <p class="hero-sub" lang="en">
-        Agents in Lineage are not disposable config files — they have
-        parents, generations, immutable genome records, and fitness
-        histories. Evaluation drives evolution; poor agents are
-        retired, strong ones reproduce.
+        Lineage lets Agents evolve like living organisms. They aren't
+        disposable config files — they have parents, generations,
+        immutable genome records, and fitness histories. Evaluation
+        drives evolution: the weak retire, the strong reproduce.
     </p>
     <p class="hero-sub" lang="zh">
-        Lineage 里的 Agent 不是一次性的配置文件 ——
-        每个 Agent 都有 parent、generation、不可变的 genome 记录、以及 fitness 历史。
-        评估驱动演化：表现差的 Agent 退场，表现好的 Agent 繁衍。
+        Lineage 让 Agent 像生命一样演化。它们不是一次性的配置文件 ——
+        有父代、世代、不可变的基因组记录和适应度历史。
+        评估驱动演化：弱者退役，强者繁衍。
     </p>
     <p class="hero-sub" lang="ja">
-        Lineage の Agent は使い捨ての設定ファイルではありません ——
-        親（parent）、世代（generation）、不変な genome レコード、
-        そして fitness 履歴を持ちます。評価が進化を駆動し、
-        パフォーマンスの低い Agent は退場し、優れた Agent が繁殖します。
+        Lineage は Agent を生命のように進化させます。
+        一度きりの設定ファイルではありません ——
+        親、世代、不変な genome レコード、適応度（fitness）の履歴を持ちます。
+        評価が進化を駆動し、弱者は退役し、強者は繁殖します。
     </p>
 
     <p class="hero-sub" lang="en">
-        Local-first. Self-hosted by default. Rust core + Ratatui TUI.
-        Three-channel install: brew, npm, or curl.
+        Tell the Founder Agent what you want, and it turns a fuzzy
+        idea into a high-quality Agent — running an offline evaluation
+        as part of creation. Each subsequent use leaves an evaluable
+        trail; only changes proven stronger are passed on to the next
+        generation. In parallel, reusable how-tos accumulate, and any
+        future Agent in the same domain inherits them.
     </p>
     <p class="hero-sub" lang="zh">
-        本地优先（local-first）。默认自托管。Rust 核心 + Ratatui TUI。
-        三种安装渠道：brew、npm、curl。
+        告诉 Founder Agent 你想要什么，它会帮你把模糊的想法变成高质量 Agent，
+        并在创建 Agent 时跑离线评估。
+        后续每次使用都留下可评估痕迹，被证实更强的改动才会传到下一代；
+        同时沉淀出可复用的 how-to，未来同领域的 Agent 都能继承。
     </p>
     <p class="hero-sub" lang="ja">
-        ローカルファースト。デフォルトでセルフホスト。
-        Rust コア + Ratatui TUI。インストール経路は 3 つ：brew、npm、curl。
+        Founder Agent にやってほしいことを伝えるだけ。
+        曖昧なアイデアを高品質な Agent に変え、Agent 作成時に
+        オフライン評価を実行します。以降の利用はすべて評価可能な痕跡を残し、
+        現在のバージョンより強いと証明された変更だけが次世代に受け継がれます。
+        同時に再利用可能な how-to が蓄積され、同じドメインの将来の Agent は
+        それを継承します。
+    </p>
+
+    <p class="hero-sub" lang="en">
+        The Agent Kernel is built for real work: long conversations
+        don't lose the goal, multi-day tasks resume after crashes,
+        prompt caching across providers saves 70-90% on tokens, and
+        the advisor pattern works on any base model.
+    </p>
+    <p class="hero-sub" lang="zh">
+        Agent Kernel 为真实工作设计：长对话不丢目标、跨天任务能续上、
+        跨 provider prompt cache 省 70-90% token、任意底模都可调用 advisor。
+    </p>
+    <p class="hero-sub" lang="ja">
+        Agent Kernel は実ワークロードのために設計 ——
+        長い会話でゴールを見失わない、複数日のタスクがクラッシュ後も再開、
+        プロバイダ越えのプロンプトキャッシュでトークンを 70-90% 節約、
+        任意のベースモデルで使える advisor パターン。
+    </p>
+
+    <p class="hero-sub" lang="en">
+        Local-first, self-hosted by default. Rust core + Ratatui TUI.
+        Three install channels: brew, npm, or curl.
+    </p>
+    <p class="hero-sub" lang="zh">
+        Local-first，默认自托管。Rust 内核 + Ratatui TUI。
+        brew、npm、curl 三种安装方式。
+    </p>
+    <p class="hero-sub" lang="ja">
+        ローカルファースト、デフォルトでセルフホスト。
+        Rust コア + Ratatui TUI。3 つのインストール方法：brew、npm、curl。
     </p>
 
     <div class="install-line">
@@ -1836,15 +1876,21 @@ rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
         var hash = (location.hash || '').replace('#', '').toLowerCase();
         if (SUPPORTED.indexOf(hash) !== -1) return hash;
 
-        // 2. localStorage (user's prior choice)
+        // 2. localStorage (user's prior choice on this device).
         try {
             var saved = localStorage.getItem(STORAGE_KEY);
             if (SUPPORTED.indexOf(saved) !== -1) return saved;
         } catch (e) { /* private mode, fall through */ }
 
-        // 3. Default English (was: navigator.language match — removed
-        //    so first-time visitors all land on English regardless of
-        //    OS locale; per-Lang switcher remains one click away).
+        // 3. Browser locale — match navigator.language prefix to one
+        //    of the supported locales. Auto-pick zh/ja for users whose
+        //    browsers report those locales; everything else falls
+        //    through to English.
+        var nav = (navigator.language || 'en').toLowerCase();
+        if (nav.indexOf('zh') === 0) return 'zh';
+        if (nav.indexOf('ja') === 0) return 'ja';
+
+        // 4. Default English.
         return 'en';
     }
 
