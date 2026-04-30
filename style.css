@@ -204,15 +204,25 @@ main {
 
 /* Brand mark in sidebar — small version of the same 5×11 ASCII pixel
  * art used by the TUI (theme::logo()). Rendered as <pre> so column
- * alignment survives whatever monospace font the OS picks. */
+ * alignment survives whatever monospace font the OS picks.
+ *
+ * Background MUST be transparent: the mark sits inside the sidebar
+ * (or hero) and is the brand identity itself, not a code block.
+ * Override the global <pre> dark-background rule below.
+ * Padding zeroed out for the same reason — the mark is a glyph,
+ * not a code listing. */
 .sidebar-mark {
     font-family: var(--font-mono);
     color: var(--brand);
+    background: transparent;
     font-weight: bold;
     font-size: calc(var(--scaling) * 9px);
     line-height: calc(var(--scaling) * 9px);
     letter-spacing: 0;
     margin: 0 0 calc(0.5 * var(--text-height)) 0;
+    padding: 0;
+    border-radius: 0;
+    overflow: visible;
     white-space: pre;
     user-select: none;
 }
@@ -424,17 +434,24 @@ pre code {
 }
 
 /* The 5×11 ASCII brand mark — same glyphs as crates/lineage/src/tui/theme.rs
- * LOGO_ROWS, scaled up. Center-aligned in the hero block.
+ * LOGO_ROWS, scaled up. Sits at the top of the hero block.
  * Important: white-space: pre + monospace + letter-spacing 0 to
- * preserve the pixel-grid alignment. */
+ * preserve the pixel-grid alignment.
+ *
+ * Background MUST be transparent (not the global <pre> dark bg).
+ * Padding zeroed: this is a glyph, not a code listing. */
 .hero-mark {
     font-family: var(--font-mono);
     color: var(--brand);
+    background: transparent;
     font-weight: bold;
     font-size: calc(var(--scaling) * 28px);
     line-height: calc(var(--scaling) * 28px);
     letter-spacing: 0;
     margin: 0 0 calc(1.2 * var(--text-height)) 0;
+    padding: 0;
+    border-radius: 0;
+    overflow: visible;
     white-space: pre;
     user-select: none;
 }
