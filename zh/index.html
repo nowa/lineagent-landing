@@ -23,7 +23,7 @@
     file paths: never translated.
   - Brand mark (5×11 ASCII pixel art) is the same across all three.
 -->
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -35,7 +35,7 @@
 
     <!-- Canonical URL — content lives at the root regardless of the
          active language (trilingual gating happens client-side). -->
-    <link rel="canonical" href="https://www.lineagent.ai/">
+    <link rel="canonical" href="https://www.lineagent.ai/zh/">
 
     <!-- Crawler hints. /llms.txt is a markdown summary aimed at AI
          assistants (ChatGPT / Claude / Perplexity); /sitemap.xml is
@@ -49,7 +49,7 @@
 
     <meta property="og:title" content="Lineage — Self-Hosted Multi-Agent Runtime in Rust">
     <meta property="og:description" content="Agents that evolve over time. Founder Agent designs from a fuzzy idea. Runs across 9 LLM providers including local open-source models.">
-    <meta property="og:url" content="https://www.lineagent.ai/">
+    <meta property="og:url" content="https://www.lineagent.ai/zh/">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Lineage">
     <meta property="og:image" content="https://www.lineagent.ai/og-image.svg">
@@ -237,8 +237,8 @@
                 </svg>
             </button>
             <ul class="dropdown-menu" role="menu">
-                <li><a href="/" data-lang-set="en" role="menuitem" aria-current="true"><span class="label">English</span></a></li>
-                <li><a href="/zh/" data-lang-set="zh" role="menuitem"><span class="label">简体中文</span></a></li>
+                <li><a href="/" data-lang-set="en" role="menuitem"><span class="label">English</span></a></li>
+                <li><a href="/zh/" data-lang-set="zh" role="menuitem" aria-current="true"><span class="label">简体中文</span></a></li>
                 <li><a href="/ja/" data-lang-set="ja" role="menuitem"><span class="label">日本語</span></a></li>
             </ul>
         </div>
@@ -295,55 +295,55 @@
     <nav class="sidebar-nav">
         <ul>
             <li><a href="#install">
-                <span lang="en">Install</span>
                 
+                <span lang="zh">安装</span>
                 
             </a></li>
             <li><a href="#what">
-                <span lang="en">What is Lineage?</span>
                 
+                <span lang="zh">Lineage 是什么？</span>
                 
             </a></li>
             <li><a href="#quickstart">
-                <span lang="en">Quick start</span>
                 
+                <span lang="zh">快速开始</span>
                 
             </a></li>
             <li><a href="#models">
-                <span lang="en">Models &amp; Strains</span>
                 
+                <span lang="zh">模型与 Strain</span>
                 
             </a></li>
             <li><a href="#tools">
-                <span lang="en">Tools</span>
                 
+                <span lang="zh">Tools</span>
                 
             </a></li>
             <li><a href="#kernel">
-                <span lang="en">Agent Kernel</span>
                 
+                <span lang="zh">Agent Kernel</span>
                 
             </a></li>
             <li><a href="#self-update">
-                <span lang="en">Self-update</span>
                 
+                <span lang="zh">自更新</span>
                 
             </a></li>
             <li><a href="#telemetry">
-                <span lang="en">Telemetry &amp; privacy</span>
                 
+                <span lang="zh">遥测与隐私</span>
                 
             </a></li>
             <li><a href="#faq">
-                <span lang="en">FAQ</span>
                 
+                <span lang="zh">常见问题</span>
                 
             </a></li>
         </ul>
     </nav>
 
     <footer class="sidebar-footer">
-        <p>© 2026 Lineage. <span lang="en">All rights reserved.</span></p>
+        <p>© 2026 Lineage. <span lang="zh">保留所有权利。</span></p>
     </footer>
 </aside>
 
@@ -354,8 +354,8 @@
      install one-liner. The two former CTA buttons are gone — the
      sidebar nav already covers Install / What is this navigation. -->
 <section id="home" class="hero">
-    <h1 class="hero-tagline" lang="en">An evolution-native multi-agent runtime.</h1>
     
+    <h1 class="hero-tagline" lang="zh">一个原生支持演化的多 Agent 运行时。</h1>
     
 
 <pre class="hero-mark" aria-hidden="true">  ███████
@@ -364,46 +364,41 @@
   ███████
   █  █  █  </pre>
 
-    <p class="hero-sub" lang="en">
-        Lineage lets Agents evolve like living organisms. They aren't
-        disposable config files — they have parents, generations,
-        immutable genome records, and fitness histories. Evaluation
-        drives evolution: the weak retire, the strong reproduce.
-    </p>
     
+    <p class="hero-sub" lang="zh">
+        Lineage 让 Agent 像生命一样演化。它们不是一次性的配置文件 ——
+        有父代、世代、不可变的基因组记录和适应度历史。
+        评估驱动演化：弱者退役，强者繁衍。
+    </p>
     
 
-    <p class="hero-sub" lang="en">
-        Tell the Founder Agent what you want, and it turns a fuzzy
-        idea into a high-quality Agent — running an offline evaluation
-        as part of creation. Each subsequent use leaves an evaluable
-        trail; only changes proven stronger are passed on to the next
-        generation. In parallel, reusable how-tos accumulate, and any
-        future Agent in the same domain inherits them.
-    </p>
     
+    <p class="hero-sub" lang="zh">
+        告诉 Founder Agent 你想要什么，它会帮你把模糊的想法变成高质量 Agent，
+        并在创建 Agent 时跑离线评估。
+        后续每次使用都留下可评估痕迹，被证实更强的改动才会传到下一代；
+        同时沉淀出可复用的 how-to，未来同领域的 Agent 都能继承。
+    </p>
     
 
-    <p class="hero-sub" lang="en">
-        The Agent Kernel is built for real work: long conversations
-        don't lose the goal, multi-day tasks resume after crashes,
-        prompt caching across providers saves 70-90% on tokens, and
-        the advisor pattern works on any base model.
-    </p>
     
+    <p class="hero-sub" lang="zh">
+        Agent Kernel 为真实工作设计：长对话不丢目标、跨天任务能续上、
+        跨 provider prompt cache 省 70-90% token、任意底模都可调用 advisor。
+    </p>
     
 
-    <p class="hero-sub" lang="en">
-        Local-first, self-hosted by default. Rust core + Ratatui TUI.
-        Three install channels: brew, npm, or curl.
-    </p>
     
+    <p class="hero-sub" lang="zh">
+        Local-first，默认自托管。Rust 内核 + Ratatui TUI。
+        brew、npm、curl 三种安装方式。
+    </p>
     
 
     <div class="install-line">
         <code>curl -fsSL https://www.lineagent.ai/install.sh | sh</code>
         <button type="button" class="copy-btn" data-copy="curl -fsSL https://www.lineagent.ai/install.sh | sh">
-            <span lang="en">copy</span>
+            <span lang="zh">复制</span>
         </button>
     </div>
 </section>
@@ -411,51 +406,48 @@
 
 <!-- Install ──────────────────────────────────────────────────────── -->
 <section id="install">
-<h2 lang="en">Install<a class="headerlink" href="#install">#</a></h2>
+
+<h2 lang="zh">安装<a class="headerlink" href="#install">#</a></h2>
 
 
 
-<p lang="en">
-    Pick whichever package manager you already use. All three
-    channels ship the same release — same semver, same binary, same
-    self-update behavior. Choose by familiarity.
+<p lang="zh">
+    选你已经在用的那个包管理器即可。三条渠道发的是同一个 release ——
+    同一个 semver、同一个二进制、同一套自更新行为。按熟悉程度选就行。
 </p>
 
 
 
-<h3 lang="en">Homebrew (macOS &amp; Linux)</h3>
-
+<h3 lang="zh">Homebrew（macOS 与 Linux）</h3>
 
 <pre><code>brew install nowa/lineage/lineage</code></pre>
 
 <h3>npm</h3>
 <pre><code>npm install -g @lineage/cli</code></pre>
 
-<h3 lang="en">Direct (curl)</h3>
 
+<h3 lang="zh">直装（curl）</h3>
 
 <pre><code>curl -fsSL https://www.lineagent.ai/install.sh | sh</code></pre>
 
-<p lang="en">
-    The installer downloads a per-platform tarball, verifies its
-    SHA-256 against a published <code>checksums.txt</code>, and
-    drops <code>lineage</code> into <code>~/.local/bin</code>. It
-    refuses to run as root and warns you if <code>~/.local/bin</code>
-    isn't on your <code>$PATH</code>.
+
+<p lang="zh">
+    安装脚本会下载对应平台的 tarball，对照公开的 <code>checksums.txt</code>
+    校验 SHA-256，然后把 <code>lineage</code> 放到 <code>~/.local/bin</code>。
+    它拒绝以 root 身份运行；如果 <code>~/.local/bin</code> 不在你的
+    <code>$PATH</code> 里，会给出提示。
 </p>
 
 
 
-<p lang="en">Verify:</p>
-
+<p lang="zh">验证：</p>
 
 <pre><code>lineage --version
 lineage status</code></pre>
 
 <div class="callout">
-    <p lang="en"><strong>Windows</strong> is not yet supported. Use WSL 2 with
-    a recent Ubuntu rootfs in the meantime.</p>
     
+    <p lang="zh"><strong>Windows</strong> 暂未支持。在此之前请用 WSL 2 + 较新的 Ubuntu rootfs。</p>
     
 </div>
 </section>
@@ -463,197 +455,176 @@ lineage status</code></pre>
 
 <!-- What is Lineage? ─────────────────────────────────────────────── -->
 <section id="what">
-<h2 lang="en">What is Lineage?<a class="headerlink" href="#what">#</a></h2>
+
+<h2 lang="zh">Lineage 是什么？<a class="headerlink" href="#what">#</a></h2>
 
 
 
-<p lang="en">
-    <strong>Lineage is a system where your Agents grow up on their own.</strong>
+<p lang="zh">
+    <strong>Lineage 是一个让 Agent 自己长大的系统。</strong>
 </p>
 
 
 
-<p lang="en">
-    You don't need to write YAML and you don't need to know prompt
-    engineering. Tell Lineage what you want — "help me triage SRE
-    incidents," "write better release notes" — and the Founder Agent
-    reads your codebase, designs the spec, writes the prompts,
-    configures the tool policy, and runs an offline evaluation
-    before delivery. The grunt work between a fuzzy idea and a
-    usable Agent — Lineage does it for you.
+<p lang="zh">
+    你不需要写 YAML，也不需要懂 prompt engineering。
+    告诉它你想要什么 —— "帮我处理 SRE 事故分级"、"写更好的 release notes" ——
+    Founder Agent 会读你的代码库、设计规格、写 prompt、配工具策略，
+    并在交付之前先跑一次离线评估。
+    从模糊的想法到一个可用的 Agent，中间那段苦力活，Lineage 替你做了。
 </p>
 
 
 
-<p lang="en">
-    More importantly, it doesn't stop at version one. Every
-    conversation leaves an evaluable trail. Lineage notices what
-    worked and what didn't, proposes refinements automatically,
-    safely re-runs them against past traces, and only ships the
-    changes proven to beat the current version. The Agent itself
-    gets more precise — sharper prompts, tighter tool policy ——
-    while its "playbook" grows alongside: every trial-and-error
-    becomes a reusable how-to that any future Agent in the same
-    domain inherits. The Agent learns, and the team's collective
-    knowledge accrues.
+<p lang="zh">
+    更关键的是它不会停在第一个版本。每次对话都留下可评估的痕迹，
+    Lineage 会观察什么有效、什么没效，自动提出改进，
+    在历史 trace 上安全复跑，只把"被证实比当前版本更强"的改动发上去。
+    Agent 本身在变精准 —— prompt 更准、工具策略更紧；
+    同时它的"工作手册"也在变厚 ——
+    每次试错沉淀成可复用的 how-to，同领域的未来 Agent 都能继承。
+    Agent 在学，团队的集体知识也在累积。
 </p>
 
 
 
-<p lang="en">
-    Underneath, the Agent Kernel is built for real work: long
-    conversations don't lose the goal, multi-day tasks survive
-    crashes and resume mid-flight, the full context-engineering
-    toolkit is on by default, automatic prompt caching across
-    providers saves 70-90% on tokens, and the advisor pattern
-    works on any base model — run a cheap workhorse day-to-day,
-    hand the hard problems to Opus or GPT-5. On agentic benchmarks,
-    Lineage averages about +15% task pass rate and ~30% fewer
-    tokens per successful task vs. Hermes and Claude Code.
+<p lang="zh">
+    底层的 Agent Kernel 是为真实工作设计的：长对话不丢目标、
+    跨天任务崩溃后能续上、完整的上下文工程默认全开、
+    跨 provider 自动 prompt cache 省 70-90% token、
+    以及任意底模都可调用的 advisor 模式 ——
+    日常跑便宜模型，硬骨头交给 Opus 或 GPT-5。
+    在 agentic benchmark 上，Lineage 的任务通过率比 Hermes、Claude Code
+    平均高约 15%，单次消耗 token 少约 30%。
 </p>
 
 
 
-<p lang="en"><strong>Eight things Lineage does that most agent products don't:</strong></p>
+<p lang="zh"><strong>Lineage 做了八件别家产品没做的事：</strong></p>
 
 
 
-<ul lang="en">
-    <li><strong>High-quality Agents from a fuzzy idea.</strong> Tell
-        Lineage roughly what you want — "I need an agent for SRE
-        incident triage" or "help me write better release notes."
-        Lineage's Founder Agent reads your codebase, designs the
-        spec, writes the prompts and tool policy, and runs an offline
-        evaluation before the new Agent is ever exposed to you. You
-        don't write YAML; you describe the job.</li>
-    <li><strong>Your agents get better the more you use them.</strong>
-        Every conversation leaves an evaluable trail. Lineage notices
-        what worked and what didn't, proposes refinements, safely
-        re-runs them against past traces, and only ships changes
-        that beat the current Agent. You don't tune prompts every
-        Friday — Lineage does, and you approve the result.</li>
-    <li><strong>Two ways your agents grow.</strong> The agent itself
-        gets sharper — better prompts, tighter tool policy — but
-        only after each change passes evaluation; only the proven
-        ones are passed down to the next generation. Separately,
-        the agent's <em>playbook</em> grows: hard-won lessons get
-        written down as reusable how-tos any future Agent in the
-        same domain inherits. The agent learning + the team's
-        collective knowledge growing, at the same time.</li>
-    <li><strong>Fits the way you already work.</strong> Two modes,
-        both on at once: a <strong>personal mode</strong> that
-        follows you everywhere (à la OpenClaw — your habits, your
-        memory, your shortcuts, regardless of which folder you're
-        in) and a <strong>project mode</strong> that respects
-        per-project boundaries (à la Claude Code — each codebase
-        has its own memory, trust state, and rules). No toggle to
-        flip.</li>
-    <li><strong>Best-in-class agentic reasoning.</strong> Lineage's
-        Agent Kernel is engineered for the parts that decide who
-        actually gets work done: long conversations that don't lose
-        the goal, multi-day tasks that survive crashes and resumes,
-        the full context-engineering scope (progressive disclosure +
-        just-in-time retrieval + context offloading) wired in by
-        default, automatic prompt caching across providers (70-90%
-        token savings on repeat work), and the advisor pattern that
-        was Claude-Code-only until now. Head-to-head against Hermes
-        and Claude Code on agentic benchmarks, Lineage averages about
-        +15% task pass rate and ~30% fewer tokens per successful task.</li>
-    <li><strong>Permissions that match how you actually trust software.</strong>
-        Three layers of override that mirror real life: a global
-        default ("on this laptop, never let agents run sudo"), a
-        per-project tightening ("inside this client repo, also
-        never touch <code>.env</code>"), and a personal/local
-        layer ("on my own machine, allow X for testing"). All three
-        are plain JSON files you can read and revert — nothing
-        hidden in a settings UI.</li>
-    <li><strong>Advisor on tap, on any model.</strong> Run a fast,
-        cost-balanced workhorse day-to-day; when the kernel hits a
-        hard problem, it asks a stronger advisor on the same turn —
-        Claude Opus, GPT-5, or whichever you've configured. Until
-        now this was a Claude-Code-only superpower; Lineage delivers
-        it on top of any model, including open-source ones running
-        on your laptop.</li>
-    <li><strong>Coming soon: share evolved agents with people you trust.</strong>
-        AMP (Agent Marketplace Protocol) is a peer-to-peer way to
-        send your evolved Strains and Genomes to friends,
-        teammates, or family — like sharing a Spotify playlist of
-        agents you've trained. Their evaluation feedback flows back
-        to you. No central authority deciding which agents live;
-        the network grows by trust, not by leaderboard. Public
-        timeline: MVP-B Alpha.</li>
+<ul lang="zh">
+    <li><strong>再模糊的想法，也能造出高质量 Agent。</strong>
+        告诉 Lineage 你大概想要什么 ——
+        "我需要一个处理 SRE 事故分级的 Agent"、
+        "帮我写更好的 release notes" —— Lineage 的 Founder Agent
+        会读你的代码库、设计这个 Agent 的规格、写好 prompt 和工具策略，
+        并在它出现在你面前之前先跑一次离线评估。
+        你不需要写 YAML，只需要描述这个 Agent 该做什么工作。</li>
+    <li><strong>越用越好用。</strong>每一次对话都留下可评估的痕迹。
+        Lineage 会注意到什么有效、什么没效，提出改进方案，
+        在历史 trace 上安全地复跑一遍评估，
+        只把"比当前版本更强"的改进发上去。
+        你不需要每周五去调一次 prompt —— Lineage 在调，你只需要 approve。</li>
+    <li><strong>两种方式让你的 Agent 成长。</strong>Agent 本身的表现会越来越精准 ——
+        prompt 更准、工具策略更紧 ——
+        但每个改动都得通过评估，只有被证实更好的那部分才会传到下一代。
+        另外，Agent 的"工作手册"也在变厚 ——
+        每次试错沉淀下来的方法被写成可复用的 how-to，
+        同领域的任何未来 Agent 都能继承。
+        既是 Agent 在学，也是团队集体知识在累积，两件事同时发生。</li>
+    <li><strong>按你已有的工作习惯来。</strong>两种模式同时在跑：
+        一个 <strong>personal 模式</strong>跟着你走
+        （类似 OpenClaw —— 你的习惯、你的记忆、你的快捷方式，
+        和你在哪个目录无关）；一个 <strong>project 模式</strong>
+        尊重每个项目的边界（类似 Claude Code ——
+        每个代码仓有自己的 memory、信任状态、规则）。
+        不需要你来回切，两边都开着。</li>
+    <li><strong>业内最强的 agentic 推理能力。</strong>Lineage 的
+        Agent Kernel 在那些 "决定谁真能干活" 的环节上是为最佳表现设计的：
+        长对话不丢目标、跨天任务能在崩溃后续上、
+        完整的上下文工程能力（渐进式披露 + just-in-time 检索 +
+        上下文卸载）默认全开、跨 provider 自动 prompt cache
+        （重复工作上省 70-90% token）、以及之前只有 Claude Code
+        才有的 advisor 模式。在 agentic benchmark 上和 Hermes、
+        Claude Code 同场对比，Lineage 任务通过率平均高出约 15%，
+        单次成功消耗 token 少约 30%。</li>
+    <li><strong>像信任软件那样自然地控权限。</strong>三层 override，
+        和你日常的信任习惯对齐 ——
+        全局默认（"在这台电脑上，永远不允许 Agent 跑 sudo"）、
+        项目级再收紧（"在这个客户仓里，也别动 <code>.env</code>"）、
+        个人/本地层（"我自己机器上，让 X 通过用于测试"）。
+        三层都是你能看见、能回退的纯 JSON 文件 ——
+        没有什么藏在设置 UI 里的东西。</li>
+    <li><strong>任何模型都能用 advisor。</strong>日常跑一个快又便宜的主力模型，
+        遇到硬骨头，kernel 会在同一轮里问一个更强的 advisor ——
+        Claude Opus、GPT-5、或你配置的任何模型。
+        这之前是 Claude Code 自家产品独有的能力 ——
+        Lineage 把它加在任意底模上，含你笔记本上跑的开源模型。</li>
+    <li><strong>即将到来：把演化好的 Agent 分享给你信任的人。</strong>
+        AMP（Agent Marketplace Protocol）是一种点对点的方式，
+        让你把演化出来的 Strain 和 Genome 直接发给朋友、同事、家人 ——
+        就像分享一份你训出来的 Agent 歌单一样。
+        他们的评估反馈也会流回来。
+        没有中心权威决定哪个 Agent 该活下来 ——
+        网络靠信任长大，不靠排行榜。计划：MVP-B Alpha。</li>
 </ul>
 
 
 
-<p lang="en"><strong>The four primitives</strong> that make this work:</p>
-
+<p lang="zh"><strong>支撑这一切的四个原语：</strong></p>
 
 
 <div class="concept-grid">
     <div>
         <h3>Strain</h3>
-        <p lang="en">A reusable agent template — coding, email, browser-ops.
-        Defines which tools an agent in this family is allowed to
-        touch and how it'll be evaluated. Forking a Strain is how you
-        customize Lineage to your domain without losing the evolution
-        machinery.</p>
         
+        <p lang="zh">可复用的 Agent 模板 —— 编码、邮件、浏览器自动化。
+        定义这个族里的 Agent 能用哪些 tool、怎么被评估。
+        想把 Lineage 适配到你自己的领域，fork 一个 Strain 就行 ——
+        演化机制照旧。</p>
         
     </div>
     <div>
         <h3>Agent</h3>
-        <p lang="en">A working instance — your actual pal, explore, founder.
-        Each carries an immutable genome snapshot, a parent reference,
-        a generation number, and a live fitness history. Lifecycle is
-        4-state: <code>candidate → stable → deprecated → extinct</code> —
-        so retirement and rollback are first-class operations, not improvised.</p>
         
+        <p lang="zh">具体在跑的实例 —— 你能用的 pal、explore、founder 本体。
+        每一个都带着不可变的 genome 快照、parent 引用、世代号、
+        持续记录的 fitness 历史。生命周期 4 状态：
+        <code>candidate → stable → deprecated → extinct</code> ——
+        退役和回滚是头等公民，不是临时凑出来的。</p>
         
     </div>
     <div>
         <h3>Genome</h3>
-        <p lang="en">The agent's source code — prompts, planner config,
-        tool-policy weights — frozen as content-addressed JSON. Editing
-        a genome creates a new child Agent, never mutates the parent.
-        That's what makes "why did the agent change?" answerable by
-        a diff.</p>
         
+        <p lang="zh">Agent 的"源代码"—— prompt、planner 配置、tool-policy 权重 ——
+        冻结成内容寻址的 JSON。编辑 genome 会产生一个新的子 Agent，
+        永远不会改父代。所以"为什么这个 Agent 变了？"这个问题，
+        永远能用一次 diff 答出来。</p>
         
     </div>
     <div>
         <h3>Evolution</h3>
-        <p lang="en">The closed loop other tools don't have. CUSUM watches
-        the live quality signal → mutate → offline eval → human gate →
-        Blue-Green swap → 7-day observation window → auto-rollback on
-        regression. Selection is mechanical and reversible, not vibe-based.</p>
         
+        <p lang="zh">别家工具没有的闭环。CUSUM 监控线上质量信号 → 变异 → 离线评估
+        → 人工 gate → Blue-Green 切换 → 7 天观察窗 → 检测到回归自动回滚。
+        选择是机械化、可回滚的，而不是凭感觉。</p>
         
     </div>
 </div>
 
-<p lang="en">
-    Underneath, Lineage runs as four cooperating subsystems. A request
-    enters <strong>Control</strong>, executes inside the
-    <strong>AgentKernel</strong>, draws on <strong>Capability</strong>
-    for tools and memory, and is observed by the
-    <strong>Evolution</strong> loop. Same shape whether the request
-    comes from your terminal, an IM channel, or the API.
+
+<p lang="zh">
+    底下跑的是四个协作子系统。一个请求从 <strong>Control</strong> 进来，
+    在 <strong>AgentKernel</strong> 里执行，从 <strong>Capability</strong>
+    取工具和记忆，由 <strong>Evolution</strong> 循环观察 ——
+    无论请求来自你的终端、IM 频道，还是 API，结构都一样。
 </p>
 
 
-
 <svg class="arch-svg" viewBox="0 0 760 610" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="arch-svg-title">
-    <title id="arch-svg-title" lang="en">Lineage four subsystems</title>
     
+    <title id="arch-svg-title" lang="zh">Lineage 四个子系统</title>
     
 
     <!-- Layer 1: Control ─────────────────────────────────────────── -->
     <g>
         <rect class="layer--control" width="760" height="130" rx="16" />
         <text x="20" y="34" font-size="17" font-weight="700" class="title--control">1. Control</text>
-        <text x="110" y="34" font-size="13" class="desc--control" lang="en">Ingress &amp; routing</text>
         
+        <text x="110" y="34" font-size="13" class="desc--control" lang="zh">入口与路由</text>
         
 
         <g transform="translate(20, 50)">
@@ -669,8 +640,8 @@ lineage status</code></pre>
         <g transform="translate(386, 50)">
             <rect class="sub--control" width="170" height="68" rx="10" stroke-width="1" />
             <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--control">Auth</text>
-            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--control" lang="en">token · session</text>
             
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--control" lang="zh">令牌 · 会话</text>
             
         </g>
         <g transform="translate(569, 50)">
@@ -688,8 +659,8 @@ lineage status</code></pre>
     <g transform="translate(0, 160)">
         <rect class="layer--execution" width="760" height="130" rx="16" />
         <text x="20" y="34" font-size="17" font-weight="700" class="title--execution">2. Execution</text>
-        <text x="123" y="34" font-size="13" class="desc--execution" lang="en">Pure compute core</text>
         
+        <text x="123" y="34" font-size="13" class="desc--execution" lang="zh">纯计算内核</text>
         
 
         <g transform="translate(20, 50)">
@@ -700,8 +671,8 @@ lineage status</code></pre>
         <g transform="translate(203, 50)">
             <rect class="sub--execution" width="170" height="68" rx="10" stroke-width="1" />
             <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--execution">Compose</text>
-            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--execution" lang="en">turn pipeline</text>
             
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--execution" lang="zh">Turn 流水线</text>
             
         </g>
         <g transform="translate(386, 50)">
@@ -712,8 +683,8 @@ lineage status</code></pre>
         <g transform="translate(569, 50)">
             <rect class="sub--execution" width="170" height="68" rx="10" stroke-width="1" />
             <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--execution">Streaming</text>
-            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--execution" lang="en">tokens + events</text>
             
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--execution" lang="zh">token + 事件</text>
             
         </g>
     </g>
@@ -726,8 +697,8 @@ lineage status</code></pre>
     <g transform="translate(0, 320)">
         <rect class="layer--capability" width="760" height="130" rx="16" />
         <text x="20" y="34" font-size="17" font-weight="700" class="title--capability">3. Capability</text>
-        <text x="135" y="34" font-size="13" class="desc--capability" lang="en">Tools, skills, memory</text>
         
+        <text x="135" y="34" font-size="13" class="desc--capability" lang="zh">工具、技能、记忆</text>
         
 
         <g transform="translate(20, 50)">
@@ -738,8 +709,8 @@ lineage status</code></pre>
         <g transform="translate(203, 50)">
             <rect class="sub--capability" width="170" height="68" rx="10" stroke-width="1" />
             <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--capability">Skills</text>
-            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--capability" lang="en">recallable how-tos</text>
             
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--capability" lang="zh">可调用的方法集</text>
             
         </g>
         <g transform="translate(386, 50)">
@@ -750,8 +721,8 @@ lineage status</code></pre>
         <g transform="translate(569, 50)">
             <rect class="sub--capability" width="170" height="68" rx="10" stroke-width="1" />
             <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--capability">Memory</text>
-            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--capability" lang="en">4-tier</text>
             
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--capability" lang="zh">四层记忆</text>
             
         </g>
     </g>
@@ -764,46 +735,46 @@ lineage status</code></pre>
     <g transform="translate(0, 480)">
         <rect class="layer--evolution" width="760" height="130" rx="16" />
         <text x="20" y="34" font-size="17" font-weight="700" class="title--evolution">4. Evolution</text>
-        <text x="124" y="34" font-size="13" class="desc--evolution" lang="en">Eval-driven selection</text>
         
+        <text x="124" y="34" font-size="13" class="desc--evolution" lang="zh">评估驱动的选择</text>
         
 
         <g transform="translate(20, 50)">
             <rect class="sub--evolution" width="170" height="68" rx="10" stroke-width="1" />
             <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--evolution">Eval</text>
-            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="en">offline + live</text>
             
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="zh">离线 + 在线</text>
             
         </g>
         <g transform="translate(203, 50)">
             <rect class="sub--evolution" width="170" height="68" rx="10" stroke-width="1" />
             <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--evolution">CUSUM</text>
-            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="en">regression trigger</text>
             
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="zh">回归触发器</text>
             
         </g>
         <g transform="translate(386, 50)">
             <rect class="sub--evolution" width="170" height="68" rx="10" stroke-width="1" />
             <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--evolution">Mutation</text>
-            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="en">genome ops</text>
             
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="zh">Genome 变异</text>
             
         </g>
         <g transform="translate(569, 50)">
             <rect class="sub--evolution" width="170" height="68" rx="10" stroke-width="1" />
             <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--evolution">Blue-Green</text>
-            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="en">auto-rollback</text>
             
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="zh">自动回滚</text>
             
         </g>
     </g>
 </svg>
 
-<p lang="en">
-    Files are the Source of Truth; the SQLite DB is a materialized
-    index that can be rebuilt from <code>data/</code> at any time.
-</p>
 
+<p lang="zh">
+    文件是 Source of Truth；SQLite DB 只是物化索引，
+    任何时候都可以从 <code>data/</code> 重建。
+</p>
 
 
 </section>
@@ -811,15 +782,14 @@ lineage status</code></pre>
 
 <!-- Quick start ──────────────────────────────────────────────────── -->
 <section id="quickstart">
-<h2 lang="en">Quick start<a class="headerlink" href="#quickstart">#</a></h2>
+
+<h2 lang="zh">快速开始<a class="headerlink" href="#quickstart">#</a></h2>
 
 
 
-<p lang="en">
-    Lineage is a TUI-first product. Drop into a project directory
-    and run <code>lineage chat</code>:
+<p lang="zh">
+    Lineage 是 TUI 优先的产品。进到一个项目目录，跑 <code>lineage chat</code>：
 </p>
-
 
 
 <pre><code>$ cd ~/your-project
@@ -846,158 +816,147 @@ $ lineage chat
 
   Done. Diff is ready to commit.</code></pre>
 
-<p lang="en">
-    The first run walks you through provider setup
-    (Anthropic / OpenAI / OpenAI-compat / Codex subscription),
-    asks you to trust the project directory, and then drops into
-    the three-pane chat layout — conversation in the middle,
-    status bar at the bottom, optional context pane on the side.
+
+<p lang="zh">
+    首次运行会引导你完成 provider 配置
+    （Anthropic / OpenAI / OpenAI-compat / Codex 订阅），
+    询问是否信任当前项目目录，然后进入三栏聊天布局 ——
+    中间是会话，底部是状态栏，侧边可选上下文面板。
 </p>
 
 
 
-<p lang="en">
-    Sessions are persistent. Run <code>lineage chat --resume</code>
-    to pick up where you left off. Run <code>lineage agents</code>
-    to list lineage trees, <code>lineage cost</code> to see token
-    spend, <code>lineage soul</code> to edit the active strain's
-    personality.
+<p lang="zh">
+    会话是持久化的。<code>lineage chat --resume</code> 接续上次对话。
+    <code>lineage agents</code> 列出系谱树；
+    <code>lineage cost</code> 查看 token 花费；
+    <code>lineage soul</code> 编辑当前 strain 的人格设定。
 </p>
-
 
 </section>
 
 
 <!-- Models & built-in Strains ─────────────────────────────────────── -->
 <section id="models">
-<h2 lang="en">Models &amp; built-in Strains<a class="headerlink" href="#models">#</a></h2>
+
+<h2 lang="zh">支持的模型与内置 Strain<a class="headerlink" href="#models">#</a></h2>
 
 
 
-<h3 lang="en">Supported model providers</h3>
+<h3 lang="zh">支持的模型 provider</h3>
 
 
 
-<p lang="en">
-    Lineage talks to LLMs through a multi-provider registry. You
-    configure any subset; routing happens by model-name prefix.
-    Mix and match per Strain — pal can run on Claude Sonnet while
-    explore runs on a cheaper Qwen, all in the same session.
+<p lang="zh">
+    Lineage 通过多 provider 注册表对接 LLM。你配置哪些 provider 都行，
+    路由按模型名前缀走。一个 Strain 用一种模型 —— 比如 pal 跑 Claude Sonnet，
+    explore 跑更便宜的 Qwen，同一个会话里混搭。
 </p>
-
 
 
 <dl class="provider-list">
     <dt><code>claude-*</code></dt>
-    <dd lang="en">Anthropic — Claude Opus / Sonnet / Haiku 4.x family.</dd>
     
+    <dd lang="zh">Anthropic —— Claude Opus / Sonnet / Haiku 4.x 系列。</dd>
     
 
     <dt><code>gpt-*</code> / <code>o3-*</code> / <code>o4-*</code></dt>
-    <dd lang="en">OpenAI — Chat Completions and Responses API. Plus
-        OpenAI Codex subscription with native attribution
-        (browser-OAuth pairing, no API key needed).</dd>
     
+    <dd lang="zh">OpenAI —— Chat Completions 与 Responses API。
+        外加 OpenAI Codex 订阅（原生归属，浏览器 OAuth 配对，
+        不需要 API key）。</dd>
     
 
     <dt><code>deepseek-*</code></dt>
-    <dd lang="en">DeepSeek — V3 / R1 family.</dd>
     
+    <dd lang="zh">DeepSeek —— V3 / R1 系列。</dd>
     
 
     <dt><code>qwen*</code></dt>
-    <dd lang="en">Qwen via DashScope — Qwen 3 / Qwen Max / Qwen Coder.</dd>
     
+    <dd lang="zh">Qwen（走 DashScope）—— Qwen 3 / Qwen Max / Qwen Coder。</dd>
     
 
     <dt><code>moonshot-*</code> / <code>kimi-*</code></dt>
-    <dd lang="en">Moonshot — Kimi K2 / Kimi Latest.</dd>
     
+    <dd lang="zh">Moonshot —— Kimi K2 / Kimi Latest。</dd>
     
 
     <dt><code>groq</code> / <code>llama-*</code> / <code>mixtral-*</code></dt>
-    <dd lang="en">Groq — Llama / Mixtral / DeepSeek hosted with
-        Groq's LPU inference (very fast).</dd>
     
+    <dd lang="zh">Groq —— Llama / Mixtral / DeepSeek 在 Groq LPU 上托管（速度非常快）。</dd>
     
 
     <dt><code>openrouter/*</code></dt>
-    <dd lang="en">OpenRouter — meta-router for 200+ models from
-        Anthropic / OpenAI / Google / Meta / Mistral / etc.</dd>
     
+    <dd lang="zh">OpenRouter —— 200+ 模型的元路由（Anthropic / OpenAI /
+        Google / Meta / Mistral 等）。</dd>
     
 
     <dt><code>minimax-*</code> / <code>fireworks-*</code></dt>
-    <dd lang="en">MiniMax (M2, abab) and Fireworks AI (DeepSeek,
-        Llama, Qwen on Fireworks infra).</dd>
     
+    <dd lang="zh">MiniMax（M2、abab）和 Fireworks AI（DeepSeek / Llama / Qwen
+        on Fireworks 基础设施）。</dd>
     
 </dl>
 
-<h3 lang="en">Built-in Strains</h3>
+
+<h3 lang="zh">内置 Strain</h3>
 
 
 
-<p lang="en">
-    Lineage ships with six built-in Strains. Each has an immutable
-    seed genome you can fork to create your own variants. Three are
-    user-facing; three live inside the evolution pipeline.
+<p lang="zh">
+    Lineage 出厂内置六个 Strain。每个都有一份不可变的 seed genome，
+    你可以 fork 它来派生自己的变体。其中三个面向用户，三个跑在演化管线内部。
 </p>
 
 
 
-<p class="strain-group" lang="en"><strong>User-facing</strong></p>
-
+<p class="strain-group" lang="zh"><strong>面向用户</strong></p>
 
 
 <dl class="strain-list">
     <dt><code>pal</code></dt>
-    <dd lang="en">Your primary agent. Every request flows through
-        pal first — it handles tasks directly when it can, and
-        delegates to specialists when domain expertise is needed.</dd>
     
+    <dd lang="zh">你的主 Agent。所有请求先到 pal —— 能自己处理就自己处理，
+        需要领域专长时再委派给专家。</dd>
     
 
     <dt><code>explore</code></dt>
-    <dd lang="en">Read-only codebase navigator. Fast at finding
-        patterns, generating reports, and answering "where is X
-        defined?" without modifying anything.</dd>
     
+    <dd lang="zh">只读代码库导航专家。擅长找模式、生成报告、回答
+        "X 定义在哪里？"之类的问题 —— 不改任何文件。</dd>
     
 
     <dt><code>founder</code></dt>
-    <dd lang="en">System engineer. Designs new Strains, bootstraps
-        Agents, imports Skills. Use when you want to extend
-        Lineage's agent ecosystem itself.</dd>
     
+    <dd lang="zh">系统工程师。设计新 Strain、引导新 Agent、导入 Skill。
+        当你想扩展 Lineage 的 Agent 生态本身时使用。</dd>
     
 </dl>
 
-<p class="strain-group" lang="en"><strong>Evolution pipeline</strong></p>
 
+<p class="strain-group" lang="zh"><strong>演化管线</strong></p>
 
 
 <dl class="strain-list">
     <dt><code>analyzer</code></dt>
-    <dd lang="en">Diagnostic engine. Examines evaluation results to
-        find patterns aggregate scores hide, attributes failures to
-        root causes, and decides which mutation operators the
-        evolution pipeline applies next.</dd>
     
+    <dd lang="zh">诊断引擎。检查评估结果，找出聚合分数遮蔽的模式，
+        把失败归因到根因，决定演化管线下一步用哪个 mutation operator。</dd>
     
 
     <dt><code>grader</code></dt>
-    <dd lang="en">Evaluation oracle. Scores Agent outputs against
-        EvalContract dimensions with cited evidence. Drives
-        evolution decisions — accuracy is everything.</dd>
     
+    <dd lang="zh">评估神谕。按 EvalContract 维度给 Agent 输出打分，
+        必须提供证据。驱动演化决策 —— 准确性高于一切。</dd>
     
 
     <dt><code>comparator</code></dt>
-    <dd lang="en">Blind judge. Compares two Agent outputs WITHOUT
-        knowing which is the champion and which is the candidate.
-        Bias toward either side corrupts the entire pipeline.</dd>
     
+    <dd lang="zh">盲审法官。比较两个 Agent 的输出，
+        <em>不知道</em>哪个是 champion、哪个是 candidate。
+        任何一侧的偏见都会污染整条管线。</dd>
     
 </dl>
 </section>
@@ -1005,288 +964,255 @@ $ lineage chat
 
 <!-- Tools ────────────────────────────────────────────────────────── -->
 <section id="tools">
-<h2 lang="en">Tools<a class="headerlink" href="#tools">#</a></h2>
+
+<h2 lang="zh">Tools<a class="headerlink" href="#tools">#</a></h2>
 
 
 
-<p lang="en">
-    Tools are how Agents act on the world. Lineage ships a Rust-native
-    toolbox covering the moves a coding-and-ops agent actually needs:
-    read &amp; edit files, run shell, drive a browser, fetch web pages,
-    delegate to other Agents, schedule background work. Every tool is
-    gated by per-Strain genome weights — a Strain that doesn't
-    declare a tool simply can't call it. No external runtime, no
-    Node sidecar, no MCP-only fallback.
+<p lang="zh">
+    Tools 是 Agent 作用于世界的手段。Lineage 自带一套 Rust 原生工具箱，
+    覆盖一个 coding/ops Agent 真正需要的动作：读写文件、跑 shell、操控浏览器、
+    抓网页、委派给其他 Agent、调度后台任务。每一个 tool 都按 Strain 的 genome
+    权重门控 —— Strain 没声明的 tool 就调不到。不需要外部运行时、不需要 Node
+    sidecar，不强制走 MCP fallback。
 </p>
-
 
 
 <dl class="provider-list">
     <dt><code>filesystem</code></dt>
-    <dd lang="en">read · write · edit · grep · glob · multi-edit, scoped to
-        the current <code>project_dir</code>. Edits are diff-tracked.</dd>
     
+    <dd lang="zh">read · write · edit · grep · glob · multi-edit，作用域限定在
+        当前 <code>project_dir</code>。改动记 diff。</dd>
     
 
     <dt><code>cli</code></dt>
-    <dd lang="en">execute shell commands. Per-Strain allowlist (regex), per
-        run sandbox tier, optional human-in-the-loop confirmation for
-        write-class commands.</dd>
     
+    <dd lang="zh">执行 shell 命令。Strain 级 allowlist（正则）、按运行选沙箱档位、
+        写类命令可选 human-in-the-loop 确认。</dd>
     
 
     <dt><code>delegate</code></dt>
-    <dd lang="en">spawn or call another Agent — sync wait, async fire,
-        or polling check. Sub-conversation is its own ExecutionTrace
-        for replay.</dd>
     
+    <dd lang="zh">起一个新 Agent 或调用另一个 Agent —— 同步等、异步开、轮询查。
+        子会话有独立的 ExecutionTrace，可回放。</dd>
     
 
     <dt><code>browser</code></dt>
-    <dd lang="en">navigate · click · type · evaluate · screenshot via the
-        bundled <code>agent-browser</code> CDP client. Dedicated Chromium
-        profile, loopback-only control, no shared cookies.</dd>
     
+    <dd lang="zh">navigate · click · type · evaluate · screenshot，
+        走自带的 <code>agent-browser</code> CDP 客户端。
+        独立 Chromium profile，控制端口只绑 loopback，不共享 cookie。</dd>
     
 
     <dt><code>web</code></dt>
-    <dd lang="en">fetch URL → Markdown (htmd), search via configured search
-        provider, RSS pull. No headless browser fallback by default.</dd>
     
+    <dd lang="zh">URL 抓取 → Markdown（htmd 转换）、走配置的搜索 provider、RSS 拉取。
+        默认不回落到 headless 浏览器。</dd>
     
 
     <dt><code>memory</code></dt>
-    <dd lang="en">strain-scoped JSONL memory: <code>save</code> ·
-        <code>recall</code> · <code>forget</code>. Project memory is
-        per-<code>project_key</code>, separate from cross-project strain memory.</dd>
     
+    <dd lang="zh">Strain 范围内的 JSONL 记忆：<code>save</code> ·
+        <code>recall</code> · <code>forget</code>。
+        Project memory 按 <code>project_key</code> 分桶，跟跨项目的 strain memory 分开。</dd>
     
 
     <dt><code>task</code></dt>
-    <dd lang="en">create &amp; manage long-running multi-step tasks
-        (Task → Step → Job, ADR-053). File-first state with a stuck-detection
-        watchdog.</dd>
     
+    <dd lang="zh">创建/管理长任务（Task → Step → Job，参考 ADR-053）。
+        File-first 状态，带 stuck 检测看门狗。</dd>
     
 
     <dt><code>system</code></dt>
-    <dd lang="en">introspect the runtime — agent list, lineage tree,
-        evolution status (CUSUM signal, candidates in flight),
-        cost ledger.</dd>
     
+    <dd lang="zh">运行时自省 —— Agent 列表、系谱树、演化状态
+        （CUSUM 信号、在飞 candidate）、成本台账。</dd>
     
 
     <dt><code>schedule</code> / <code>file_watch</code></dt>
-    <dd lang="en">cron-style scheduled triggers and filesystem-change
-        triggers. Both feed the background queue, not the interactive
-        chat path.</dd>
     
+    <dd lang="zh">cron 风格的定时触发器和文件系统变化触发器。
+        都进后台队列，不会插队到 interactive chat。</dd>
     
 
     <dt><code>email</code> / <code>calendar</code> / <code>channel</code></dt>
-    <dd lang="en">side-effect tools, idempotency-keyed at the DB level —
-        re-running the same call won't double-send.</dd>
     
+    <dd lang="zh">副作用类工具，DB 层用 idempotency key 去重 —— 同一调用重跑不会重发。</dd>
     
 
     <dt><code>ask_user</code> / <code>checklist</code> / <code>progress</code></dt>
-    <dd lang="en">conversational utilities — pause for user input, render
-        checklists in the TUI, stream progress markers.</dd>
     
+    <dd lang="zh">对话辅助工具 —— 暂停等用户输入、TUI 里渲染 checklist、流进度标记。</dd>
     
 </dl>
 
-<p lang="en">
-    There is no MCP wall here: every tool above is a Rust function
-    behind a typed schema. MCP servers can be loaded as additional
-    surfaces, but the core tools don't depend on them.
-</p>
 
+<p lang="zh">
+    这里没有 MCP 围墙：上面每一个 tool 都是一个带类型 schema 的 Rust 函数。
+    你可以再挂 MCP server 当作额外面，但核心 tool 不依赖它们。
+</p>
 
 </section>
 
 
 <!-- Agent Kernel ─────────────────────────────────────────────────── -->
 <section id="kernel">
-<h2 lang="en">Agent Kernel<a class="headerlink" href="#kernel">#</a></h2>
+
+<h2 lang="zh">Agent Kernel<a class="headerlink" href="#kernel">#</a></h2>
 
 
 
-<p lang="en">
-    The <strong>Agent Kernel</strong> is the part of Lineage that turns a
-    chat turn into action — assembling the prompt, calling the LLM,
-    dispatching tool calls, streaming the results back. We built it as
-    a pure-computation core (Ports &amp; Adapters), so the same Agent
-    runs unchanged across every provider, every transport, every
-    interaction surface. Six capabilities are wired in. Together
-    they're why Lineage holds up where most agents fall over: long
-    sessions, multi-step plans, and provider switching mid-flight.
+<p lang="zh">
+    <strong>Agent Kernel</strong> 是 Lineage 把"一轮对话"转成"实际动作"的那块 ——
+    编译 prompt、调用 LLM、派发 tool call、把结果流回去。
+    我们把它做成了纯计算内核（Ports &amp; Adapters 模式）——
+    所以同一个 Agent 不需要改一行代码，就能跑在不同 provider、不同 transport、
+    不同交互界面上。Kernel 内置六项能力，组合起来正是 Lineage 在长会话、
+    多步骤任务、临时切换 provider 这些常见 "崩点" 上仍然能撑住的原因。
 </p>
-
 
 
 <dl class="provider-list">
-    <dt lang="en">Context engineering</dt>
+    
+    <dt lang="zh">上下文工程</dt>
     
     
-    <dd lang="en">Context engineering — fitting only the highest-signal
-        tokens into the model's finite attention window — is what
-        separates an Agent that stays sharp over weeks from one that
-        rots after lunch. Lineage covers the full canonical scope as
-        first-class slots (<strong>system instructions, project
-        profile, recalled memory, conversation history, tool state,
-        few-shot exemplars</strong>) with explicit per-slot token
-        budgets, all assembled by a deterministic
-        <code>PromptCompiler</code> — same inputs always produce the
-        same prompt. Three field-recognized techniques are wired in
-        by default: <strong>progressive disclosure</strong> — tools
-        and memory enter as name + stub; the Agent calls
-        <code>tool_search</code> / <code>memory_search</code> to
-        expand on demand (typically 90%+ token savings on a fat
-        catalog); <strong>just-in-time retrieval</strong> per turn
-        instead of pre-loaded snapshots; and <strong>context
-        offloading</strong> — bulky tool outputs and pre-compact
-        history get persisted to disk and referenced by ID, so the
-        live window stays lean. Conversations stream straight to
-        JSONL on disk — a crash mid-turn resumes mid-turn instead
-        of starting over.</dd>
-    
+    <dd lang="zh">上下文工程 —— 把"高信号 token"装进模型有限注意力窗口的工程纪律 ——
+        才是决定一个 Agent 是越跑越锋利、还是越跑越糊的关键。
+        Lineage 把领域公认的 6 类槽位全部当成头等公民处理：
+        <strong>system 指令、项目 profile、recall 出来的 memory、
+        会话历史、工具状态、few-shot 范例</strong> ——
+        每一类都有显式的 token 预算，由一个确定性的
+        <code>PromptCompiler</code> 按同一规则组装
+        （同样的输入 → 同样的 prompt）。
+        默认开三项业内公认的高阶技巧：<strong>渐进式披露
+        （progressive disclosure）</strong> ——
+        工具和 memory 先以"名字 + 简介"形式进窗口，Agent 通过
+        <code>tool_search</code> / <code>memory_search</code> 按需展开
+        （工具池一胖，token 一般能省 90%+）；<strong>just-in-time 检索</strong> ——
+        每轮临时拉，不预加载快照；<strong>上下文卸载（context offloading）</strong> ——
+        体量大的工具输出和压缩前的历史落到磁盘上，窗口里只留引用。
+        会话直接流式落到磁盘 JSONL ——
+        中途崩了，从崩的那一秒继续跑，不是从头开始。</dd>
     
 
-    <dt lang="en">Compaction — three operations, three timescales</dt>
+    
+    <dt lang="zh">智能压缩 — 三种操作，三种时间尺度</dt>
     
     
-    <dd lang="en">In most products, compaction is binary: when the
-        window fills, summarize the past or fail. Lineage runs three
-        distinct operations at three different cadences ——
-        <strong>Prune</strong> on every turn (zero-cost, replaces
-        stale successful tool results with placeholders);
-        <strong>Compact</strong> when the window approaches budget
-        (LLM-assisted structured summary preserving goal /
-        constraints / decisions / next-step; full conversation
-        archived as JSONL + Markdown before compaction so nothing
-        is lost); <strong>Distill</strong> at section boundaries
-        (LLM-assisted extraction into reusable knowledge artifacts).
-        Cut points respect message boundaries — never mid-tool-result,
-        never mid-tool-call-batch. The granularity is what lets a
-        single Agent run a multi-day task without losing the goal
-        it was given on turn one.</dd>
-    
+    <dd lang="zh">大部分产品的 compaction 是二值的：窗口一满，要么摘要、要么挂掉。
+        Lineage 在三个不同时间尺度上各跑一种操作 ——
+        <strong>Prune</strong>（每轮都跑、零 LLM 成本，
+        把陈旧的成功 tool result 折成占位符）、
+        <strong>Compact</strong>（窗口接近预算时跑、LLM 辅助结构化摘要，
+        保留目标 / 约束 / 决策 / 下一步；完整对话在压缩前归档为 JSONL +
+        Markdown，原始证据不丢）、<strong>Distill</strong>
+        （在段落边界跑，把通用知识蒸馏成可复用条目）。
+        切点严格走消息边界 —— 永不在 tool_result 里截断、
+        永不切散 tool_call 批次。这种切分粒度，
+        正是让一个 Agent 能跑一个跨天的长任务、
+        到最后还记得最初被交代的目标的关键。</dd>
     
 
-    <dt lang="en">Memory — 4 tiers, on your disk</dt>
+    
+    <dt lang="zh">四层 Memory — 全部在你磁盘上</dt>
     
     
-    <dd lang="en">Anthropic's April-2026 Managed Agents release pitched
-        "memory as a filesystem" as the breakthrough; Lineage has
-        shipped that idea since day one — and goes further. Four
-        tiers, not one: <strong>Conversation</strong> (this turn's
-        live working set) → <strong>Project</strong> (per-project
-        knowledge, <code>data/projects/{key}/memory.jsonl</code>) →
-        <strong>Strain</strong> (cross-project domain expertise,
-        <code>data/memory/{strain_id}.jsonl</code>) →
-        <strong>Genome</strong> (immutable, fortified only by
-        evolution). State-based promotion (mem0-aligned): information
-        moves up only on evidence, never by leakage. Lower tiers
-        are write-rate-bounded so a noisy session can't drown the
-        signal. Every byte is plain JSONL on your disk — view it,
-        edit it, delete it, version-control it. No vendor SaaS holds
-        memory of your work for you.</dd>
-    
+    <dd lang="zh">Anthropic 在 2026 年 4 月把 "memory = 文件系统" 当 Managed
+        Agents 的卖点发布 —— Lineage 从第一天就是这么做的，而且做得更彻底。
+        四层而非一层：<strong>Conversation</strong>（这轮 live working set）→
+        <strong>Project</strong>（项目级知识，
+        <code>data/projects/{key}/memory.jsonl</code>）→
+        <strong>Strain</strong>（跨项目领域专长，
+        <code>data/memory/{strain_id}.jsonl</code>）→
+        <strong>Genome</strong>（不可变，只能通过演化被加固）。
+        状态化层级晋升（mem0 同思路）：信息只能凭证据向上走，
+        不会"无意中漏到上层"。低层有写入速率上限 ——
+        一场吵闹的会话淹不掉信号。每一字节 memory 都是你磁盘上的纯
+        JSONL —— 能看、能改、能删、能 git。不需要任何 SaaS 替你保管。</dd>
     
 
-    <dt lang="en">Long-running tasks</dt>
+    
+    <dt lang="zh">长任务执行</dt>
     
     
-    <dd lang="en">Real work outlives one chat turn. Lineage models
-        multi-step plans as <strong>Task → Step → Job</strong> ——
-        the Task is your goal, Steps are individually-checkpointable
-        units of work, Jobs run inside Steps. Task state lives on
-        disk first (<code>data/tasks/{id}/task.json</code>), not in
-        the agent's head, so a Step can pause for human review,
-        resume after a break, or hand off between Agents. A
-        background watchdog raises any Step that hasn't moved in
-        N minutes — plans don't quietly die in the middle and
-        surface as "wait, what happened to that thing I asked for?"
-        three days later. Anthropic's Managed Agents shipped persistent
-        memory in public beta to handle exactly this; Lineage has
-        the equivalent shape on your local disk, no managed-cloud
-        dependency.</dd>
-    
+    <dd lang="zh">真正有价值的工作不会在一轮对话里结束。Lineage 把多步骤计划建模为
+        <strong>Task → Step → Job</strong>：Task 是你定的目标、Step 是
+        逐个 checkpoint 的工作单元、Job 在 Step 内部跑。
+        Task 状态先写盘（<code>data/tasks/{id}/task.json</code>），
+        不放在 Agent 脑子里 —— 所以一个 Step 可以暂停等人工 review、
+        休息后接续、或者在 Agent 之间转手。后台 watchdog 会把
+        "N 分钟没动" 的 Step 拎出来 ——
+        计划不会在中间静悄悄地死掉、然后三天后才被你想起来
+        "诶那件事呢？"。Anthropic 在 2026 年 4 月把 Managed Agents
+        的持久 memory 做成 public beta 来处理同一类问题；
+        Lineage 在你自己的本地盘上提供了同样形状的东西，
+        不依赖任何托管云。</dd>
     
 
-    <dt lang="en">Prompt cache</dt>
+    
+    <dt lang="zh">Prompt Cache 自动命中</dt>
     
     
-    <dd lang="en">Provider-side caching is wired in by default —
-        Anthropic, OpenAI, DeepSeek, and any backend that exposes
-        one. The kernel structures every prompt to be cache-friendly:
-        stable system prefix at the top, volatile context at the
-        bottom. Long sessions hit cache-read pricing on every repeat
-        turn — typically 70-90% off the per-token cost — automatic,
-        no app code changes.</dd>
-    
+    <dd lang="zh">默认对接各家的 prompt cache —— Anthropic、OpenAI、DeepSeek，
+        以及任何暴露 cache 接口的后端。Kernel 在编译每个 prompt 时就把它做成
+        cache-friendly 的形状：稳定的 system 前缀放上面，易变的 context
+        放下面。长会话每次重复 turn 都按 cache-read 计价 ——
+        一般能砍掉 70-90% 的 token 成本 —— 自动生效，应用层不用改一行代码。</dd>
     
 
-    <dt lang="en">Advisor pattern — without the Anthropic lock-in</dt>
+    
+    <dt lang="zh">Advisor 模式 — 不再被 Anthropic 锁定</dt>
     
     
-    <dd lang="en">Until now, the advisor pattern — a fast, cost-balanced
-        model running routine work and delegating only the hard cases
-        to a stronger model — has effectively been an Anthropic-only
-        capability, baked into Claude Code and unavailable elsewhere.
-        Lineage brings it to any provider, including open-source
-        local models. Run a cost-effective workhorse like
-        <code>qwen-coder</code> or <code>deepseek-v3</code> for the
-        90% of everyday turns; when the kernel detects a hard case,
-        it auto-escalates to a SOTA advisor (Claude Opus, GPT-5,
-        etc.) on the same turn — no manual model swap, no agent
-        hand-off. You get Claude-Code-class reasoning quality at
-        non-Claude-Code economics.</dd>
-    
+    <dd lang="zh">在 Lineage 之前，advisor 模式 ——
+        用一个性价比好、速度快的模型跑日常工作，只把难题交给更强的模型 ——
+        基本是 Anthropic 自家的能力（写死在 Claude Code 里），别家用不了。
+        Lineage 把这套能力带到任何 provider 上，包括开源本地模型。
+        日常 90% 的轮次跑一个性价比平衡的主力模型
+        （比如 <code>qwen-coder</code> 或 <code>deepseek-v3</code>）；
+        当 kernel 判断遇到难题，它会在同一轮自动升级到 SOTA advisor
+        （Claude Opus、GPT-5 等）—— 不用你手动换模型、也不用切 Agent。
+        拿到 Claude-Code 级别的推理质量，但不用付 Claude-Code 的成本。</dd>
     
 </dl>
 
-<p lang="en">
-    Where this lands competitively: most coding-agent products give
-    you context engineering inside their UI, route a single provider,
-    and end the trail at the conversation boundary. Lineage stores
-    every turn as a replayable artifact, evolves the Agent that
-    produced it based on those replays, and lets you swap the
-    underlying model tomorrow. The kernel is the part that makes
-    cross-session, cross-provider, cross-model continuity actually work.
-</p>
 
+<p lang="zh">
+    放在竞品里看：大多数 coding agent 产品只在自家 UI 里给你 context engineering，
+    只对接一家 provider，对话边界一过线索就断。
+    Lineage 把每一轮 turn 存成可回放的 artifact，
+    基于这些回放演化跑出它的 Agent，明天还允许你换底模。
+    kernel 就是让"跨会话、跨 provider、跨底模的连续性"真正成立的那块。
+</p>
 
 </section>
 
 
 <!-- Self-update ──────────────────────────────────────────────────── -->
 <section id="self-update">
-<h2 lang="en">Self-update<a class="headerlink" href="#self-update">#</a></h2>
+
+<h2 lang="zh">自更新<a class="headerlink" href="#self-update">#</a></h2>
 
 
 
-<p lang="en">
-    <code>lineage self-update</code> is channel-aware. If you
-    installed via Homebrew, it redirects you to <code>brew upgrade
-    lineage</code>; npm to <code>npm update -g</code>; Cargo to
-    <code>cargo install lineage --force</code>; snap to
-    <code>sudo snap refresh</code>. Only direct (<code>install.sh</code>)
-    installs do an in-place atomic POSIX rename swap, with a
-    <code>.prev</code> hardlink backup.
+<p lang="zh">
+    <code>lineage self-update</code> 是频道感知的。Homebrew 装的会被引导去
+    <code>brew upgrade lineage</code>；npm 装的引导到
+    <code>npm update -g</code>；Cargo 装的引导到
+    <code>cargo install lineage --force</code>；snap 装的引导到
+    <code>sudo snap refresh</code>。
+    只有直装（<code>install.sh</code>）会就地原子 POSIX rename 替换，
+    并带 <code>.prev</code> hardlink 备份。
 </p>
 
 
 
-<p lang="en">
-    Background updates are <strong>opt-in</strong>. By default the
-    background updater is in notify-only mode: it checks GitHub
-    every 30 minutes, prints a banner if a new version is available,
-    and stops there. To turn on silent installs, edit
-    <code>~/.config/lineage/lineage.toml</code>:
+<p lang="zh">
+    后台自动更新是<strong>主动 opt-in</strong> 的。默认情况下后台只做通知 ——
+    每 30 分钟查一次 GitHub，发现新版本就在启动时打条 banner，仅此而已。
+    要打开静默安装，编辑 <code>~/.config/lineage/lineage.toml</code>：
 </p>
-
 
 
 <pre><code>[updates]
@@ -1298,169 +1224,155 @@ check_interval_minutes = 30</code></pre>
 
 <!-- Telemetry & privacy ─────────────────────────────────────────── -->
 <section id="telemetry">
-<h2 lang="en">Telemetry &amp; privacy<a class="headerlink" href="#telemetry">#</a></h2>
+
+<h2 lang="zh">遥测与隐私<a class="headerlink" href="#telemetry">#</a></h2>
 
 
 
-<p lang="en">
-    Lineage ships anonymous usage telemetry default-on. The data
-    helps prioritize features and catch real regressions. We
-    deliberately skipped the first-run consent prompt — every other
-    consent dialog you've ever seen in a CLI tool taught you to tap
-    "no" on reflex, which means default-off telemetry measures only
-    a self-selected sub-population and biases every product decision.
-    Default-on with a kill-switch gives us a representative sample
-    while keeping you in control.
+<p lang="zh">
+    Lineage 默认开启匿名使用遥测。这些数据帮我们优先排功能，也帮我们发现真正的回归。
+    我们刻意没做首启同意对话框 —— 你在每个 CLI 工具里见过的每个"是否同意收集数据"
+    弹窗都在训练你下意识按"否"，这意味着默认 off 的遥测只能采到一群自选样本，
+    每个产品决策都被偏置数据带跑偏。默认 on + 一键关停才能让我们看到代表性样本，
+    同时把控制权留给你。
 </p>
 
 
 
-<p lang="en"><strong>What is collected:</strong></p>
+<p lang="zh"><strong>会收集什么：</strong></p>
 
 
 
-<ul lang="en">
-    <li>Tool-call counts and names (<code>filesystem.read</code>,
-        <code>delegate_wait</code>, etc. — never their arguments).</li>
-    <li>Turn durations, session lengths, error counts.</li>
-    <li>Strain keys (which agents you used).</li>
-    <li>Lineage version + OS/arch.</li>
+<ul lang="zh">
+    <li>工具调用名和次数（<code>filesystem.read</code>、<code>delegate_wait</code> 等 ——
+        参数永远不传）。</li>
+    <li>每轮时长、会话长度、错误次数。</li>
+    <li>Strain key（你用了哪些 Agent）。</li>
+    <li>Lineage 版本号 + OS / 架构。</li>
 </ul>
 
 
 
-<p lang="en"><strong>What is NEVER collected:</strong></p>
+<p lang="zh"><strong>永远不会收集什么：</strong></p>
 
 
 
-<ul lang="en">
-    <li>Filesystem paths.</li>
-    <li>Prompts, LLM responses, or any tool input/output.</li>
-    <li>Source-IP addresses (stripped at the Cloudflare edge before
-        reaching the PostHog endpoint).</li>
-    <li>Anything resembling your personal data.</li>
+<ul lang="zh">
+    <li>任何文件系统路径。</li>
+    <li>Prompt、LLM 回复，或任何工具的输入/输出。</li>
+    <li>源 IP 地址（在 Cloudflare 边缘剥离，根本到不了 PostHog）。</li>
+    <li>任何近似你个人数据的东西。</li>
 </ul>
 
 
 
-<p lang="en"><strong>Three opt-out paths:</strong></p>
+<p lang="zh"><strong>三种关掉的方式：</strong></p>
 
 
 
-<pre lang="en"><code># 1. Per-process env var (hot-disable for one invocation)
+<pre lang="zh"><code># 1. 单次进程关闭（环境变量）
 LINEAGE_DISABLE_TELEMETRY=1 lineage chat
 
-# 2. Per-install (writes to lineage.toml)
+# 2. 永久关闭（写到 lineage.toml）
 lineage telemetry disable usage
 
-# 3. Per-install for the local JSONL audit log specifically
+# 3. 单独关掉本地 JSONL 审计日志
 LINEAGE_DISABLE_LOCAL_TELEMETRY=1</code></pre>
 
 
 
-<p lang="en">
-    Telemetry uploads land in our own self-hosted PostHog instance
-    at <code>telemetry.lineagent.ai</code> — not PostHog Cloud, not
-    a third party.
+<p lang="zh">
+    遥测上传到的是我们自己自托管的 PostHog 实例（<code>telemetry.lineagent.ai</code>），
+    不是 PostHog Cloud，也不是任何第三方。
 </p>
-
 
 </section>
 
 
 <!-- FAQ ──────────────────────────────────────────────────────────── -->
 <section id="faq">
-<h2 lang="en">FAQ<a class="headerlink" href="#faq">#</a></h2>
 
+<h2 lang="zh">常见问题<a class="headerlink" href="#faq">#</a></h2>
 
 
 <dl class="faq">
 
-<dt lang="en">Why Rust?</dt>
+
+<dt lang="zh">为什么用 Rust？</dt>
 
 
-<dd lang="en">The Control / Execution / Capability planes need predictable
-    latency and zero GC pauses on the hot path. Tooling is mature
-    enough that we get these for free without paying in
-    productivity. The TUI specifically benefits — Ratatui is
-    extremely fast, and the streaming-tokens-into-three-panes
-    rendering would be hard to keep tear-free in a GC'd runtime.</dd>
-
-
-
-<dt lang="en">Where does my data live?</dt>
-
-
-<dd lang="en">On your machine. Conversation history is JSONL under
-    <code>data/conversations/</code>. Genomes and strains are
-    YAML/JSON under <code>data/</code>. Memory is JSONL under
-    <code>data/memory/</code>. The SQLite DB is purely an index and
-    can be rebuilt from these files via <code>lineage rebuild-index</code>
-    at any time. Files are the Source of Truth.</dd>
+<dd lang="zh">Control / Execution / Capability 三个平面需要可预测的延迟，
+    热路径不能有 GC 停顿。Rust 的工具链够成熟，这些好处不需要在生产力上付代价就能拿到。
+    TUI 尤其受益 —— Ratatui 极快，把流式 token 实时渲染到三个面板，
+    在带 GC 的运行时里很难做到不撕裂。</dd>
 
 
 
-<dt lang="en">Is the agent autonomous? What about safety?</dt>
+<dt lang="zh">我的数据存在哪里？</dt>
 
 
-<dd lang="en">The Capability Plane runs in a tiered sandbox — Wasm/WASI in
-    MVP, Linux namespace + seccomp + cgroups in Phase 1, MicroVM in
-    Phase 2. Tool policy is per-strain via genome weights:
-    a strain that doesn't list <code>cli_execute</code> in its
-    allowlist literally cannot shell out. Browser automation goes
-    through a dedicated Chromium profile and binds loopback-only.</dd>
-
-
-
-<dt lang="en">What's a "genome"?</dt>
-
-
-<dd lang="en">An immutable JSON snapshot of an Agent's prompts, planner
-    config, and tool-policy weights. Genome is content-addressed by
-    SHA-256; editing one creates a new Agent (a child) and the old
-    one stays archived for replay. This makes the lineage
-    auditable: you can always answer "what changed?" by diffing
-    parent vs child genomes.</dd>
+<dd lang="zh">在你自己的机器上。会话历史是
+    <code>data/conversations/</code> 下的 JSONL；
+    Genome 和 Strain 是 <code>data/</code> 下的 YAML/JSON；
+    记忆是 <code>data/memory/</code> 下的 JSONL。
+    SQLite DB 只是索引，任何时候都可以
+    <code>lineage rebuild-index</code> 重建。文件是 Source of Truth。</dd>
 
 
 
-<dt lang="en">Linux / macOS only?</dt>
+<dt lang="zh">Agent 是自主运行的吗？安全性怎么保证？</dt>
 
 
-<dd lang="en">Yes for now. Path/sandbox conventions assume POSIX (XDG dirs,
-    flock, atomic-rename semantics). Windows lands in Phase 1 if
-    there's demand. WSL 2 works today.</dd>
+<dd lang="zh">Capability Plane 跑在分层沙箱里 ——
+    MVP 用 Wasm/WASI，Phase 1 用 Linux namespace + seccomp + cgroups，
+    Phase 2 用 MicroVM。
+    工具策略是按 strain 走 genome 权重的：一个 strain 如果 allowlist 里没列
+    <code>cli_execute</code>，它字面上就 shell 不出去。
+    浏览器自动化走独立的 Chromium profile，且只绑 loopback。</dd>
 
 
 
-<dt lang="en">How do I delete everything?</dt>
+<dt lang="zh">"Genome" 是什么？</dt>
 
 
-<dd lang="en">
+<dd lang="zh">某个 Agent 的 prompt、planner 配置、tool-policy 权重的不可变 JSON 快照。
+    Genome 用 SHA-256 内容寻址；编辑一个 genome 会产生新 Agent（子代），
+    旧的归档保留以供回放。这让系谱可审计 ——
+    "什么变了？"永远可以通过 diff 父代 vs 子代 genome 答出来。</dd>
+
+
+
+<dt lang="zh">只支持 Linux / macOS？</dt>
+
+
+<dd lang="zh">目前是。路径和沙箱假设走的都是 POSIX（XDG 目录、flock、原子 rename 语义）。
+    Windows 如果有用户需求，在 Phase 1 加入。WSL 2 现在就能跑。</dd>
+
+
+
+<dt lang="zh">怎么彻底删除？</dt>
+
+
+<dd lang="zh">
     <pre><code>lineage telemetry disable usage --purge
 rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
        "$XDG_CONFIG_HOME/lineage" "$HOME/.local/bin/lineage"</code></pre>
-    The first command deletes any uploaded events from the central
-    PostHog and disables future uploads. The <code>rm</code> wipes
-    your entire local install (data, state, config, binary) without
-    leaving a single artifact.
+    第一条命令删掉中央 PostHog 上你已上传的事件，并关掉未来上传。
+    <code>rm</code> 抹掉你的整个本地安装（数据、状态、配置、二进制），不留一片痕迹。
 </dd>
 
 
 
-<dt lang="en">Why not just use Claude Code / Cursor / Copilot directly?</dt>
+<dt lang="zh">为什么不直接用 Claude Code / Cursor / Copilot？</dt>
 
 
-<dd lang="en">You can, and you should — they're great. Lineage is for
-    when you want the agents themselves to evolve over time based
-    on evaluation. Claude Code is a tool; a Lineage Agent is a
-    lineage node with a fitness history. If your only need is
-    "edit this file, fix this bug, write this test," you don't
-    need Lineage. If you want to tune which agent personalities
-    succeed at which tasks across weeks, and have that selection
-    happen mechanically rather than by gut, that's where Lineage
-    starts to pay off.</dd>
-
+<dd lang="zh">完全可以，而且也应该用 —— 它们都很好用。
+    Lineage 适合的是另一个需求：希望 Agent 本身随时间基于评估演化。
+    Claude Code 是一个工具；Lineage 的 Agent 是一个有 fitness 历史的系谱节点。
+    如果你的需求就是"改这个文件、修这个 bug、写这个测试"，
+    你不需要 Lineage。
+    如果你想调试"哪种 Agent 人格在哪类任务上跨周稳定胜出"，并且想让这个筛选机械化、
+    不靠直觉，那才是 Lineage 开始发挥价值的地方。</dd>
 
 
 </dl>
@@ -1469,8 +1381,8 @@ rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
 
 <!-- Footer ──────────────────────────────────────────────────────── -->
 <footer class="page-footer">
-    <p lang="en">© 2026 Lineage. All rights reserved.</p>
     
+    <p lang="zh">© 2026 Lineage。保留所有权利。</p>
     
 </footer>
 
@@ -1485,22 +1397,25 @@ rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
     var STORAGE_KEY = 'lineage-lang';
 
     function pickLang() {
-        // On the EN entry page, auto-redirect first-time
-        // visitors to /zh/ or /ja/ if their browser locale
-        // matches. Hash, localStorage prior choice, and
-        // navigator.language are all considered. After
-        // any explicit choice (lang dropdown click) the
-        // localStorage value sticks and re-redirects on
-        // future visits.
+        // 1. URL hash (e.g. #zh) takes precedence — bookmark / share.
         var hash = (location.hash || '').replace('#', '').toLowerCase();
         if (SUPPORTED.indexOf(hash) !== -1) return hash;
+
+        // 2. localStorage (user's prior choice on this device).
         try {
             var saved = localStorage.getItem(STORAGE_KEY);
             if (SUPPORTED.indexOf(saved) !== -1) return saved;
-        } catch (e) {}
+        } catch (e) { /* private mode, fall through */ }
+
+        // 3. Browser locale — match navigator.language prefix to one
+        //    of the supported locales. Auto-pick zh/ja for users whose
+        //    browsers report those locales; everything else falls
+        //    through to English.
         var nav = (navigator.language || 'en').toLowerCase();
         if (nav.indexOf('zh') === 0) return 'zh';
         if (nav.indexOf('ja') === 0) return 'ja';
+
+        // 4. Default English.
         return 'en';
     }
 
@@ -1563,13 +1478,7 @@ rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
 
     // Initial language pick on DOMContentLoaded.
     function init() {
-        // EN-page-only auto-redirect to /zh/ or /ja/ for
-        // matching browser locales on first visit.
-        var picked = pickLang();
-        if (picked !== 'en') {
-            var URLS = { zh: '/zh/', ja: '/ja/' };
-            if (URLS[picked]) { location.replace(URLS[picked]); return; }
-        }
+        setLang(pickLang());
 
         // Restore active state on theme buttons (data-theme on <html>
         // was already set by the inline FOUC script). Wire clicks.

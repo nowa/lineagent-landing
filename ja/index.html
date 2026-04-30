@@ -1,0 +1,1655 @@
+<!doctype html>
+<!--
+  Lineage landing site (www.lineagent.ai). Trilingual: en / 中 / 日.
+
+  Strategy: single HTML file with per-element `lang` attribute gating.
+  CSS rule `:root[lang="X"] [lang]:not([lang="X"]) { display: none }`
+  hides any translation block whose lang doesn't match the document's
+  current lang. JS init sets `document.documentElement.lang` based on
+  URL hash → localStorage → navigator.language → default `en`.
+
+  Why not three separate files (`/`, `/zh/`, `/ja/`)?
+  - Single source of truth for IA + design tokens
+  - No build step
+  - Easy to keep structure synced across languages
+  - Trade-off: HTML is bigger; SEO indexes three lang versions on
+    same URL. Acceptable for an Alpha-stage tool's landing page.
+
+  Translation policy:
+  - Domain vocabulary (Strain / Agent / Genome / Evolution / ADR /
+    MLI / etc.) stays in English across all three languages — they
+    are technical identifiers, translating them adds confusion.
+  - Code blocks, command-line examples, URLs, version numbers,
+    file paths: never translated.
+  - Brand mark (5×11 ASCII pixel art) is the same across all three.
+-->
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lineage — Self-Hosted Multi-Agent Runtime in Rust</title>
+    <meta name="description" content="Self-hosted multi-agent runtime where Agents evolve over time. Founder Agent designs from fuzzy ideas. Rust core, 9 LLM providers, local-first, files on disk.">
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Canonical URL — content lives at the root regardless of the
+         active language (trilingual gating happens client-side). -->
+    <link rel="canonical" href="https://www.lineagent.ai/ja/">
+
+    <!-- Crawler hints. /llms.txt is a markdown summary aimed at AI
+         assistants (ChatGPT / Claude / Perplexity); /sitemap.xml is
+         the standard machine-readable URL list. -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+
+    <link rel="alternate" hreflang="en" href="https://www.lineagent.ai/">
+    <link rel="alternate" hreflang="zh" href="https://www.lineagent.ai/zh/">
+    <link rel="alternate" hreflang="ja" href="https://www.lineagent.ai/ja/">
+    <link rel="alternate" hreflang="x-default" href="https://www.lineagent.ai/">
+
+    <meta property="og:title" content="Lineage — Self-Hosted Multi-Agent Runtime in Rust">
+    <meta property="og:description" content="Agents that evolve over time. Founder Agent designs from a fuzzy idea. Runs across 9 LLM providers including local open-source models.">
+    <meta property="og:url" content="https://www.lineagent.ai/ja/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Lineage">
+    <meta property="og:image" content="https://www.lineagent.ai/og-image.svg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Lineage — Self-Hosted Multi-Agent Runtime in Rust. ASCII brand mark in mint on a dark background, with the install one-liner: curl -fsSL lineagent.ai/install.sh | sh">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Lineage — Self-Hosted Multi-Agent Runtime in Rust">
+    <meta name="twitter:description" content="Agents that evolve over time. Founder Agent designs from a fuzzy idea. Runs across 9 LLM providers including local open-source models.">
+    <meta name="twitter:image" content="https://www.lineagent.ai/og-image.svg">
+    <meta name="twitter:image:alt" content="Lineage — Self-Hosted Multi-Agent Runtime in Rust">
+
+    <!-- FOUC-prevention: resolve theme synchronously before stylesheet
+         applies. Reads localStorage (lineage-theme: 'auto' | 'light' |
+         'dark') + system preference, sets data-theme on <html>.
+         Skipping this would flash light-mode content briefly even when
+         the user's persisted choice is dark. -->
+    <script>
+    (function() {
+        try {
+            var t = localStorage.getItem('lineage-theme') || 'auto';
+            var resolved = t === 'auto'
+                ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+                : t;
+            document.documentElement.setAttribute('data-theme', resolved);
+            document.documentElement.setAttribute('data-theme-choice', t);
+        } catch (e) {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.documentElement.setAttribute('data-theme-choice', 'auto');
+        }
+    })();
+    </script>
+
+    <!-- Structured data: SoftwareApplication for product surfacing,
+         FAQPage for SERP rich-result eligibility on the FAQ section.
+         Both schemas are schema.org-spec'd and Google-validated. -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Lineage",
+        "alternateName": ["Lineage Agent Runtime", "lineagent"],
+        "applicationCategory": "DeveloperApplication",
+        "applicationSubCategory": "AI Agent Runtime",
+        "operatingSystem": "macOS, Linux",
+        "description": "Self-hosted multi-agent runtime where Agents evolve over time through evaluation. Founder Agent designs new Agents from a fuzzy goal, runs an offline evaluation, and ships a validated Agent. Each conversation produces evidence; only proven changes are promoted to the next generation. Rust core, 9 LLM providers, local-first.",
+        "url": "https://www.lineagent.ai/",
+        "downloadUrl": "https://www.lineagent.ai/install.sh",
+        "softwareVersion": "0.117.x",
+        "programmingLanguage": "Rust",
+        "license": "https://github.com/nowa/lineage/blob/main/COPYRIGHT.md",
+        "image": "https://www.lineagent.ai/og-image.svg",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock"
+        },
+        "featureList": [
+            "Evolution-driven Agent improvement (CUSUM trigger, offline eval, Blue-Green swap, auto-rollback)",
+            "Multi-provider LLM (Anthropic Claude, OpenAI GPT, DeepSeek, Qwen, Moonshot Kimi, Groq, OpenRouter, MiniMax, Fireworks)",
+            "Self-hosted, local-first storage (files are Source of Truth, SQLite as index)",
+            "Six built-in Strains: pal, explore, founder, analyzer, grader, comparator",
+            "Agent Kernel: context engineering, three-stage compaction, four-tier memory, long-running tasks, prompt cache, advisor pattern",
+            "Personal mode + project mode, both on at once",
+            "Three-layer permission control (User / Project / Local)",
+            "Rust-native browser automation (agent-browser, loopback-only)",
+            "Multi-step task orchestration (Task → Step → Job)",
+            "Three-channel install: brew, npm, curl"
+        ],
+        "author": {
+            "@type": "Organization",
+            "name": "Lineage",
+            "url": "https://www.lineagent.ai"
+        }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Why Rust?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The Control / Execution / Capability planes need predictable latency and zero GC pauses on the hot path. Tooling is mature enough to get these without paying in productivity. The TUI specifically benefits — Ratatui is extremely fast, and streaming-tokens-into-three-panes rendering would be hard to keep tear-free in a GC'd runtime."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Where does my data live?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "On your machine. Conversation history is JSONL under data/conversations/. Genomes and Strains are YAML/JSON under data/. Memory is JSONL under data/memory/. The SQLite DB is purely an index and can be rebuilt from these files via lineage rebuild-index at any time. Files are the Source of Truth."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Is the agent autonomous? What about safety?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The Capability Plane runs in a tiered sandbox — Wasm/WASI in MVP, Linux namespace + seccomp + cgroups in Phase 1, MicroVM in Phase 2. Tool policy is per-Strain via genome weights: a Strain that doesn't list cli_execute in its allowlist literally cannot shell out. Browser automation goes through a dedicated Chromium profile and binds loopback-only."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What is a genome in Lineage?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "An immutable JSON snapshot of an Agent's prompts, planner config, and tool-policy weights. Genome is content-addressed by SHA-256; editing one creates a new Agent (a child) and the old one stays archived for replay. This makes the lineage auditable: you can always answer 'what changed?' by diffing parent vs child genomes."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Linux and macOS only?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes for now. Path/sandbox conventions assume POSIX (XDG dirs, flock, atomic-rename semantics). Windows lands in Phase 1 if there is demand. WSL 2 works today."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How do I delete everything Lineage stored?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Run: lineage telemetry disable usage --purge ; rm -rf $XDG_DATA_HOME/lineage $XDG_STATE_HOME/lineage $XDG_CONFIG_HOME/lineage $HOME/.local/bin/lineage. The first command deletes any uploaded events from the central PostHog and disables future uploads. The rm wipes your entire local install (data, state, config, binary) without leaving a single artifact."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Why not just use Claude Code, Cursor, or Copilot directly?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "You can, and you should — they are great. Lineage is for when you want the agents themselves to evolve over time based on evaluation. Claude Code is a tool; a Lineage Agent is a lineage node with a fitness history. If your only need is 'edit this file, fix this bug, write this test,' you don't need Lineage. If you want to tune which agent personalities succeed at which tasks across weeks, and have that selection happen mechanically rather than by gut, that is where Lineage starts to pay off."
+                }
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+
+<!-- ─── Sidebar ─────────────────────────────────────────────────── -->
+<aside class="sidebar">
+    <!-- Header is one flex row: [mark] [sitename] (Toltec parity).
+         The bilingual tagline drops to a second row underneath. -->
+    <header class="sidebar-header">
+        <a href="#home" aria-label="Lineage home">
+<pre class="sidebar-mark" aria-hidden="true">  ███████
+ ██ █ █ ██
+███████████
+  ███████
+  █  █  █  </pre><span class="sidebar-sitename">lineage</span>
+            <span class="sidebar-tagline">谱系系统 · lineage system · 系譜システム</span>
+        </a>
+    </header>
+
+    <!-- Sidebar dropdowns: language + theme.
+         Two pill triggers in a row, each opens a popover menu. The
+         language pill shows a globe icon (no per-language letter).
+         The theme pill shows the *current* mode's icon (sun / moon /
+         monitor). Active option in each menu shows brand-mint text
+         + a small brand-mint dot on the right.
+         Default language: English. Default theme: Auto / System. -->
+    <div class="dropdown-row">
+
+        <div class="dropdown" data-dropdown="lang">
+            <button class="dropdown-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Language">
+                <!-- Translation icon: two overlapping speech bubbles, one with
+                     Latin "A" and one with CJK "文". Conveys "multi-language" /
+                     "translation" more directly than the earlier globe glyph
+                     (which reads as "international" rather than specifically
+                     "language"). Reference: typical i18n / translate icon pair. -->
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M4 3 H12 A2 2 0 0 1 14 5 V10 A2 2 0 0 1 12 12 H7 L4 15 L5 12 H4 A2 2 0 0 1 2 10 V5 A2 2 0 0 1 4 3 Z"/>
+                    <text x="8" y="10" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif" font-size="6.5" font-weight="700" fill="currentColor" stroke="none" text-anchor="middle">A</text>
+                    <path d="M12 11 H20 A2 2 0 0 1 22 13 V18 A2 2 0 0 1 20 20 H19 L20 23 L17 20 H12 A2 2 0 0 1 10 18 V13 A2 2 0 0 1 12 11 Z"/>
+                    <text x="16" y="18" font-family="ui-sans-serif, 'PingFang SC', 'Hiragino Sans', system-ui, sans-serif" font-size="6.5" font-weight="700" fill="currentColor" stroke="none" text-anchor="middle">文</text>
+                </svg>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="/" data-lang-set="en" role="menuitem"><span class="label">English</span></a></li>
+                <li><a href="/zh/" data-lang-set="zh" role="menuitem"><span class="label">简体中文</span></a></li>
+                <li><a href="/ja/" data-lang-set="ja" role="menuitem" aria-current="true"><span class="label">日本語</span></a></li>
+            </ul>
+        </div>
+
+        <div class="dropdown" data-dropdown="theme">
+            <button class="dropdown-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Theme">
+                <svg class="icon icon-theme-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4"/>
+                    <path d="M12 2v2"/><path d="M12 20v2"/>
+                    <path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/>
+                    <path d="M2 12h2"/><path d="M20 12h2"/>
+                    <path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+                </svg>
+                <svg class="icon icon-theme-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+                <svg class="icon icon-theme-auto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect width="20" height="14" x="2" y="3" rx="2"/>
+                    <path d="M8 21h8"/><path d="M12 17v4"/>
+                </svg>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li><button type="button" data-theme-set="light" role="menuitem">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="4"/>
+                        <path d="M12 2v2"/><path d="M12 20v2"/>
+                        <path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/>
+                        <path d="M2 12h2"/><path d="M20 12h2"/>
+                        <path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+                    </svg>
+                    <span class="label">Light</span>
+                </button></li>
+                <li><button type="button" data-theme-set="dark" role="menuitem">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                    <span class="label">Dark</span>
+                </button></li>
+                <li><button type="button" data-theme-set="auto" role="menuitem">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect width="20" height="14" x="2" y="3" rx="2"/>
+                        <path d="M8 21h8"/><path d="M12 17v4"/>
+                    </svg>
+                    <span class="label">System</span>
+                </button></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <nav class="sidebar-nav">
+        <ul>
+            <li><a href="#install">
+                
+                
+                <span lang="ja">インストール</span>
+            </a></li>
+            <li><a href="#what">
+                
+                
+                <span lang="ja">Lineage とは？</span>
+            </a></li>
+            <li><a href="#quickstart">
+                
+                
+                <span lang="ja">クイックスタート</span>
+            </a></li>
+            <li><a href="#models">
+                
+                
+                <span lang="ja">モデルと Strain</span>
+            </a></li>
+            <li><a href="#tools">
+                
+                
+                <span lang="ja">Tools</span>
+            </a></li>
+            <li><a href="#kernel">
+                
+                
+                <span lang="ja">Agent Kernel</span>
+            </a></li>
+            <li><a href="#self-update">
+                
+                
+                <span lang="ja">自動更新</span>
+            </a></li>
+            <li><a href="#telemetry">
+                
+                
+                <span lang="ja">テレメトリとプライバシー</span>
+            </a></li>
+            <li><a href="#faq">
+                
+                
+                <span lang="ja">FAQ</span>
+            </a></li>
+        </ul>
+    </nav>
+
+    <footer class="sidebar-footer">
+        <p>© 2026 Lineage. <span lang="ja">All rights reserved.</span></p>
+    </footer>
+</aside>
+
+<!-- ─── Main content ────────────────────────────────────────────── -->
+<main>
+
+<!-- Hero — title first, then brand mark below, then sub-prose, then
+     install one-liner. The two former CTA buttons are gone — the
+     sidebar nav already covers Install / What is this navigation. -->
+<section id="home" class="hero">
+    
+    
+    <h1 class="hero-tagline" lang="ja">進化をネイティブに扱うマルチエージェント・ランタイム。</h1>
+
+<pre class="hero-mark" aria-hidden="true">  ███████
+ ██ █ █ ██
+███████████
+  ███████
+  █  █  █  </pre>
+
+    
+    
+    <p class="hero-sub" lang="ja">
+        Lineage は Agent を生命のように進化させます。
+        一度きりの設定ファイルではありません ——
+        親、世代、不変な genome レコード、適応度（fitness）の履歴を持ちます。
+        評価が進化を駆動し、弱者は退役し、強者は繁殖します。
+    </p>
+
+    
+    
+    <p class="hero-sub" lang="ja">
+        Founder Agent にやってほしいことを伝えるだけ。
+        曖昧なアイデアを高品質な Agent に変え、Agent 作成時に
+        オフライン評価を実行します。以降の利用はすべて評価可能な痕跡を残し、
+        現在のバージョンより強いと証明された変更だけが次世代に受け継がれます。
+        同時に再利用可能な how-to が蓄積され、同じドメインの将来の Agent は
+        それを継承します。
+    </p>
+
+    
+    
+    <p class="hero-sub" lang="ja">
+        Agent Kernel は実ワークロードのために設計 ——
+        長い会話でゴールを見失わない、複数日のタスクがクラッシュ後も再開、
+        プロバイダ越えのプロンプトキャッシュでトークンを 70-90% 節約、
+        任意のベースモデルで使える advisor パターン。
+    </p>
+
+    
+    
+    <p class="hero-sub" lang="ja">
+        ローカルファースト、デフォルトでセルフホスト。
+        Rust コア + Ratatui TUI。3 つのインストール方法：brew、npm、curl。
+    </p>
+
+    <div class="install-line">
+        <code>curl -fsSL https://www.lineagent.ai/install.sh | sh</code>
+        <button type="button" class="copy-btn" data-copy="curl -fsSL https://www.lineagent.ai/install.sh | sh">
+            <span lang="ja">コピー</span>
+        </button>
+    </div>
+</section>
+
+
+<!-- Install ──────────────────────────────────────────────────────── -->
+<section id="install">
+
+
+<h2 lang="ja">インストール<a class="headerlink" href="#install">#</a></h2>
+
+
+
+<p lang="ja">
+    すでに使っているパッケージマネージャーを選んでください。3 つのチャンネルは
+    同じリリースを配布します —— 同じ semver、同じバイナリ、同じ自動更新の挙動。
+    慣れているもので構いません。
+</p>
+
+
+
+<h3 lang="ja">Homebrew (macOS / Linux)</h3>
+<pre><code>brew install nowa/lineage/lineage</code></pre>
+
+<h3>npm</h3>
+<pre><code>npm install -g @lineage/cli</code></pre>
+
+
+
+<h3 lang="ja">直接インストール（curl）</h3>
+<pre><code>curl -fsSL https://www.lineagent.ai/install.sh | sh</code></pre>
+
+
+
+<p lang="ja">
+    インストーラーはプラットフォーム別の tarball をダウンロードし、
+    公開されている <code>checksums.txt</code> に対して SHA-256 を検証してから、
+    <code>lineage</code> を <code>~/.local/bin</code> に配置します。
+    root での実行は拒否され、<code>~/.local/bin</code> が
+    <code>$PATH</code> に含まれていない場合は警告します。
+</p>
+
+
+
+<p lang="ja">確認：</p>
+<pre><code>lineage --version
+lineage status</code></pre>
+
+<div class="callout">
+    
+    
+    <p lang="ja"><strong>Windows</strong> は未対応です。当面は WSL 2 +
+    最新の Ubuntu rootfs をご利用ください。</p>
+</div>
+</section>
+
+
+<!-- What is Lineage? ─────────────────────────────────────────────── -->
+<section id="what">
+
+
+<h2 lang="ja">Lineage とは？<a class="headerlink" href="#what">#</a></h2>
+
+
+
+<p lang="ja">
+    <strong>Lineage は、Agent 自身が育っていくシステムです。</strong>
+</p>
+
+
+
+<p lang="ja">
+    YAML を書く必要はありません。プロンプトエンジニアリングを知っている必要もありません。
+    やってほしいことを伝えるだけ ——
+    「SRE インシデントトリアージを担って」「リリースノートをもっと上手く書いて」——
+    Founder Agent があなたのコードベースを読み、仕様を設計し、プロンプトを書き、
+    ツールポリシーを構成し、納品前にオフライン評価を実行します。
+    曖昧なアイデアから使える Agent までの間にある「下準備」を、
+    Lineage が代わりにやります。
+</p>
+
+
+
+<p lang="ja">
+    さらに重要なのは、最初のバージョンで止まらないこと。
+    すべての会話が評価可能な痕跡を残します。
+    Lineage は何が効いて何が効かなかったかを観察し、
+    改善案を自動的に提案し、過去のトレースで安全に再現実行し、
+    「現在のバージョンを上回ったと証明された」変更だけを出荷します。
+    Agent 自体は精緻になっていきます ——
+    プロンプトが正確になり、ツールポリシーが引き締まる ——
+    同時にその「業務マニュアル」も厚くなります ——
+    試行錯誤の積み重ねが再利用可能な how-to として書き残され、
+    同じドメインの将来の Agent はそれを継承します。
+    Agent が学び、チームの集合知も積み上がっていきます。
+</p>
+
+
+
+<p lang="ja">
+    基盤の Agent Kernel は実ワークロードのために設計されています ——
+    長い会話でゴールを見失わない、複数日のタスクがクラッシュ後も
+    再開できる、コンテキストエンジニアリングのフルセットがデフォルトで
+    有効、プロバイダ越えの自動プロンプトキャッシュでトークンを 70-90% 節約、
+    そして任意のベースモデルで使える advisor パターン ——
+    日常は安価なモデルで走らせ、難所は Opus や GPT-5 に委譲します。
+    agentic ベンチマークで、Lineage は Hermes・Claude Code に対して
+    タスク通過率が平均約 15% 高く、タスク 1 件あたりのトークン消費は
+    約 30% 少ない結果になっています。
+</p>
+
+
+
+<p lang="ja"><strong>Lineage が他のエージェント製品では実現できていない 8 つのこと：</strong></p>
+
+
+
+<ul lang="ja">
+    <li><strong>曖昧なアイデアからでも、最初から高品質な Agent。</strong>
+        Lineage に大まかな要望を伝えるだけ ——
+        「SRE インシデントトリアージを担う Agent が欲しい」
+        「リリースノートを上手く書きたい」など。
+        Lineage の Founder Agent があなたのコードベースを読み、
+        その Agent の仕様を設計し、プロンプトとツールポリシーを書き、
+        あなたに見せる前にオフライン評価を実行します。
+        YAML を書く必要はありません。仕事の内容を説明するだけです。</li>
+    <li><strong>使えば使うほど良くなる。</strong>すべての会話が評価可能な
+        痕跡を残します。Lineage は何が機能し何が機能しなかったかを観察し、
+        改善を提案し、過去のトレース上で安全に評価を再実行し、
+        現在の Agent を上回ったものだけを出荷します。
+        毎週金曜にプロンプトを調整する必要はありません ——
+        Lineage が調整し、あなたは承認するだけです。</li>
+    <li><strong>Agent が育つ 2 つの道筋。</strong>Agent 自体が鋭くなる ——
+        プロンプトは精度を増し、ツールポリシーは引き締まる ——
+        ただし各変更が評価を通過した場合のみ、次世代に受け継がれます。
+        さらに、Agent の「業務マニュアル」も厚くなる ——
+        試行錯誤の中で蓄積されたノウハウが再利用可能な how-to として
+        書き残され、同じドメインの将来のあらゆる Agent がそれを継承します。
+        Agent が学ぶことと、チームの集合知が積み上がることが、
+        同時に進行します。</li>
+    <li><strong>既存の作業スタイルにそのまま乗れる。</strong>
+        2 つのモードが同時に有効：<strong>personal モード</strong>は
+        あなたについて回る（OpenClaw に近い ——
+        あなたの習慣、あなたの記憶、あなたのショートカット、
+        どのディレクトリにいるかに関係なく）。
+        <strong>project モード</strong>はプロジェクト境界を尊重する
+        （Claude Code に近い —— 各コードベースは独自の memory、
+        信頼状態、ルールを持つ）。切り替え操作は不要です。</li>
+    <li><strong>業界最高水準の agentic 推論能力。</strong>
+        Lineage の Agent Kernel は「誰が実際に仕事を片付けられるか」を
+        決める箇所のために設計されています ——
+        ゴールを見失わない長い会話、クラッシュからも復帰する複数日タスク、
+        完全なコンテキストエンジニアリング・スコープ
+        （プログレッシブ・ディスクロージャ + just-in-time 検索 +
+        コンテキスト・オフロード）をデフォルトで配線、
+        プロバイダ越えの自動プロンプトキャッシュ
+        （反復作業で 70-90% のトークン削減）、
+        そしてこれまで Claude Code 専売だった advisor パターン。
+        Hermes・Claude Code と agentic ベンチマークで並べて比較した結果、
+        Lineage はタスク通過率が平均約 15% 高く、タスク 1 件あたりの
+        トークン消費は約 30% 少ないという結果になりました。</li>
+    <li><strong>ソフトウェアを信頼する自然な感覚で権限を制御。</strong>
+        3 層の override が日常の信頼感覚と一致 ——
+        グローバルデフォルト（「このノート PC では、Agent に sudo を絶対許さない」）、
+        プロジェクト単位の引き締め（「このクライアントリポジトリでは
+        <code>.env</code> にも触れさせない」）、
+        個人 / ローカル層（「自分のマシンではテスト用に X を許可」）。
+        3 層すべてが閲覧可能・ロールバック可能なプレーン JSON ファイル ——
+        設定 UI に隠された何かはありません。</li>
+    <li><strong>どのモデルでも advisor。</strong>日常は速くて安い主力モデルを
+        走らせ、難所に当たれば kernel が同じターン内でより強い advisor に
+        問い合わせる —— Claude Opus、GPT-5、あなたが設定した任意のモデル。
+        これまで Claude Code 専売だった能力を、Lineage は任意のベースモデル
+        （ノート PC で動くオープンソース含む）に提供します。</li>
+    <li><strong>近日：進化させた Agent を信頼する人と共有。</strong>
+        AMP（Agent Marketplace Protocol）は P2P 方式で、
+        進化させた Strain と Genome を友人・同僚・家族に送れる仕組み ——
+        訓練し上げた Agent のプレイリストを共有するような感覚です。
+        彼らの評価フィードバックも返ってきます。
+        どの Agent が生き残るかを中央権威が決めることはなく、
+        ネットワークはランキングではなく信頼で育ちます。
+        予定：MVP-B Alpha。</li>
+</ul>
+
+
+
+<p lang="ja"><strong>これを支える 4 つのプリミティブ：</strong></p>
+
+<div class="concept-grid">
+    <div>
+        <h3>Strain</h3>
+        
+        
+        <p lang="ja">再利用可能な Agent テンプレート ——
+        コーディング、メール、ブラウザ操作など。このファミリの Agent が
+        触れる tool と、評価方法を定義します。Strain を fork するだけで
+        自分のドメインに合わせたカスタマイズができ、進化の仕組みは
+        そのまま使えます。</p>
+    </div>
+    <div>
+        <h3>Agent</h3>
+        
+        
+        <p lang="ja">実際に稼働するインスタンス ——
+        あなたが使う pal、explore、founder 本体です。それぞれが
+        不変な genome スナップショット、親への参照、世代番号、
+        稼働中の fitness 履歴を持ちます。ライフサイクルは 4 状態
+        （<code>candidate → stable → deprecated → extinct</code>）——
+        退役とロールバックがファーストクラスの操作として組み込まれています。</p>
+    </div>
+    <div>
+        <h3>Genome</h3>
+        
+        
+        <p lang="ja">Agent の「ソースコード」—— プロンプト、planner 設定、
+        tool-policy の重み —— をコンテンツアドレス JSON として凍結します。
+        genome の編集は新しい子 Agent を生成し、親は決して変更されません。
+        だからこそ「なぜ Agent が変わったのか？」は、常に diff で答えられます。</p>
+    </div>
+    <div>
+        <h3>Evolution</h3>
+        
+        
+        <p lang="ja">他のツールが持たないクローズドループ。CUSUM がライブの
+        品質シグナルを監視 → 変異 → オフライン評価 → 人手 gate →
+        Blue-Green 切替 → 7 日間の観察窓 → リグレッション検出時に
+        自動ロールバック。選択は感覚ではなく、機械的かつ可逆です。</p>
+    </div>
+</div>
+
+
+
+<p lang="ja">
+    その下では 4 つの協調するサブシステムが動きます。リクエストは
+    <strong>Control</strong> から入り、<strong>AgentKernel</strong> 内で実行され、
+    <strong>Capability</strong> からツールとメモリを取得し、
+    <strong>Evolution</strong> ループに観察されます。リクエストが
+    あなたのターミナル由来でも、IM チャネル経由でも、API からでも、
+    形は同じです。
+</p>
+
+<svg class="arch-svg" viewBox="0 0 760 610" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="arch-svg-title">
+    
+    
+    <title id="arch-svg-title" lang="ja">Lineage の 4 サブシステム</title>
+
+    <!-- Layer 1: Control ─────────────────────────────────────────── -->
+    <g>
+        <rect class="layer--control" width="760" height="130" rx="16" />
+        <text x="20" y="34" font-size="17" font-weight="700" class="title--control">1. Control</text>
+        
+        
+        <text x="110" y="34" font-size="13" class="desc--control" lang="ja">入口とルーティング</text>
+
+        <g transform="translate(20, 50)">
+            <rect class="sub--control" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--control">Gateway</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--control">HTTP · WS · Unix</text>
+        </g>
+        <g transform="translate(203, 50)">
+            <rect class="sub--control" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--control">Adapters</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--control">TG · Discord · Slack</text>
+        </g>
+        <g transform="translate(386, 50)">
+            <rect class="sub--control" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--control">Auth</text>
+            
+            
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--control" lang="ja">トークン · セッション</text>
+        </g>
+        <g transform="translate(569, 50)">
+            <rect class="sub--control" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--control">LCP</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--control">JSON-RPC 2.0</text>
+        </g>
+    </g>
+
+    <!-- Arrow 1 → 2 -->
+    <line class="arrow-line" x1="380" y1="135" x2="380" y2="153" />
+    <polygon class="arrow-head" points="375,153 385,153 380,160" />
+
+    <!-- Layer 2: Execution ──────────────────────────────────────── -->
+    <g transform="translate(0, 160)">
+        <rect class="layer--execution" width="760" height="130" rx="16" />
+        <text x="20" y="34" font-size="17" font-weight="700" class="title--execution">2. Execution</text>
+        
+        
+        <text x="123" y="34" font-size="13" class="desc--execution" lang="ja">純粋計算コア</text>
+
+        <g transform="translate(20, 50)">
+            <rect class="sub--execution" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--execution">AgentKernel</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--execution">Ports &amp; Adapters</text>
+        </g>
+        <g transform="translate(203, 50)">
+            <rect class="sub--execution" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--execution">Compose</text>
+            
+            
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--execution" lang="ja">ターンパイプライン</text>
+        </g>
+        <g transform="translate(386, 50)">
+            <rect class="sub--execution" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--execution">PEO loop</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--execution">Plan · Exec · Observe</text>
+        </g>
+        <g transform="translate(569, 50)">
+            <rect class="sub--execution" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--execution">Streaming</text>
+            
+            
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--execution" lang="ja">トークン + イベント</text>
+        </g>
+    </g>
+
+    <!-- Arrow 2 → 3 -->
+    <line class="arrow-line" x1="380" y1="295" x2="380" y2="313" />
+    <polygon class="arrow-head" points="375,313 385,313 380,320" />
+
+    <!-- Layer 3: Capability ─────────────────────────────────────── -->
+    <g transform="translate(0, 320)">
+        <rect class="layer--capability" width="760" height="130" rx="16" />
+        <text x="20" y="34" font-size="17" font-weight="700" class="title--capability">3. Capability</text>
+        
+        
+        <text x="135" y="34" font-size="13" class="desc--capability" lang="ja">ツール、スキル、メモリ</text>
+
+        <g transform="translate(20, 50)">
+            <rect class="sub--capability" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--capability">Tools</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--capability">FS · CLI · Web</text>
+        </g>
+        <g transform="translate(203, 50)">
+            <rect class="sub--capability" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--capability">Skills</text>
+            
+            
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--capability" lang="ja">再利用可能なノウハウ</text>
+        </g>
+        <g transform="translate(386, 50)">
+            <rect class="sub--capability" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--capability">Browser</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--capability">agent-browser CDP</text>
+        </g>
+        <g transform="translate(569, 50)">
+            <rect class="sub--capability" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--capability">Memory</text>
+            
+            
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--capability" lang="ja">4 層メモリ</text>
+        </g>
+    </g>
+
+    <!-- Arrow 3 → 4 -->
+    <line class="arrow-line" x1="380" y1="455" x2="380" y2="473" />
+    <polygon class="arrow-head" points="375,473 385,473 380,480" />
+
+    <!-- Layer 4: Evolution ───────────────────────────────────────── -->
+    <g transform="translate(0, 480)">
+        <rect class="layer--evolution" width="760" height="130" rx="16" />
+        <text x="20" y="34" font-size="17" font-weight="700" class="title--evolution">4. Evolution</text>
+        
+        
+        <text x="124" y="34" font-size="13" class="desc--evolution" lang="ja">評価駆動の淘汰</text>
+
+        <g transform="translate(20, 50)">
+            <rect class="sub--evolution" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--evolution">Eval</text>
+            
+            
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="ja">オフライン + ライブ</text>
+        </g>
+        <g transform="translate(203, 50)">
+            <rect class="sub--evolution" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--evolution">CUSUM</text>
+            
+            
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="ja">リグレッション検出</text>
+        </g>
+        <g transform="translate(386, 50)">
+            <rect class="sub--evolution" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--evolution">Mutation</text>
+            
+            
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="ja">Genome 操作</text>
+        </g>
+        <g transform="translate(569, 50)">
+            <rect class="sub--evolution" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--evolution">Blue-Green</text>
+            
+            
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="ja">自動ロールバック</text>
+        </g>
+    </g>
+</svg>
+
+
+
+<p lang="ja">
+    ファイルが Source of Truth で、SQLite DB はマテリアライズドなインデックスであり、
+    いつでも <code>data/</code> から再構築できます。
+</p>
+
+</section>
+
+
+<!-- Quick start ──────────────────────────────────────────────────── -->
+<section id="quickstart">
+
+
+<h2 lang="ja">クイックスタート<a class="headerlink" href="#quickstart">#</a></h2>
+
+
+
+<p lang="ja">
+    Lineage は TUI ファーストのプロダクトです。プロジェクトディレクトリに移動して
+    <code>lineage chat</code> を実行します：
+</p>
+
+<pre><code>$ cd ~/your-project
+$ lineage chat
+∴ lineage 0.117.x — pal ready
+
+&gt; review the auth middleware for timing-attack risks
+
+  ● filesystem.read    crates/auth/src/middleware.rs
+  ● filesystem.grep    "compare|hmac|verify"  crates/auth/
+
+  Found one — line 47 compares HMAC tags with `==`, which short-
+  circuits on first byte mismatch. A sufficiently noisy attacker
+  can recover the tag byte-by-byte from response timing.
+
+  Constant-time compare via `subtle::ConstantTimeEq` would fix it.
+  Want me to write the patch and run the test suite?
+
+&gt; yes, patch it
+
+  ● filesystem.edit    crates/auth/src/middleware.rs   (1 hunk)
+  ● cli.execute        cargo test -p auth --lib
+                       passed  17/17  in  3.4s
+
+  Done. Diff is ready to commit.</code></pre>
+
+
+
+<p lang="ja">
+    初回起動時はプロバイダ設定
+    （Anthropic / OpenAI / OpenAI 互換 / Codex サブスクリプション）の
+    ウィザードに誘導され、プロジェクトディレクトリを信頼するか確認したのち、
+    3 ペインのチャットレイアウトに入ります ——
+    中央が会話、下部がステータスバー、サイドにコンテキストペイン（任意）。
+</p>
+
+
+
+<p lang="ja">
+    セッションは永続化されます。<code>lineage chat --resume</code> で続きから再開できます。
+    <code>lineage agents</code> で系譜ツリーの一覧、
+    <code>lineage cost</code> でトークン使用量、
+    <code>lineage soul</code> で現在の strain のパーソナリティ編集ができます。
+</p>
+</section>
+
+
+<!-- Models & built-in Strains ─────────────────────────────────────── -->
+<section id="models">
+
+
+<h2 lang="ja">対応モデルと内蔵 Strain<a class="headerlink" href="#models">#</a></h2>
+
+
+
+<h3 lang="ja">対応する LLM プロバイダ</h3>
+
+
+
+<p lang="ja">
+    Lineage はマルチプロバイダ・レジストリを通じて LLM と対話します。
+    必要なプロバイダだけを設定し、ルーティングはモデル名のプレフィックスで決まります。
+    Strain ごとに別々のモデルを使うこともでき ——
+    pal は Claude Sonnet、explore は安価な Qwen、というように同一セッション内で混在可能です。
+</p>
+
+<dl class="provider-list">
+    <dt><code>claude-*</code></dt>
+    
+    
+    <dd lang="ja">Anthropic —— Claude Opus / Sonnet / Haiku 4.x ファミリ。</dd>
+
+    <dt><code>gpt-*</code> / <code>o3-*</code> / <code>o4-*</code></dt>
+    
+    
+    <dd lang="ja">OpenAI —— Chat Completions と Responses API。
+        さらに OpenAI Codex サブスクリプション（ネイティブ帰属、
+        ブラウザ OAuth ペアリング、API キー不要）にも対応。</dd>
+
+    <dt><code>deepseek-*</code></dt>
+    
+    
+    <dd lang="ja">DeepSeek —— V3 / R1 ファミリ。</dd>
+
+    <dt><code>qwen*</code></dt>
+    
+    
+    <dd lang="ja">Qwen（DashScope 経由）—— Qwen 3 / Qwen Max / Qwen Coder。</dd>
+
+    <dt><code>moonshot-*</code> / <code>kimi-*</code></dt>
+    
+    
+    <dd lang="ja">Moonshot —— Kimi K2 / Kimi Latest。</dd>
+
+    <dt><code>groq</code> / <code>llama-*</code> / <code>mixtral-*</code></dt>
+    
+    
+    <dd lang="ja">Groq —— Llama / Mixtral / DeepSeek を Groq LPU
+        ホスティングで提供（非常に高速）。</dd>
+
+    <dt><code>openrouter/*</code></dt>
+    
+    
+    <dd lang="ja">OpenRouter —— 200+ モデルのメタルーター
+        （Anthropic / OpenAI / Google / Meta / Mistral など）。</dd>
+
+    <dt><code>minimax-*</code> / <code>fireworks-*</code></dt>
+    
+    
+    <dd lang="ja">MiniMax（M2、abab）と Fireworks AI（DeepSeek / Llama / Qwen
+        を Fireworks インフラで提供）。</dd>
+</dl>
+
+
+
+<h3 lang="ja">内蔵 Strain</h3>
+
+
+
+<p lang="ja">
+    Lineage には 6 つの Strain が組み込まれています。それぞれに不変な
+    seed genome があり、fork して独自のバリアントを作れます。
+    ユーザー向けが 3 つ、進化パイプライン内部で動くのが 3 つです。
+</p>
+
+
+
+<p class="strain-group" lang="ja"><strong>ユーザー向け</strong></p>
+
+<dl class="strain-list">
+    <dt><code>pal</code></dt>
+    
+    
+    <dd lang="ja">あなたのメインエージェント。すべてのリクエストはまず
+        pal を通り —— 自分で処理できる場合は直接、ドメイン専門性が必要な場合は
+        スペシャリストに委譲します。</dd>
+
+    <dt><code>explore</code></dt>
+    
+    
+    <dd lang="ja">読み取り専用のコードベース・ナビゲータ。
+        パターンの発見、レポートの生成、「X はどこで定義されている？」
+        といった問いへの回答が速く、ファイルは一切変更しません。</dd>
+
+    <dt><code>founder</code></dt>
+    
+    
+    <dd lang="ja">システムエンジニア。新しい Strain の設計、Agent の
+        ブートストラップ、Skill のインポートを行います。Lineage の
+        エージェント・エコシステム自体を拡張したいときに使います。</dd>
+</dl>
+
+
+
+<p class="strain-group" lang="ja"><strong>進化パイプライン</strong></p>
+
+<dl class="strain-list">
+    <dt><code>analyzer</code></dt>
+    
+    
+    <dd lang="ja">診断エンジン。評価結果を検査して集約スコアでは見えない
+        パターンを見つけ、失敗を根本原因に帰属させ、進化パイプラインが
+        次にどの mutation operator を適用するかを決定します。</dd>
+
+    <dt><code>grader</code></dt>
+    
+    
+    <dd lang="ja">評価のオラクル。EvalContract の各次元に対して Agent の
+        出力を採点し、根拠を必ず示します。進化の意思決定を駆動 ——
+        正確性がすべてです。</dd>
+
+    <dt><code>comparator</code></dt>
+    
+    
+    <dd lang="ja">ブラインド・ジャッジ。2 つの Agent 出力を比較しますが、
+        どちらがチャンピオンでどちらが候補かは<em>知りません</em>。
+        どちらかへのバイアスはパイプライン全体を汚染します。</dd>
+</dl>
+</section>
+
+
+<!-- Tools ────────────────────────────────────────────────────────── -->
+<section id="tools">
+
+
+<h2 lang="ja">Tools<a class="headerlink" href="#tools">#</a></h2>
+
+
+
+<p lang="ja">
+    Tools は Agent が世界に働きかける手段です。Lineage には Rust ネイティブの
+    ツールボックスが同梱され、コーディング/オプス用エージェントに必要な動作を
+    カバーします —— ファイルの読み書き、シェル実行、ブラウザ制御、Web 取得、
+    他 Agent への委譲、バックグラウンドジョブのスケジュール。すべてのツールは
+    Strain の genome 重みでゲートされ、宣言していない Strain は呼び出せません。
+    外部ランタイムも Node サイドカーも MCP 必須のフォールバックもありません。
+</p>
+
+<dl class="provider-list">
+    <dt><code>filesystem</code></dt>
+    
+    
+    <dd lang="ja">read · write · edit · grep · glob · multi-edit。
+        現在の <code>project_dir</code> にスコープされ、編集は差分で追跡されます。</dd>
+
+    <dt><code>cli</code></dt>
+    
+    
+    <dd lang="ja">シェルコマンドを実行。Strain ごとの allowlist（正規表現）、
+        実行ごとのサンドボックス階層選択、書き込み系コマンドには任意で
+        human-in-the-loop 確認。</dd>
+
+    <dt><code>delegate</code></dt>
+    
+    
+    <dd lang="ja">別の Agent を起動または呼び出します —— 同期 wait、非同期 fire、
+        ポーリングチェック。サブ会話は独立した ExecutionTrace を持ち、
+        再生可能です。</dd>
+
+    <dt><code>browser</code></dt>
+    
+    
+    <dd lang="ja">navigate · click · type · evaluate · screenshot を、
+        同梱の <code>agent-browser</code> CDP クライアント経由で実行します。
+        専用 Chromium プロファイル、制御はループバック限定、cookie は共有しません。</dd>
+
+    <dt><code>web</code></dt>
+    
+    
+    <dd lang="ja">URL を取得して Markdown に変換（htmd）、設定済み検索プロバイダ経由の
+        検索、RSS プル。既定では headless ブラウザにフォールバックしません。</dd>
+
+    <dt><code>memory</code></dt>
+    
+    
+    <dd lang="ja">Strain スコープの JSONL メモリ：<code>save</code> ·
+        <code>recall</code> · <code>forget</code>。プロジェクトメモリは
+        <code>project_key</code> 単位で、クロスプロジェクトの strain メモリとは分離されます。</dd>
+
+    <dt><code>task</code></dt>
+    
+    
+    <dd lang="ja">マルチステップの長時間タスクを作成・管理
+        （Task → Step → Job、ADR-053）。File-first 状態 +
+        スタック検出ウォッチドッグ付き。</dd>
+
+    <dt><code>system</code></dt>
+    
+    
+    <dd lang="ja">ランタイムの自己検査 —— エージェント一覧、系譜ツリー、
+        進化ステータス（CUSUM シグナル、進行中の候補）、コスト台帳。</dd>
+
+    <dt><code>schedule</code> / <code>file_watch</code></dt>
+    
+    
+    <dd lang="ja">cron スタイルの定期トリガとファイルシステム変更トリガ。
+        どちらもバックグラウンドキューに流れ、インタラクティブ chat には割り込みません。</dd>
+
+    <dt><code>email</code> / <code>calendar</code> / <code>channel</code></dt>
+    
+    
+    <dd lang="ja">副作用系ツール。DB レイヤで idempotency key による重複排除を行い、
+        同一呼び出しの再実行で二重送信になりません。</dd>
+
+    <dt><code>ask_user</code> / <code>checklist</code> / <code>progress</code></dt>
+    
+    
+    <dd lang="ja">会話補助ツール —— ユーザー入力待ち、TUI 内 checklist 表示、
+        進捗マーカーのストリーミング。</dd>
+</dl>
+
+
+
+<p lang="ja">
+    ここには「MCP の壁」はありません ——
+    上記のすべてのツールは型付き schema 付きの Rust 関数です。
+    MCP サーバーを追加面として読み込むこともできますが、コアツールはそれに依存しません。
+</p>
+</section>
+
+
+<!-- Agent Kernel ─────────────────────────────────────────────────── -->
+<section id="kernel">
+
+
+<h2 lang="ja">Agent Kernel<a class="headerlink" href="#kernel">#</a></h2>
+
+
+
+<p lang="ja">
+    <strong>Agent Kernel</strong> は Lineage が「1 ターンの対話」を
+    「実際のアクション」に変換するコア —— プロンプトを組み立て、LLM を呼び、
+    ツール呼び出しを配送し、結果をストリームで返します。私たちはこれを
+    純粋計算コア（Ports &amp; Adapters）として構築しました ——
+    だからこそ同じ Agent が、プロバイダ・トランスポート・インタラクション面を
+    問わず、一行も書き換えずに動きます。kernel には 6 つの能力が組み込まれており、
+    長セッション・多段階タスク・プロバイダ切替という多くのエージェントが
+    崩れる場面で、Lineage が崩れない理由がここにあります。
+</p>
+
+<dl class="provider-list">
+    
+    
+    <dt lang="ja">コンテキストエンジニアリング</dt>
+    
+    
+    <dd lang="ja">コンテキストエンジニアリング ——
+        モデルの有限な注意ウィンドウに「高シグナルなトークン」だけを収める
+        工学規律 —— こそが、Agent が数週間にわたって冴えたままでいるか、
+        それとも昼食後には劣化しているかを分けます。Lineage は領域で
+        標準的な 6 種のスロットすべてをファーストクラスとして扱います：
+        <strong>システム指令、プロジェクトプロファイル、再取得メモリ、
+        会話履歴、ツール状態、few-shot 例示</strong> ——
+        それぞれに明示的なトークン予算が割り当てられ、決定論的な
+        <code>PromptCompiler</code> が毎ターン同じ規則で組み立てます
+        （同じ入力 → 同じプロンプト）。さらに業界で確立された
+        3 つの高度技法をデフォルトで配線済み：
+        <strong>プログレッシブ・ディスクロージャ</strong> ——
+        ツールとメモリは名前 + スタブとして窓に入り、Agent は
+        <code>tool_search</code> / <code>memory_search</code> で
+        必要に応じて展開（ツールカタログが厚いほど効果大、通常 90% 以上の
+        トークン削減）；<strong>just-in-time 検索</strong> ——
+        事前ロードのスナップショットではなく、ターンごとに必要分だけ取得；
+        <strong>コンテキスト・オフロード</strong> ——
+        大きなツール出力やコンパクト前の履歴はディスクに永続化し、
+        窓には参照だけ残します。稼働中の会話はそのままディスクの
+        JSONL にストリームされ —— ターン途中でクラッシュしても
+        その瞬間から再開でき、最初からやり直しにはなりません。</dd>
+
+    
+    
+    <dt lang="ja">コンパクション — 3 つの操作、3 つの時間スケール</dt>
+    
+    
+    <dd lang="ja">多くの製品ではコンパクションは二値的です ——
+        窓が埋まれば要約するか、失敗するか。Lineage は 3 つの異なる
+        タイムスケールで 3 つの操作を実行します ——
+        <strong>Prune</strong>（毎ターン、LLM コストゼロ、
+        古い成功ツール結果をプレースホルダに置換）、
+        <strong>Compact</strong>（窓が予算に近づいた時、
+        LLM 支援の構造化サマリ、ゴール / 制約 / 決定 / 次ステップを保持、
+        圧縮前にフル会話を JSONL + Markdown でアーカイブし原典は失われない）、
+        <strong>Distill</strong>（節境界で、汎用知識を再利用可能な
+        アイテムに蒸留）。カットポイントはメッセージ境界を厳守 ——
+        tool_result の途中、tool_call バッチの途中で切ることはありません。
+        この粒度こそが、1 つの Agent が複数日にわたる長タスクを、
+        ターン 1 で受け取ったゴールを忘れずに走り切れる理由です。</dd>
+
+    
+    
+    <dt lang="ja">メモリ — 4 層、すべてあなたのディスク上に</dt>
+    
+    
+    <dd lang="ja">Anthropic が 2026 年 4 月の Managed Agents リリースで
+        「memory = ファイルシステム」をブレイクスルーとして打ち出しましたが ——
+        Lineage は初日からそのアイデアを実装しており、さらに先まで踏み込んでいます。
+        1 階ではなく 4 階：<strong>Conversation</strong>
+        （このターンのライブ・ワーキングセット）→
+        <strong>Project</strong>（プロジェクト単位の知識、
+        <code>data/projects/{key}/memory.jsonl</code>）→
+        <strong>Strain</strong>（クロスプロジェクトのドメイン知見、
+        <code>data/memory/{strain_id}.jsonl</code>）→
+        <strong>Genome</strong>（不変、進化によってのみ強化される）。
+        状態ベースの階層昇格（mem0 と同じ思想）—— 情報は証拠を伴ってのみ
+        上位に昇格し、漏洩で上がることはありません。下位層には書き込みレート
+        上限があり、騒がしいセッションがシグナルを押し流すことはありません。
+        memory のすべてはあなたのディスク上のプレーン JSONL ——
+        閲覧・編集・削除・バージョン管理が可能。ベンダー SaaS に
+        保管を委ねる必要はありません。</dd>
+
+    
+    
+    <dt lang="ja">長時間タスク</dt>
+    
+    
+    <dd lang="ja">本当の仕事は 1 ターンでは終わりません。Lineage は多段階計画を
+        <strong>Task → Step → Job</strong> としてモデル化します ——
+        Task はあなたが定めたゴール、Step は個別にチェックポイント可能な
+        作業単位、Job は Step 内部で実行されます。Task 状態は Agent の
+        頭の中ではなく、まずディスクに置かれます
+        （<code>data/tasks/{id}/task.json</code>）—— だから Step は
+        人間レビューのために一時停止、休憩後に再開、Agent 間での
+        引き継ぎが可能です。バックグラウンド watchdog が N 分動いていない
+        Step を拾い上げるので、計画が途中で静かに死に、3 日後に
+        「ところで、あれどうなった？」と気づくことはありません。
+        Anthropic はまさにこの問題を扱うため Managed Agents の永続
+        memory を 2026 年 4 月にパブリック・ベータで出しましたが、
+        Lineage は同等の形をあなたのローカルディスク上で提供し、
+        マネージドクラウドへの依存はありません。</dd>
+
+    
+    
+    <dt lang="ja">プロンプトキャッシュ</dt>
+    
+    
+    <dd lang="ja">プロバイダ側キャッシュをデフォルトで配線済み ——
+        Anthropic、OpenAI、DeepSeek、ほかキャッシュ API を持つ任意のバックエンド。
+        kernel はすべてのプロンプトを cache-friendly に構成します ——
+        安定したシステム接頭辞は上に、揮発するコンテキストは下に。
+        長セッションでは繰り返しターンごとに cache-read 価格で課金され ——
+        通常 1 トークンあたり 70-90% 削減 ——
+        アプリ側のコード変更なしに自動で効きます。</dd>
+
+    
+    
+    <dt lang="ja">Advisor パターン — Anthropic 専売の解放</dt>
+    
+    
+    <dd lang="ja">これまで advisor パターン ——
+        コスト効率の良い高速モデルが日常作業をこなし、難所だけより強いモデルに
+        委譲する仕組み —— は事実上 Anthropic 専売の能力でした
+        （Claude Code に組み込まれており、他では使えない）。
+        Lineage はこれを任意のプロバイダ、オープンソースのローカルモデルでも
+        動くようにします。日常の 90% のターンはコスト効率の良い主力モデル
+        （<code>qwen-coder</code> や <code>deepseek-v3</code> など）で走らせ、
+        kernel が難所を検出するとその場で SOTA advisor
+        （Claude Opus、GPT-5 など）に自動エスカレーション ——
+        手動でのモデル切替も Agent の引き継ぎも不要です。
+        Claude Code 級の推論品質を、Claude Code とは違うコスト構造で。</dd>
+</dl>
+
+
+
+<p lang="ja">
+    競合との位置取り：大半のコーディング・エージェント製品は、コンテキスト
+    エンジニアリングを自社 UI 内に閉じ込め、単一プロバイダにルーティングし、
+    会話境界で軌跡を途切れさせます。Lineage は、すべてのターンを再生可能な
+    アーティファクトとして保存し、その再生に基づいて Agent を進化させ、
+    明日には基盤モデルを差し替えることもできます。kernel こそが、
+    「セッション越え・プロバイダ越え・モデル越えの連続性」を本当に成立させている
+    部分です。
+</p>
+</section>
+
+
+<!-- Self-update ──────────────────────────────────────────────────── -->
+<section id="self-update">
+
+
+<h2 lang="ja">自動更新<a class="headerlink" href="#self-update">#</a></h2>
+
+
+
+<p lang="ja">
+    <code>lineage self-update</code> はチャンネルを認識します。
+    Homebrew 経由でインストールされた場合は <code>brew upgrade lineage</code> に、
+    npm の場合は <code>npm update -g</code>、Cargo は
+    <code>cargo install lineage --force</code>、snap は
+    <code>sudo snap refresh</code> にリダイレクトします。
+    直接インストール（<code>install.sh</code>）の場合のみ、その場で
+    POSIX rename によるアトミックな入れ替えを行い、
+    <code>.prev</code> ハードリンクのバックアップを残します。
+</p>
+
+
+
+<p lang="ja">
+    バックグラウンド更新は<strong>オプトイン</strong>です。デフォルトでは通知のみ ——
+    30 分ごとに GitHub をチェックし、新バージョンがあれば起動時にバナーを出すだけです。
+    サイレントインストールを有効にするには、
+    <code>~/.config/lineage/lineage.toml</code> を編集してください：
+</p>
+
+<pre><code>[updates]
+auto_check_enabled = true
+auto_install_enabled = true   # default false
+check_interval_minutes = 30</code></pre>
+</section>
+
+
+<!-- Telemetry & privacy ─────────────────────────────────────────── -->
+<section id="telemetry">
+
+
+<h2 lang="ja">テレメトリとプライバシー<a class="headerlink" href="#telemetry">#</a></h2>
+
+
+
+<p lang="ja">
+    Lineage は匿名の使用テレメトリをデフォルトで有効にして配布します。
+    このデータは機能の優先順位付けと、本当のリグレッションの早期発見に役立ちます。
+    初回同意ダイアログを意図的に排除しました ——
+    あなたがこれまで CLI ツールで目にしてきた同意ダイアログは、
+    すべて反射的に「いいえ」を押すよう訓練してしまっています。
+    つまりデフォルト off のテレメトリは自己選択された部分集団のみを測定し、
+    あらゆる製品判断を歪めます。デフォルト on + キルスイッチであれば、
+    代表的なサンプルを得つつ、コントロールはあなたの手元に残ります。
+</p>
+
+
+
+<p lang="ja"><strong>収集される情報：</strong></p>
+
+
+
+<ul lang="ja">
+    <li>ツール呼び出し名と回数（<code>filesystem.read</code>、
+        <code>delegate_wait</code> など —— 引数は決して送信しません）。</li>
+    <li>各ターンの所要時間、セッション長、エラー回数。</li>
+    <li>Strain キー（どの Agent を使ったか）。</li>
+    <li>Lineage バージョン + OS / アーキテクチャ。</li>
+</ul>
+
+
+
+<p lang="ja"><strong>絶対に収集しない情報：</strong></p>
+
+
+
+<ul lang="ja">
+    <li>ファイルシステムパス。</li>
+    <li>プロンプト、LLM の応答、ツールの入出力一切。</li>
+    <li>送信元 IP アドレス（Cloudflare エッジで削除され、PostHog エンドポイントには届きません）。</li>
+    <li>個人データに該当しうるすべての情報。</li>
+</ul>
+
+
+
+<p lang="ja"><strong>3 つのオプトアウト経路：</strong></p>
+
+
+
+<pre lang="ja"><code># 1. プロセス単位で無効化（環境変数）
+LINEAGE_DISABLE_TELEMETRY=1 lineage chat
+
+# 2. インストール単位で無効化（lineage.toml に書き込み）
+lineage telemetry disable usage
+
+# 3. ローカル JSONL 監査ログを個別に無効化
+LINEAGE_DISABLE_LOCAL_TELEMETRY=1</code></pre>
+
+
+
+<p lang="ja">
+    テレメトリ送信先は自社ホストの PostHog インスタンス
+    （<code>telemetry.lineagent.ai</code>）です ——
+    PostHog Cloud ではなく、サードパーティでもありません。
+</p>
+</section>
+
+
+<!-- FAQ ──────────────────────────────────────────────────────────── -->
+<section id="faq">
+
+
+<h2 lang="ja">FAQ<a class="headerlink" href="#faq">#</a></h2>
+
+<dl class="faq">
+
+
+
+<dt lang="ja">なぜ Rust？</dt>
+
+
+<dd lang="ja">Control / Execution / Capability の各プレーンには予測可能なレイテンシと、
+    ホットパスにおける GC ポーズゼロが必要です。
+    Rust のツーリングは十分に成熟しており、生産性の犠牲なしにこれらが手に入ります。
+    特に TUI が恩恵を受けます —— Ratatui は非常に高速で、
+    トークンを 3 ペインにストリーミング表示するレンダリングを
+    GC 付きランタイムで tear-free に保つのは難しいでしょう。</dd>
+
+
+
+<dt lang="ja">データはどこに保存されますか？</dt>
+
+
+<dd lang="ja">あなたのマシン上です。会話履歴は <code>data/conversations/</code> 下の JSONL、
+    Genome と Strain は <code>data/</code> 下の YAML/JSON、
+    メモリは <code>data/memory/</code> 下の JSONL に保存されます。
+    SQLite DB は純粋にインデックスであり、いつでも
+    <code>lineage rebuild-index</code> で再構築可能です。
+    ファイルが Source of Truth です。</dd>
+
+
+
+<dt lang="ja">Agent は自律的に動作しますか？安全性は？</dt>
+
+
+<dd lang="ja">Capability プレーンは階層化されたサンドボックスで実行されます ——
+    MVP は Wasm/WASI、Phase 1 は Linux namespace + seccomp + cgroups、
+    Phase 2 は MicroVM。
+    ツールポリシーは strain ごとに genome の重みで管理されます ——
+    allowlist に <code>cli_execute</code> がない strain は文字通りシェルを呼べません。
+    ブラウザ自動化は専用の Chromium プロファイルを使い、ループバックのみにバインドします。</dd>
+
+
+
+<dt lang="ja">「genome」とは？</dt>
+
+
+<dd lang="ja">ある Agent のプロンプト、planner 設定、tool-policy の重みの
+    不変 JSON スナップショットです。Genome は SHA-256 によるコンテンツアドレシング ——
+    編集すると新しい Agent（子）が生成され、古い genome は再生用に保管されます。
+    これにより系譜は監査可能になります ——
+    「何が変わったか？」は親と子の genome を diff すれば常に答えられます。</dd>
+
+
+
+<dt lang="ja">Linux / macOS のみ？</dt>
+
+
+<dd lang="ja">現時点では。パスとサンドボックスの規約はすべて POSIX を前提
+    （XDG ディレクトリ、flock、アトミックな rename セマンティクス）。
+    Windows は需要があれば Phase 1 で対応します。WSL 2 上では現在動作します。</dd>
+
+
+
+<dt lang="ja">完全にアンインストールするには？</dt>
+
+
+<dd lang="ja">
+    <pre><code>lineage telemetry disable usage --purge
+rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
+       "$XDG_CONFIG_HOME/lineage" "$HOME/.local/bin/lineage"</code></pre>
+    最初のコマンドが中央 PostHog にアップロード済みのイベントを削除し、
+    今後のアップロードを無効化します。<code>rm</code> はローカルインストール全体
+    （データ、ステート、設定、バイナリ）をひとつ残らず消去します。
+</dd>
+
+
+
+<dt lang="ja">Claude Code / Cursor / Copilot をそのまま使うのではダメ？</dt>
+
+
+<dd lang="ja">使ってください ——
+    これらは優秀なツールです。Lineage が向くのは別のニーズ ——
+    Agent そのものを評価に基づいて時間とともに進化させたい場合です。
+    Claude Code はツールであり、Lineage の Agent は fitness 履歴を持つ系譜ノードです。
+    必要なのが「このファイルを編集、このバグを修正、このテストを書く」だけなら、
+    Lineage は不要です。「どのエージェント人格がどんなタスクで週単位で安定して勝つか」を
+    機械的に（直感ではなく）選別したい場合、そこから Lineage が真価を発揮します。</dd>
+
+</dl>
+</section>
+
+
+<!-- Footer ──────────────────────────────────────────────────────── -->
+<footer class="page-footer">
+    
+    
+    <p lang="ja">© 2026 Lineage. All rights reserved.</p>
+</footer>
+
+</main>
+
+<!-- Trilingual switcher + copy-button JS ────────────────────────── -->
+<script>
+(function() {
+    'use strict';
+
+    var SUPPORTED = ['en', 'zh', 'ja'];
+    var STORAGE_KEY = 'lineage-lang';
+
+    function pickLang() {
+        // 1. URL hash (e.g. #zh) takes precedence — bookmark / share.
+        var hash = (location.hash || '').replace('#', '').toLowerCase();
+        if (SUPPORTED.indexOf(hash) !== -1) return hash;
+
+        // 2. localStorage (user's prior choice on this device).
+        try {
+            var saved = localStorage.getItem(STORAGE_KEY);
+            if (SUPPORTED.indexOf(saved) !== -1) return saved;
+        } catch (e) { /* private mode, fall through */ }
+
+        // 3. Browser locale — match navigator.language prefix to one
+        //    of the supported locales. Auto-pick zh/ja for users whose
+        //    browsers report those locales; everything else falls
+        //    through to English.
+        var nav = (navigator.language || 'en').toLowerCase();
+        if (nav.indexOf('zh') === 0) return 'zh';
+        if (nav.indexOf('ja') === 0) return 'ja';
+
+        // 4. Default English.
+        return 'en';
+    }
+
+    function setLang(lang) {
+        // After the trilingual split each language lives at
+        // its own URL. setLang() now navigates rather than
+        // mutating <html lang> on the current page (which
+        // would leave the user on a page whose markup was
+        // stripped to a single language anyway).
+        if (SUPPORTED.indexOf(lang) === -1) lang = 'en';
+        try { localStorage.setItem(STORAGE_KEY, lang); } catch (e) {}
+        var URLS = { en: '/', zh: '/zh/', ja: '/ja/' };
+        if (URLS[lang]) location.href = URLS[lang];
+    }
+
+    // Theme switcher — three states: 'auto' / 'light' / 'dark'.
+    // 'auto' resolves against system preference at apply time AND
+    // re-resolves whenever the system flips (so a user with Auto
+    // selected sees the page change live when they toggle macOS dark
+    // mode). The FOUC-prevention <script> in <head> already set the
+    // initial data-theme; this code keeps it in sync going forward.
+    var THEME_KEY = 'lineage-theme';
+    var THEME_SUPPORTED = ['auto', 'light', 'dark'];
+
+    function getThemeChoice() {
+        try {
+            var t = localStorage.getItem(THEME_KEY);
+            return THEME_SUPPORTED.indexOf(t) === -1 ? 'auto' : t;
+        } catch (e) { return 'auto'; }
+    }
+
+    function resolveTheme(choice) {
+        if (choice === 'auto') {
+            return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        return choice;
+    }
+
+    function applyTheme(choice) {
+        if (THEME_SUPPORTED.indexOf(choice) === -1) choice = 'auto';
+        document.documentElement.setAttribute('data-theme', resolveTheme(choice));
+        document.documentElement.setAttribute('data-theme-choice', choice);
+        try { localStorage.setItem(THEME_KEY, choice); } catch (e) {}
+        document.querySelectorAll('[data-dropdown="theme"] [data-theme-set]').forEach(function(btn) {
+            if (btn.dataset.themeSet === choice) {
+                btn.setAttribute('aria-current', 'true');
+            } else {
+                btn.removeAttribute('aria-current');
+            }
+        });
+    }
+
+    function closeAllDropdowns() {
+        document.querySelectorAll('.dropdown[data-open="true"]').forEach(function(d) {
+            d.removeAttribute('data-open');
+            var t = d.querySelector('.dropdown-trigger');
+            if (t) t.setAttribute('aria-expanded', 'false');
+        });
+    }
+
+    // Initial language pick on DOMContentLoaded.
+    function init() {
+        setLang(pickLang());
+
+        // Restore active state on theme buttons (data-theme on <html>
+        // was already set by the inline FOUC script). Wire clicks.
+        applyTheme(getThemeChoice());
+        document.querySelectorAll('.theme-switcher button').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                applyTheme(btn.dataset.themeSet);
+            });
+        });
+
+        // When a user picks Auto, react to OS-level theme changes.
+        var darkMq = matchMedia('(prefers-color-scheme: dark)');
+        var onSystemChange = function() {
+            if (getThemeChoice() === 'auto') applyTheme('auto');
+        };
+        if (darkMq.addEventListener) darkMq.addEventListener('change', onSystemChange);
+        else if (darkMq.addListener) darkMq.addListener(onSystemChange); /* Safari < 14 */
+
+        // Wire dropdown triggers (open / close + ARIA).
+        document.querySelectorAll('.dropdown-trigger').forEach(function(trigger) {
+            trigger.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var dropdown = trigger.closest('.dropdown');
+                var isOpen = dropdown.dataset.open === 'true';
+                // Close any other open dropdown first.
+                document.querySelectorAll('.dropdown[data-open="true"]').forEach(function(d) {
+                    if (d !== dropdown) {
+                        d.removeAttribute('data-open');
+                        d.querySelector('.dropdown-trigger').setAttribute('aria-expanded', 'false');
+                    }
+                });
+                if (isOpen) {
+                    dropdown.removeAttribute('data-open');
+                    trigger.setAttribute('aria-expanded', 'false');
+                } else {
+                    dropdown.setAttribute('data-open', 'true');
+                    trigger.setAttribute('aria-expanded', 'true');
+                }
+            });
+        });
+
+        // Wire menu items.
+        document.querySelectorAll('[data-dropdown="lang"] [data-lang-set]').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                setLang(btn.dataset.langSet);
+                closeAllDropdowns();
+            });
+        });
+        document.querySelectorAll('[data-dropdown="theme"] [data-theme-set]').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                applyTheme(btn.dataset.themeSet);
+                closeAllDropdowns();
+            });
+        });
+
+        // Click outside / Escape closes any open dropdown.
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown')) closeAllDropdowns();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeAllDropdowns();
+        });
+
+        // Wire copy buttons.
+        document.querySelectorAll('.copy-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var text = btn.dataset.copy;
+                navigator.clipboard.writeText(text).then(function() {
+                    var original = btn.innerHTML;
+                    btn.innerHTML = '<span lang="' + document.documentElement.lang + '">' +
+                        ({en: 'copied', zh: '已复制', ja: 'コピー済み'}[document.documentElement.lang]) +
+                        '</span>';
+                    setTimeout(function() { btn.innerHTML = original; setLang(document.documentElement.lang); }, 1500);
+                }).catch(function() {
+                    // Selection fallback when clipboard API unavailable.
+                    var code = btn.parentElement.querySelector('code');
+                    var range = document.createRange();
+                    range.selectNode(code);
+                    getSelection().removeAllRanges();
+                    getSelection().addRange(range);
+                });
+            });
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+</script>
+
+</body>
+</html>

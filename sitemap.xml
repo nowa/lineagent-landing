@@ -6,12 +6,29 @@
     <lastmod>2026-04-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <!-- Trilingual content lives at the same URL with per-element
-         lang attribute gating; declare the alternates here so search
-         engines surface the right language version per query locale. -->
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lineagent.ai/"/>
-    <xhtml:link rel="alternate" hreflang="zh" href="https://www.lineagent.ai/?lang=zh"/>
-    <xhtml:link rel="alternate" hreflang="ja" href="https://www.lineagent.ai/?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://www.lineagent.ai/zh/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://www.lineagent.ai/ja/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.lineagent.ai/"/>
+  </url>
+  <url>
+    <loc>https://www.lineagent.ai/zh/</loc>
+    <lastmod>2026-04-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lineagent.ai/"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://www.lineagent.ai/zh/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://www.lineagent.ai/ja/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.lineagent.ai/"/>
+  </url>
+  <url>
+    <loc>https://www.lineagent.ai/ja/</loc>
+    <lastmod>2026-04-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lineagent.ai/"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://www.lineagent.ai/zh/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://www.lineagent.ai/ja/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.lineagent.ai/"/>
   </url>
   <url>

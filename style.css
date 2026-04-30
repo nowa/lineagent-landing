@@ -950,7 +950,10 @@ footer.page-footer p { margin: 0.4em 0; }
 
 .dropdown-menu li { margin: 0; }
 
-.dropdown-menu li button {
+/* Selectors target both <button> (theme dropdown) and <a> (lang
+ * dropdown after the trilingual URL split — see build.py). */
+.dropdown-menu li > button,
+.dropdown-menu li > a {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -965,34 +968,46 @@ footer.page-footer p { margin: 0.4em 0; }
     cursor: pointer;
     border-radius: 8px;
     text-align: left;
+    text-decoration: none;
     transition: background var(--transition), color var(--transition);
+    box-sizing: border-box;
 }
 
-.dropdown-menu li button:hover { background: var(--bg-dim); }
+.dropdown-menu li > button:hover,
+.dropdown-menu li > a:hover {
+    background: var(--bg-dim);
+    color: var(--fg);
+}
 
-:root[data-theme="dark"] .dropdown-menu li button:hover {
+:root[data-theme="dark"] .dropdown-menu li > button:hover,
+:root[data-theme="dark"] .dropdown-menu li > a:hover {
     background: rgba(255, 255, 255, 0.06);
 }
 
-.dropdown-menu li button .icon {
+.dropdown-menu li > button .icon,
+.dropdown-menu li > a .icon {
     width: 18px;
     height: 18px;
     flex: 0 0 auto;
 }
 
-.dropdown-menu li button .label { flex: 1 1 auto; }
+.dropdown-menu li > button .label,
+.dropdown-menu li > a .label { flex: 1 1 auto; }
 
-.dropdown-menu li button[aria-current="true"] {
+.dropdown-menu li > button[aria-current="true"],
+.dropdown-menu li > a[aria-current="true"] {
     color: var(--brand-strong);
     background: var(--brand-soft);
 }
 
-:root[data-theme="dark"] .dropdown-menu li button[aria-current="true"] {
+:root[data-theme="dark"] .dropdown-menu li > button[aria-current="true"],
+:root[data-theme="dark"] .dropdown-menu li > a[aria-current="true"] {
     color: var(--brand);
     background: rgba(0, 223, 154, 0.10);
 }
 
-.dropdown-menu li button[aria-current="true"]::after {
+.dropdown-menu li > button[aria-current="true"]::after,
+.dropdown-menu li > a[aria-current="true"]::after {
     content: "";
     width: 6px;
     height: 6px;
@@ -1002,6 +1017,7 @@ footer.page-footer p { margin: 0.4em 0; }
     flex: 0 0 auto;
 }
 
-:root[data-theme="dark"] .dropdown-menu li button[aria-current="true"]::after {
+:root[data-theme="dark"] .dropdown-menu li > button[aria-current="true"]::after,
+:root[data-theme="dark"] .dropdown-menu li > a[aria-current="true"]::after {
     background: var(--brand);
 }
