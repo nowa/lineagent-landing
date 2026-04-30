@@ -258,118 +258,330 @@ lineage status</code></pre>
 <h2 lang="ja">Lineage とは？<a class="headerlink" href="#what">#</a></h2>
 
 <p lang="en">
-    Lineage is a continuously-evolving multi-agent runtime built around
-    four primitives. The core philosophy: <em>谱系一等公民</em> —
-    every Agent has a <code>parent_id</code>, a <code>generation</code>,
-    a <code>strain_id</code>, a <code>fitness_history</code>, an
-    immutable genome record, and an auditable execution chain.
+    Most coding agents are throwaway prompts — run one, get an answer,
+    lose the trail. <strong>Lineage is the agent runtime where the
+    agent itself is the product.</strong> Every Agent is a node in a
+    measurable lineage: parents, children, an immutable genome, and a
+    live fitness history. Improvements survive past the conversation
+    that produced them, regressions get rolled back automatically, and
+    the entire history sits as plain files on your own disk. Built in
+    Rust. Multi-provider. Local-first by default.
 </p>
 <p lang="zh">
-    Lineage 是一个持续演化的多 Agent 运行时，围绕四个核心原语构建。
-    核心哲学：<em>谱系一等公民</em> ——
-    每个 Agent 都有 <code>parent_id</code>、<code>generation</code>、
-    <code>strain_id</code>、<code>fitness_history</code>、
-    一份不可变的 genome 记录、以及一条可审计的执行链。
+    大多数 coding agent 是一次性的 prompt —— 跑一次、拿到答案、线索就断了。
+    <strong>Lineage 是把 Agent 本身当作产品的 agent 运行时。</strong>
+    每个 Agent 都是可量化谱系上的一个节点：有父代、有子代、有不可变的 genome，
+    还有持续记录的 fitness 历史。改进不会随对话结束消失、回归会被自动回滚、
+    完整的演化历史以纯文件的形式留在你自己的磁盘上。Rust 构建，多 provider 支持，
+    默认 local-first。
 </p>
 <p lang="ja">
-    Lineage は 4 つのプリミティブを中心に構築された、継続的に進化する
-    マルチエージェント・ランタイムです。コアとなる哲学は
-    <em>谱系一等公民（系譜は第一級市民）</em>——
-    すべての Agent が <code>parent_id</code>、<code>generation</code>、
-    <code>strain_id</code>、<code>fitness_history</code>、
-    不変な genome レコード、そして監査可能な実行チェーンを持ちます。
+    ほとんどのコーディング・エージェントは使い捨てのプロンプトです ——
+    一度実行して答えを得たら、軌跡は途切れる。
+    <strong>Lineage は Agent そのものをプロダクトとして扱うランタイム</strong>です。
+    すべての Agent は計測可能な系譜上のノード ——
+    親、子、不変な genome、そして稼働中の fitness 履歴を持ちます。
+    改善は会話の終了とともに失われず、リグレッションは自動でロールバックされ、
+    進化の全履歴はあなた自身のディスクにプレーンファイルとして残ります。
+    Rust 製。マルチプロバイダ。デフォルトでローカルファースト。
 </p>
+
+<p lang="en"><strong>Why this matters:</strong></p>
+<p lang="zh"><strong>为什么这件事重要：</strong></p>
+<p lang="ja"><strong>なぜこれが重要か：</strong></p>
+
+<ul lang="en">
+    <li><strong>Improvements compound.</strong> A better prompt or a tighter
+        tool-policy doesn't get re-discovered every Monday — it gets
+        merged into the genome, evaluated, and shipped.</li>
+    <li><strong>Quality regressions are caught, not endured.</strong> A
+        CUSUM trigger watches live fitness signal; bad releases auto-rollback
+        in the Blue-Green observation window.</li>
+    <li><strong>You own everything that matters.</strong> Genomes, traces,
+        memories, conversations — all JSON / JSONL on your disk. No
+        vendor SaaS holds your agent hostage.</li>
+    <li><strong>One agent, nine providers.</strong> Anthropic, OpenAI
+        (including the Codex subscription), DeepSeek, Qwen, Moonshot,
+        Groq, OpenRouter, MiniMax, Fireworks. Switch tomorrow without rewrites.</li>
+</ul>
+<ul lang="zh">
+    <li><strong>改进会累积。</strong>一条更好的 prompt 或一份更紧的 tool-policy
+        不需要每周一重新摸索一次 —— 它会被合进 genome、跑评估、发出去。</li>
+    <li><strong>回归被抓住，而不是被忍。</strong>CUSUM 触发器在线监控 fitness
+        信号；糟糕的发布会在 Blue-Green 观察窗里自动回滚。</li>
+    <li><strong>真正重要的东西归你所有。</strong>Genome、trace、memory、conversation ——
+        都是你磁盘上的 JSON / JSONL。没有 SaaS 把你的 Agent 攥在手里。</li>
+    <li><strong>一个 Agent 跑九家 provider。</strong>Anthropic、OpenAI
+        （含 Codex 订阅）、DeepSeek、Qwen、Moonshot、Groq、OpenRouter、
+        MiniMax、Fireworks。明天换底模也不用改写代码。</li>
+</ul>
+<ul lang="ja">
+    <li><strong>改善は積み上がる。</strong>より良いプロンプトや、より引き締まった
+        tool-policy を毎週月曜に再発見し直す必要はない ——
+        genome にマージされ、評価され、出荷されます。</li>
+    <li><strong>品質リグレッションは耐えるものではなく、捕まえるもの。</strong>
+        CUSUM トリガがライブの fitness シグナルを監視し、不良リリースは
+        Blue-Green 観察窓内で自動ロールバックされます。</li>
+    <li><strong>本当に重要なものはすべて、あなたの手元に。</strong>Genome、
+        トレース、メモリ、会話 —— すべて自分のディスク上の JSON / JSONL。
+        SaaS にあなたの Agent を人質にされることはありません。</li>
+    <li><strong>1 つの Agent で 9 つのプロバイダ。</strong>Anthropic、OpenAI
+        （Codex サブスクリプション含む）、DeepSeek、Qwen、Moonshot、Groq、
+        OpenRouter、MiniMax、Fireworks。明日プロバイダを切り替えても、
+        書き換えは不要です。</li>
+</ul>
+
+<p lang="en"><strong>The four primitives</strong> that make this work:</p>
+<p lang="zh"><strong>支撑这一切的四个原语：</strong></p>
+<p lang="ja"><strong>これを支える 4 つのプリミティブ：</strong></p>
 
 <div class="concept-grid">
     <div>
         <h3>Strain</h3>
-        <p lang="en">A domain or task family — email, coding, browser-ops.
-        Defines the eval contract and the boundary of which tools
-        an Agent in this family is allowed to use.</p>
-        <p lang="zh">领域或任务族 —— 邮件、编码、浏览器自动化。
-        定义评估契约，以及该族 Agent 可用工具的边界。</p>
-        <p lang="ja">ドメインまたはタスク・ファミリ ——
-        メール、コーディング、ブラウザ操作など。
-        評価契約と、そのファミリの Agent が使えるツールの境界を定義します。</p>
+        <p lang="en">A reusable agent template — coding, email, browser-ops.
+        Defines which tools an agent in this family is allowed to
+        touch and how it'll be evaluated. Forking a Strain is how you
+        customize Lineage to your domain without losing the evolution
+        machinery.</p>
+        <p lang="zh">可复用的 Agent 模板 —— 编码、邮件、浏览器自动化。
+        定义这个族里的 Agent 能用哪些 tool、怎么被评估。
+        想把 Lineage 适配到你自己的领域，fork 一个 Strain 就行 ——
+        演化机制照旧。</p>
+        <p lang="ja">再利用可能な Agent テンプレート ——
+        コーディング、メール、ブラウザ操作など。このファミリの Agent が
+        触れる tool と、評価方法を定義します。Strain を fork するだけで
+        自分のドメインに合わせたカスタマイズができ、進化の仕組みは
+        そのまま使えます。</p>
     </div>
     <div>
         <h3>Agent</h3>
-        <p lang="en">An individual instance within a Strain. Carries its own
-        immutable genome snapshot, parent reference, generation number,
-        and fitness history; runs through the 4-state lifecycle
-        <code>candidate → stable → deprecated ⇄ stable → extinct</code>.
-        Multiple Agents can coexist within one Strain — each with its
-        own evolution path.</p>
-        <p lang="zh">某个 Strain 下的具体个体。带着自己的不可变 genome 快照、parent
-        引用、世代号和 fitness 历史，按 4 状态生命周期运行
-        （<code>candidate → stable → deprecated ⇄ stable → extinct</code>）。
-        同一个 Strain 下可以并存多个 Agent，各自走各自的演化路径。</p>
-        <p lang="ja">ある Strain に属する個体です。自身の不変な genome スナップショット、
-        親（parent）への参照、世代番号、fitness 履歴を持ち、4 状態のライフサイクル
-        （<code>candidate → stable → deprecated ⇄ stable → extinct</code>）を辿ります。
-        同じ Strain の中に複数の Agent が共存し、それぞれ独自の進化経路を進みます。</p>
+        <p lang="en">A working instance — your actual pal, explore, founder.
+        Each carries an immutable genome snapshot, a parent reference,
+        a generation number, and a live fitness history. Lifecycle is
+        4-state: <code>candidate → stable → deprecated → extinct</code> —
+        so retirement and rollback are first-class operations, not improvised.</p>
+        <p lang="zh">具体在跑的实例 —— 你能用的 pal、explore、founder 本体。
+        每一个都带着不可变的 genome 快照、parent 引用、世代号、
+        持续记录的 fitness 历史。生命周期 4 状态：
+        <code>candidate → stable → deprecated → extinct</code> ——
+        退役和回滚是头等公民，不是临时凑出来的。</p>
+        <p lang="ja">実際に稼働するインスタンス ——
+        あなたが使う pal、explore、founder 本体です。それぞれが
+        不変な genome スナップショット、親への参照、世代番号、
+        稼働中の fitness 履歴を持ちます。ライフサイクルは 4 状態
+        （<code>candidate → stable → deprecated → extinct</code>）——
+        退役とロールバックがファーストクラスの操作として組み込まれています。</p>
     </div>
     <div>
         <h3>Genome</h3>
-        <p lang="en">An immutable JSON capturing prompts, planner config,
-        tool-policy weights. Editing a genome creates a new Agent
-        (a child) — never mutates the parent. Lineage is auditable
-        and replayable because of this.</p>
-        <p lang="zh">不可变的 JSON，记录 prompt、planner 配置、tool-policy 权重等。
-        编辑 genome 会产生一个新 Agent（子代），永远不修改父代。
-        系谱因此可审计、可回放。</p>
-        <p lang="ja">プロンプト、planner 設定、tool-policy の重みなどを記録した
-        不変な JSON。genome を編集すると新しい Agent（子）が生成され、
-        親は決して変更されません。これにより系譜は監査可能かつ再生可能になります。</p>
+        <p lang="en">The agent's source code — prompts, planner config,
+        tool-policy weights — frozen as content-addressed JSON. Editing
+        a genome creates a new child Agent, never mutates the parent.
+        That's what makes "why did the agent change?" answerable by
+        a diff.</p>
+        <p lang="zh">Agent 的"源代码"—— prompt、planner 配置、tool-policy 权重 ——
+        冻结成内容寻址的 JSON。编辑 genome 会产生一个新的子 Agent，
+        永远不会改父代。所以"为什么这个 Agent 变了？"这个问题，
+        永远能用一次 diff 答出来。</p>
+        <p lang="ja">Agent の「ソースコード」—— プロンプト、planner 設定、
+        tool-policy の重み —— をコンテンツアドレス JSON として凍結します。
+        genome の編集は新しい子 Agent を生成し、親は決して変更されません。
+        だからこそ「なぜ Agent が変わったのか？」は、常に diff で答えられます。</p>
     </div>
     <div>
         <h3>Evolution</h3>
-        <p lang="en">CUSUM-triggered candidate generation, offline evaluation,
-        Inbox approval, then a Blue-Green swap with a 7-day or
-        20-session observation window. Auto-rollback on regression.</p>
-        <p lang="zh">CUSUM 触发候选生成 → 离线评估 → Inbox 审批 → Blue-Green 切换
-        → 7 天或 20 会话观察窗 → 检测到回归自动回滚。</p>
-        <p lang="ja">CUSUM トリガによる候補生成 → オフライン評価 →
-        Inbox 承認 → Blue-Green 切替 → 7 日または 20 セッションの観察窓 →
-        リグレッション検出時の自動ロールバック。</p>
+        <p lang="en">The closed loop other tools don't have. CUSUM watches
+        the live quality signal → mutate → offline eval → human gate →
+        Blue-Green swap → 7-day observation window → auto-rollback on
+        regression. Selection is mechanical and reversible, not vibe-based.</p>
+        <p lang="zh">别家工具没有的闭环。CUSUM 监控线上质量信号 → 变异 → 离线评估
+        → 人工 gate → Blue-Green 切换 → 7 天观察窗 → 检测到回归自动回滚。
+        选择是机械化、可回滚的，而不是凭感觉。</p>
+        <p lang="ja">他のツールが持たないクローズドループ。CUSUM がライブの
+        品質シグナルを監視 → 変異 → オフライン評価 → 人手 gate →
+        Blue-Green 切替 → 7 日間の観察窓 → リグレッション検出時に
+        自動ロールバック。選択は感覚ではなく、機械的かつ可逆です。</p>
     </div>
 </div>
 
 <p lang="en">
-    The runtime is organized into four subsystems. User input enters
-    through Control, executes inside the AgentKernel, draws on
-    Capability for tools and skills, and is observed by the
-    Evolution loop:
+    Underneath, Lineage runs as four cooperating subsystems. A request
+    enters <strong>Control</strong>, executes inside the
+    <strong>AgentKernel</strong>, draws on <strong>Capability</strong>
+    for tools and memory, and is observed by the
+    <strong>Evolution</strong> loop. Same shape whether the request
+    comes from your terminal, an IM channel, or the API.
 </p>
 <p lang="zh">
-    运行时分为四个子系统。用户输入从 Control 进来，在 AgentKernel 里执行，
-    向 Capability 取工具和技能，由 Evolution 循环观察：
+    底下跑的是四个协作子系统。一个请求从 <strong>Control</strong> 进来，
+    在 <strong>AgentKernel</strong> 里执行，从 <strong>Capability</strong>
+    取工具和记忆，由 <strong>Evolution</strong> 循环观察 ——
+    无论请求来自你的终端、IM 频道，还是 API，结构都一样。
 </p>
 <p lang="ja">
-    ランタイムは 4 つのサブシステムで構成されます。ユーザー入力は Control から入り、
-    AgentKernel で実行され、Capability からツールとスキルを取得し、
-    Evolution ループによって観察されます：
+    その下では 4 つの協調するサブシステムが動きます。リクエストは
+    <strong>Control</strong> から入り、<strong>AgentKernel</strong> 内で実行され、
+    <strong>Capability</strong> からツールとメモリを取得し、
+    <strong>Evolution</strong> ループに観察されます。リクエストが
+    あなたのターミナル由来でも、IM チャネル経由でも、API からでも、
+    形は同じです。
 </p>
 
-<pre class="arch-diagram" aria-hidden="true">             user · IM · API · CLI
-                       │
-                       ▼
-         ┌──────────────────────────────┐
-         │           Control            │
-         │  Gateway · Adapters · Auth   │
-         └───────────────┬──────────────┘
-                         ▼
-         ┌──────────────────────────────┐
-         │          Execution           │
-         │  AgentKernel · Compose       │
-         │  PEO loop · Streaming        │
-         └───────┬──────────────────┬───┘
-                 ▼                  ▼
-    ┌──────────────────────┐  ┌─────────────────────┐
-    │      Capability      │  │      Evolution      │
-    │   Tools · Skills     │  │   Eval · CUSUM      │
-    │   Browser · Memory   │  │   Blue-Green swap   │
-    └──────────────────────┘  └─────────────────────┘</pre>
+<svg class="arch-svg" viewBox="0 0 760 610" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="arch-svg-title">
+    <title id="arch-svg-title" lang="en">Lineage four subsystems</title>
+    <title id="arch-svg-title" lang="zh">Lineage 四个子系统</title>
+    <title id="arch-svg-title" lang="ja">Lineage の 4 サブシステム</title>
+
+    <!-- Layer 1: Control ─────────────────────────────────────────── -->
+    <g>
+        <rect class="layer--control" width="760" height="130" rx="16" />
+        <text x="20" y="34" font-size="17" font-weight="700" class="title--control">1. Control</text>
+        <text x="110" y="34" font-size="13" class="desc--control" lang="en">Ingress &amp; routing</text>
+        <text x="110" y="34" font-size="13" class="desc--control" lang="zh">入口与路由</text>
+        <text x="110" y="34" font-size="13" class="desc--control" lang="ja">入口とルーティング</text>
+
+        <g transform="translate(20, 50)">
+            <rect class="sub--control" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--control">Gateway</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--control">HTTP · WS · Unix</text>
+        </g>
+        <g transform="translate(203, 50)">
+            <rect class="sub--control" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--control">Adapters</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--control">TG · Discord · Slack</text>
+        </g>
+        <g transform="translate(386, 50)">
+            <rect class="sub--control" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--control">Auth</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--control" lang="en">token · session</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--control" lang="zh">令牌 · 会话</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--control" lang="ja">トークン · セッション</text>
+        </g>
+        <g transform="translate(569, 50)">
+            <rect class="sub--control" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--control">LCP</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--control">JSON-RPC 2.0</text>
+        </g>
+    </g>
+
+    <!-- Arrow 1 → 2 -->
+    <line class="arrow-line" x1="380" y1="135" x2="380" y2="153" />
+    <polygon class="arrow-head" points="375,153 385,153 380,160" />
+
+    <!-- Layer 2: Execution ──────────────────────────────────────── -->
+    <g transform="translate(0, 160)">
+        <rect class="layer--execution" width="760" height="130" rx="16" />
+        <text x="20" y="34" font-size="17" font-weight="700" class="title--execution">2. Execution</text>
+        <text x="123" y="34" font-size="13" class="desc--execution" lang="en">Pure compute core</text>
+        <text x="123" y="34" font-size="13" class="desc--execution" lang="zh">纯计算内核</text>
+        <text x="123" y="34" font-size="13" class="desc--execution" lang="ja">純粋計算コア</text>
+
+        <g transform="translate(20, 50)">
+            <rect class="sub--execution" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--execution">AgentKernel</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--execution">Ports &amp; Adapters</text>
+        </g>
+        <g transform="translate(203, 50)">
+            <rect class="sub--execution" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--execution">Compose</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--execution" lang="en">turn pipeline</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--execution" lang="zh">Turn 流水线</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--execution" lang="ja">ターンパイプライン</text>
+        </g>
+        <g transform="translate(386, 50)">
+            <rect class="sub--execution" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--execution">PEO loop</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--execution">Plan · Exec · Observe</text>
+        </g>
+        <g transform="translate(569, 50)">
+            <rect class="sub--execution" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--execution">Streaming</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--execution" lang="en">tokens + events</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--execution" lang="zh">token + 事件</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--execution" lang="ja">トークン + イベント</text>
+        </g>
+    </g>
+
+    <!-- Arrow 2 → 3 -->
+    <line class="arrow-line" x1="380" y1="295" x2="380" y2="313" />
+    <polygon class="arrow-head" points="375,313 385,313 380,320" />
+
+    <!-- Layer 3: Capability ─────────────────────────────────────── -->
+    <g transform="translate(0, 320)">
+        <rect class="layer--capability" width="760" height="130" rx="16" />
+        <text x="20" y="34" font-size="17" font-weight="700" class="title--capability">3. Capability</text>
+        <text x="135" y="34" font-size="13" class="desc--capability" lang="en">Tools, skills, memory</text>
+        <text x="135" y="34" font-size="13" class="desc--capability" lang="zh">工具、技能、记忆</text>
+        <text x="135" y="34" font-size="13" class="desc--capability" lang="ja">ツール、スキル、メモリ</text>
+
+        <g transform="translate(20, 50)">
+            <rect class="sub--capability" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--capability">Tools</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--capability">FS · CLI · Web</text>
+        </g>
+        <g transform="translate(203, 50)">
+            <rect class="sub--capability" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--capability">Skills</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--capability" lang="en">recallable how-tos</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--capability" lang="zh">可调用的方法集</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--capability" lang="ja">再利用可能なノウハウ</text>
+        </g>
+        <g transform="translate(386, 50)">
+            <rect class="sub--capability" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--capability">Browser</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--capability">agent-browser CDP</text>
+        </g>
+        <g transform="translate(569, 50)">
+            <rect class="sub--capability" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--capability">Memory</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--capability" lang="en">4-tier</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--capability" lang="zh">四层记忆</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--capability" lang="ja">4 層メモリ</text>
+        </g>
+    </g>
+
+    <!-- Arrow 3 → 4 -->
+    <line class="arrow-line" x1="380" y1="455" x2="380" y2="473" />
+    <polygon class="arrow-head" points="375,473 385,473 380,480" />
+
+    <!-- Layer 4: Evolution ───────────────────────────────────────── -->
+    <g transform="translate(0, 480)">
+        <rect class="layer--evolution" width="760" height="130" rx="16" />
+        <text x="20" y="34" font-size="17" font-weight="700" class="title--evolution">4. Evolution</text>
+        <text x="124" y="34" font-size="13" class="desc--evolution" lang="en">Eval-driven selection</text>
+        <text x="124" y="34" font-size="13" class="desc--evolution" lang="zh">评估驱动的选择</text>
+        <text x="124" y="34" font-size="13" class="desc--evolution" lang="ja">評価駆動の淘汰</text>
+
+        <g transform="translate(20, 50)">
+            <rect class="sub--evolution" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--evolution">Eval</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="en">offline + live</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="zh">离线 + 在线</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="ja">オフライン + ライブ</text>
+        </g>
+        <g transform="translate(203, 50)">
+            <rect class="sub--evolution" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--evolution">CUSUM</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="en">regression trigger</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="zh">回归触发器</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="ja">リグレッション検出</text>
+        </g>
+        <g transform="translate(386, 50)">
+            <rect class="sub--evolution" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--evolution">Mutation</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="en">genome ops</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="zh">Genome 变异</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="ja">Genome 操作</text>
+        </g>
+        <g transform="translate(569, 50)">
+            <rect class="sub--evolution" width="170" height="68" rx="10" stroke-width="1" />
+            <text x="85" y="28" text-anchor="middle" font-weight="700" font-size="13" class="sub-title--evolution">Blue-Green</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="en">auto-rollback</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="zh">自动回滚</text>
+            <text x="85" y="48" text-anchor="middle" font-size="11" class="desc--evolution" lang="ja">自動ロールバック</text>
+        </g>
+    </g>
+</svg>
 
 <p lang="en">
     Files are the Source of Truth; the SQLite DB is a materialized
@@ -808,186 +1020,201 @@ $ lineage chat
 <h2 lang="ja">Agent Kernel<a class="headerlink" href="#kernel">#</a></h2>
 
 <p lang="en">
-    The Agent Kernel is the part of Lineage that turns a chat turn
-    into a stream of tool calls and tokens. It is a pure-computation
-    core (Ports &amp; Adapters) — no I/O, no database, no provider
-    coupling — wrapped by the runtime that does. Five capabilities
-    are baked in; together they're what makes Lineage hold up across
-    long sessions.
+    The <strong>Agent Kernel</strong> is the part of Lineage that turns a
+    chat turn into action — assembling the prompt, calling the LLM,
+    dispatching tool calls, streaming the results back. We built it as
+    a pure-computation core (Ports &amp; Adapters), so the same Agent
+    runs unchanged across every provider, every transport, every
+    interaction surface. Six capabilities are wired in. Together
+    they're why Lineage holds up where most agents fall over: long
+    sessions, multi-step plans, and provider switching mid-flight.
 </p>
 <p lang="zh">
-    Agent Kernel 是 Lineage 把"一轮对话"转成"工具调用流 + token 流"的那块。
-    它是纯计算核心（Ports &amp; Adapters 模式）—— 不做 I/O、不碰 DB、不绑定 provider ——
-    外面包着真正做 I/O 的 runtime。它内置五项能力，组合起来让 Lineage 能在长会话里撑住：
+    <strong>Agent Kernel</strong> 是 Lineage 把"一轮对话"转成"实际动作"的那块 ——
+    编译 prompt、调用 LLM、派发 tool call、把结果流回去。
+    我们把它做成了纯计算内核（Ports &amp; Adapters 模式）——
+    所以同一个 Agent 不需要改一行代码，就能跑在不同 provider、不同 transport、
+    不同交互界面上。Kernel 内置六项能力，组合起来正是 Lineage 在长会话、
+    多步骤任务、临时切换 provider 这些常见 "崩点" 上仍然能撑住的原因。
 </p>
 <p lang="ja">
-    Agent Kernel は Lineage が「1 ターンの対話」を「ツール呼び出しストリーム +
-    トークンストリーム」に変換するコアです。純粋計算コア（Ports &amp; Adapters）——
-    I/O なし、DB アクセスなし、プロバイダ結合なし —— で、I/O を担うランタイムが
-    周囲を取り囲みます。次の 5 つの能力が組み込まれており、長セッションでの
-    持続性を支えます：
+    <strong>Agent Kernel</strong> は Lineage が「1 ターンの対話」を
+    「実際のアクション」に変換するコア —— プロンプトを組み立て、LLM を呼び、
+    ツール呼び出しを配送し、結果をストリームで返します。私たちはこれを
+    純粋計算コア（Ports &amp; Adapters）として構築しました ——
+    だからこそ同じ Agent が、プロバイダ・トランスポート・インタラクション面を
+    問わず、一行も書き換えずに動きます。kernel には 6 つの能力が組み込まれており、
+    長セッション・多段階タスク・プロバイダ切替という多くのエージェントが
+    崩れる場面で、Lineage が崩れない理由がここにあります。
 </p>
 
 <dl class="provider-list">
     <dt lang="en">Context engineering</dt>
-    <dt lang="zh">上下文工程（Context engineering）</dt>
+    <dt lang="zh">上下文工程</dt>
     <dt lang="ja">コンテキストエンジニアリング</dt>
-    <dd lang="en">Every prompt is built by a deterministic
-        <code>PromptCompiler</code> — system prompt, project profile,
-        memory recall, conversation history, current tool state,
-        all assembled with explicit budget caps. Conversations are
-        JSONL-persisted (<code>data/conversations/{id}/active.jsonl</code>),
-        so a crash or restart resumes mid-turn instead of losing context.</dd>
-    <dd lang="zh">每个 prompt 都由确定性的 <code>PromptCompiler</code> 编译 ——
-        system prompt、项目 profile、memory recall、会话历史、当前工具状态，
-        按显式预算上限组装好。会话用 JSONL 持久化
-        （<code>data/conversations/{id}/active.jsonl</code>），
-        崩溃或重启不会丢上下文，可以从断点续上。</dd>
-    <dd lang="ja">すべてのプロンプトは決定論的な
-        <code>PromptCompiler</code> によって組み立てられます ——
-        system プロンプト、プロジェクトプロファイル、メモリリコール、会話履歴、
-        現在のツール状態を明示的な予算上限で組み合わせます。
-        会話は JSONL で永続化され
-        （<code>data/conversations/{id}/active.jsonl</code>）、
-        クラッシュや再起動でも途中から再開でき、コンテキストは失われません。</dd>
+    <dd lang="en">Every prompt is a deterministic build, not a guess.
+        System rules, project profile, recalled memory, tool state, and
+        live conversation are assembled to a fixed token budget — so the
+        Agent never silently drops the part it needed most. Conversations
+        stream straight to JSONL on disk, so a crash mid-turn resumes
+        mid-turn instead of starting over.</dd>
+    <dd lang="zh">每个 prompt 都是一次确定性的编译，不是凭感觉拼出来的。
+        System 规则、项目 profile、recall 出来的 memory、当前工具状态、
+        实时会话内容，都按一个固定的 token 预算装进去 ——
+        Agent 不会"悄悄丢掉它最需要的那块"。会话直接流式落到磁盘 JSONL 里，
+        中途崩了，从崩的那一秒继续跑，不是从头开始。</dd>
+    <dd lang="ja">すべてのプロンプトは決定論的な組み立てであり、当て推量ではありません。
+        システムルール、プロジェクトプロファイル、再取得したメモリ、
+        ツール状態、ライブ会話を、固定のトークン予算に収めて構成します ——
+        Agent が「一番必要だった部分を黙って落とす」ことはありません。
+        会話はそのままディスクの JSONL にストリームされ、ターンの途中で
+        クラッシュしても、その途中から再開します。最初からやり直しになりません。</dd>
 
     <dt lang="en">Compaction</dt>
-    <dt lang="zh">Compaction（压缩）</dt>
-    <dt lang="ja">コンパクション（圧縮）</dt>
-    <dd lang="en">Three-layer trace storage. Level 0 (always: metadata
-        + tool names) and Level 1 (always: input + output preview)
-        are unconditional. Level 2 (full payloads) is sampled only
-        on success for regression mining. When the live conversation
-        approaches the model's context window, the kernel compacts
-        older turns into a structured summary; raw history stays on
-        disk for replay.</dd>
-    <dd lang="zh">三层 trace 存储。Level 0（始终：元数据 + 工具名）和
-        Level 1（始终：input + output 预览）都是无条件记录的；
-        Level 2（完整 payload）只在成功时采样，用于回归挖掘。
-        活跃会话接近模型 context window 时，kernel 把更早的 turn 压成结构化摘要 ——
-        原始历史还在磁盘上，可回放。</dd>
-    <dd lang="ja">3 層のトレース保存。Level 0（常時：メタデータ + ツール名）と
-        Level 1（常時：入出力プレビュー）は無条件で記録され、
-        Level 2（完全ペイロード）は成功時のみサンプリングされ、
-        リグレッション分析に使われます。アクティブ会話がモデルの
-        context window に近づくと、kernel は古いターンを構造化サマリへ圧縮します ——
-        生履歴はディスクに残り、再生可能です。</dd>
+    <dt lang="zh">智能压缩 Compaction</dt>
+    <dt lang="ja">コンパクション</dt>
+    <dd lang="en">Long conversations cost real money and lose accuracy.
+        Lineage compacts on its own terms: when the context window
+        fills, older turns collapse into a structured summary while
+        the raw history goes to disk. Every tool call also writes
+        a 3-tier trace — minimal metadata always, full payloads
+        sampled on success — giving you replayable evidence without
+        paying the token cost on every turn.</dd>
+    <dd lang="zh">长会话既花钱又掉准确率。Lineage 主动压缩 ——
+        context window 一旦撑满，更早的 turn 折成结构化摘要，
+        原始历史落盘备查。每次工具调用同时写一份三层 trace ——
+        始终保留最小元数据、成功时采样完整 payload ——
+        证据可回放，但不为此在每一轮里掏 token 钱。</dd>
+    <dd lang="ja">長い会話はお金がかかり、精度も落ちます。Lineage は能動的に
+        圧縮します —— context window が埋まると、古いターンは構造化サマリへ
+        折り畳まれ、生履歴はディスクへ。すべてのツール呼び出しは同時に
+        3 層トレースを残します —— 最小メタデータは常時、フルペイロードは
+        成功時のみサンプリング ——
+        毎ターンのトークンコストを払わずに、再生可能な証拠が手に入ります。</dd>
 
-    <dt lang="en">Memory (4 layers)</dt>
-    <dt lang="zh">Memory（四层）</dt>
+    <dt lang="en">Memory — 4 tiers</dt>
+    <dt lang="zh">四层 Memory</dt>
     <dt lang="ja">メモリ（4 層）</dt>
-    <dd lang="en"><strong>Conversation</strong> (this turn's working set) →
-        <strong>Project</strong> (per <code>project_key</code>:
-        <code>data/projects/{key}/memory.jsonl</code>) →
-        <strong>Strain</strong> (cross-project domain knowledge:
-        <code>data/memory/{strain_id}.jsonl</code>) →
-        <strong>Genome</strong> (immutable, lifts only via evolution).
-        Higher layers don't pollute lower ones; lower-layer write rate
-        is bounded.</dd>
-    <dd lang="zh"><strong>Conversation</strong>（这轮 working set）→
-        <strong>Project</strong>（按 <code>project_key</code>：
-        <code>data/projects/{key}/memory.jsonl</code>）→
-        <strong>Strain</strong>（跨项目的领域知识：
-        <code>data/memory/{strain_id}.jsonl</code>）→
-        <strong>Genome</strong>（不可变，只通过演化路径下沉）。
-        高层不污染低层；低层写入速率有上限。</dd>
-    <dd lang="ja"><strong>Conversation</strong>（このターンのワーキングセット）→
-        <strong>Project</strong>（<code>project_key</code> 単位：
-        <code>data/projects/{key}/memory.jsonl</code>）→
-        <strong>Strain</strong>（クロスプロジェクトのドメイン知識：
-        <code>data/memory/{strain_id}.jsonl</code>）→
-        <strong>Genome</strong>（不変、進化経由でのみ下層に降りる）。
-        上位層が下位層を汚染することはなく、下位層の書き込みレートには上限があります。</dd>
+    <dd lang="en">Four memory tiers keep the right information at the
+        right scope. <strong>Conversation</strong> holds your live
+        working set. <strong>Project</strong> remembers the codebase
+        you're in. <strong>Strain</strong> carries domain expertise
+        across projects. <strong>Genome</strong> enshrines what survived
+        evolution. Information promotes upward through evidence,
+        never by leakage; lower tiers are write-rate-bounded so a
+        noisy session can't drown the signal.</dd>
+    <dd lang="zh">四层 memory 把"对的信息"放在"对的作用域"。
+        <strong>Conversation</strong> 装当前的 working set；
+        <strong>Project</strong> 记你所在的代码仓；
+        <strong>Strain</strong> 跨项目沉淀领域专长；
+        <strong>Genome</strong> 把演化筛选下来的精华固化。
+        信息只能凭证据向上走，不会"无意中漏到上层"；
+        低层写入有速率上限 —— 一场吵闹的会话淹不掉信号。</dd>
+    <dd lang="ja">4 層のメモリが、適切な情報を適切なスコープに保ちます。
+        <strong>Conversation</strong> はライブ・ワーキングセット、
+        <strong>Project</strong> は今いるコードベースの記憶、
+        <strong>Strain</strong> はプロジェクトを跨ぐドメイン知見、
+        <strong>Genome</strong> は進化を生き残ったものの結晶。
+        情報は証拠を伴ってのみ上位に昇格し、漏洩で上がることはありません。
+        下位層には書き込みレート上限があるので、騒がしいセッションが
+        シグナルを押し流すことはありません。</dd>
 
     <dt lang="en">Long-running tasks</dt>
-    <dt lang="zh">长任务（Long-running tasks）</dt>
+    <dt lang="zh">长任务执行</dt>
     <dt lang="ja">長時間タスク</dt>
-    <dd lang="en">Multi-step plans live as <code>Task → Step → Job</code>
-        (ADR-053). Task state is file-first
-        (<code>data/tasks/{id}/task.json</code>), each Step is its own
-        <code>compose_turn</code> with its own conversation, and a
-        background watchdog raises Steps that haven't progressed in
-        N minutes — so plans don't quietly die in the middle.</dd>
-    <dd lang="zh">多步骤计划走 <code>Task → Step → Job</code> 三层（ADR-053）。
-        Task 状态 file-first（<code>data/tasks/{id}/task.json</code>），
-        每个 Step 是一次独立的 <code>compose_turn</code>，自带会话；
-        后台 watchdog 把 N 分钟没进展的 Step 拎出来 ——
-        计划不会在中间静默地死掉。</dd>
-    <dd lang="ja">マルチステップ計画は <code>Task → Step → Job</code>
-        として実行されます（ADR-053）。Task 状態は file-first
-        （<code>data/tasks/{id}/task.json</code>）、各 Step は独立した
-        <code>compose_turn</code>（独自の会話）、N 分間進捗のない Step は
-        バックグラウンド watchdog に拾われます ——
-        計画が途中で静かに死ぬことはありません。</dd>
+    <dd lang="en">Real work outlives one chat turn. Lineage models
+        multi-step plans as <strong>Task → Step → Job</strong> —
+        state lives on disk first, not in the agent's head. A Step
+        can pause for review, resume after a break, or hand off
+        between agents. A background watchdog raises any Step that
+        hasn't moved in N minutes, so plans don't quietly die in
+        the middle and surface as "wait, what happened to that
+        thing I asked for?" three days later.</dd>
+    <dd lang="zh">真正有价值的工作不会在一轮对话里结束。Lineage 把多步骤计划建模为
+        <strong>Task → Step → Job</strong> —— 状态先写盘，不放在 Agent 脑子里。
+        一个 Step 可以暂停等审核、休息后接续、或者在 Agent 之间转手。
+        后台 watchdog 会把"N 分钟没动"的 Step 拎出来 ——
+        计划不会在中间静悄悄地死掉、然后三天后才被你想起来"诶那件事呢？"。</dd>
+    <dd lang="ja">本当の仕事は 1 ターンでは終わりません。Lineage は多段階計画を
+        <strong>Task → Step → Job</strong> としてモデル化します ——
+        状態は Agent の頭の中ではなく、まずディスクに置かれます。
+        Step はレビューのために一時停止、休憩後に再開、Agent 間での
+        引き継ぎが可能です。バックグラウンド watchdog が N 分動いていない
+        Step を拾い上げるので、計画が途中で静かに死に、3 日後に
+        「ところで、あれどうなった？」と気づくことはありません。</dd>
 
     <dt lang="en">Prompt cache</dt>
-    <dt lang="zh">Prompt cache（提示缓存）</dt>
+    <dt lang="zh">Prompt Cache 自动命中</dt>
     <dt lang="ja">プロンプトキャッシュ</dt>
-    <dd lang="en">Lineage uses provider-side caching wherever
-        available — Anthropic <code>cache_control</code>,
-        OpenAI cached input, DeepSeek cached prompt prefix. The
-        kernel structures the prompt prefix to be cache-friendly
-        (system + project profile pinned, memory near the bottom),
-        so repeat turns of a long session land at cache-hit pricing
-        instead of full prefill.</dd>
-    <dd lang="zh">能命中 provider cache 的就命中 ——
-        Anthropic <code>cache_control</code>、OpenAI cached input、
-        DeepSeek cached prompt prefix。
-        kernel 在编译 prompt 时就把前缀做成 cache-friendly 的形状
-        （system + 项目 profile 固定在前，memory 拉到后面），
-        长会话的重复轮次按 cache-hit 价格走，不是 full prefill。</dd>
-    <dd lang="ja">利用可能な場面ではプロバイダ側キャッシュを使います ——
-        Anthropic <code>cache_control</code>、OpenAI cached input、
-        DeepSeek cached prompt prefix。kernel はプロンプト前置部を
-        キャッシュフレンドリな形に構成し（system + プロジェクトプロファイルを
-        前段に固定、memory は後段）、長セッションの繰り返しターンは
-        full prefill ではなく cache-hit 価格で実行されます。</dd>
+    <dd lang="en">Provider-side caching is wired in by default —
+        Anthropic, OpenAI, DeepSeek, and any backend that exposes
+        one. The kernel structures every prompt to be cache-friendly:
+        stable system prefix at the top, volatile context at the
+        bottom. Long sessions hit cache-read pricing on every repeat
+        turn — typically 70-90% off the per-token cost — automatic,
+        no app code changes.</dd>
+    <dd lang="zh">默认对接各家的 prompt cache —— Anthropic、OpenAI、DeepSeek，
+        以及任何暴露 cache 接口的后端。Kernel 在编译每个 prompt 时就把它做成
+        cache-friendly 的形状：稳定的 system 前缀放上面，易变的 context
+        放下面。长会话每次重复 turn 都按 cache-read 计价 ——
+        一般能砍掉 70-90% 的 token 成本 —— 自动生效，应用层不用改一行代码。</dd>
+    <dd lang="ja">プロバイダ側キャッシュをデフォルトで配線済み ——
+        Anthropic、OpenAI、DeepSeek、ほかキャッシュ API を持つ任意のバックエンド。
+        kernel はすべてのプロンプトを cache-friendly に構成します ——
+        安定したシステム接頭辞は上に、揮発するコンテキストは下に。
+        長セッションでは繰り返しターンごとに cache-read 価格で課金され ——
+        通常 1 トークンあたり 70-90% 削減 ——
+        アプリ側のコード変更なしに自動で効きます。</dd>
 
     <dt lang="en">Native advisor pattern</dt>
-    <dt lang="zh">原生 advisor 模式</dt>
+    <dt lang="zh">原生 Advisor 模式</dt>
     <dt lang="ja">ネイティブ advisor パターン</dt>
-    <dd lang="en">Per-provider advisors translate the kernel's
-        provider-neutral request into provider-best-practice calls —
-        Anthropic gets thinking blocks + cache_control + tool_use
-        streaming; OpenAI Responses API gets reasoning + structured
-        outputs; Codex subscription gets native attribution headers.
-        The same Agent runs on any of nine providers without rewrites.</dd>
-    <dd lang="zh">每个 provider 都有专门的 advisor，把 kernel 的 provider-neutral
-        请求翻译成各家的 best practice ——
-        Anthropic 用 thinking block + cache_control + tool_use 流式；
-        OpenAI Responses API 用 reasoning + structured outputs；
-        Codex 订阅带 native attribution header。
-        同一个 Agent 跑在 9 家 provider 上不用改写。</dd>
-    <dd lang="ja">プロバイダごとに advisor があり、kernel のプロバイダ非依存
-        リクエストを各社のベストプラクティス呼び出しに翻訳します ——
-        Anthropic は thinking block + cache_control + tool_use ストリーミング、
-        OpenAI Responses API は reasoning + structured outputs、Codex
-        サブスクリプションはネイティブ帰属ヘッダ付き。同一 Agent が
-        9 つのプロバイダのどれでも書き換えなしに動きます。</dd>
+    <dd lang="en">One Agent. Nine providers. Zero rewrites. Per-provider
+        advisors translate the kernel's neutral request into each
+        vendor's best-practice call — Anthropic thinking blocks +
+        cache control, OpenAI Responses reasoning + structured outputs,
+        Codex subscription with native attribution headers. Switch
+        providers Tuesday morning; your Agent runs the same Tuesday
+        afternoon.</dd>
+    <dd lang="zh">一个 Agent，九家 provider，零次改写。每家 provider 都配了一个
+        专门的 advisor，把 kernel 这边的中性请求翻译成那家最佳实践 ——
+        Anthropic 用 thinking block + cache control；OpenAI Responses
+        用 reasoning + structured outputs；Codex 订阅带 native
+        attribution header。周二上午换 provider，周二下午你的 Agent
+        照常跑。</dd>
+    <dd lang="ja">1 つの Agent、9 つのプロバイダ、書き換え 0。プロバイダごとに
+        専用の advisor が、kernel 側の中立リクエストを各社のベストプラクティス
+        呼び出しに翻訳します —— Anthropic は thinking block + cache control、
+        OpenAI Responses は reasoning + structured outputs、Codex
+        サブスクリプションはネイティブ帰属ヘッダ付き。
+        火曜の朝にプロバイダを切り替えても、火曜の午後の Agent は
+        同じように動きます。</dd>
 </dl>
 
 <p lang="en">
     Where this lands competitively: most coding-agent products give
-    you context engineering only inside their own UI, route a single
-    provider, and stop the trail at the conversation boundary.
-    Lineage stores every turn as a replayable artifact, evolves the
-    Agent that ran it based on those replays, and lets you swap the
-    underlying model the next morning. The kernel is what makes that
-    cross-session, cross-provider continuity possible.
+    you context engineering inside their UI, route a single provider,
+    and end the trail at the conversation boundary. Lineage stores
+    every turn as a replayable artifact, evolves the Agent that
+    produced it based on those replays, and lets you swap the
+    underlying model tomorrow. The kernel is the part that makes
+    cross-session, cross-provider, cross-model continuity actually work.
 </p>
 <p lang="zh">
-    在竞品里的位置：大多数 coding agent 产品只在自家 UI 里给你 context
-    engineering，只对接一家 provider，对话边界一过线索就断。
-    Lineage 把每轮 turn 存成可回放的 artifact，基于这些回放演化跑出它的 Agent，
-    第二天还允许你换底模。kernel 是让"跨会话、跨 provider 的连续性"成立的那块。
+    放在竞品里看：大多数 coding agent 产品只在自家 UI 里给你 context engineering，
+    只对接一家 provider，对话边界一过线索就断。
+    Lineage 把每一轮 turn 存成可回放的 artifact，
+    基于这些回放演化跑出它的 Agent，明天还允许你换底模。
+    kernel 就是让"跨会话、跨 provider、跨底模的连续性"真正成立的那块。
 </p>
 <p lang="ja">
-    競合との位置取り：大半のコーディング・エージェント製品はコンテキスト
+    競合との位置取り：大半のコーディング・エージェント製品は、コンテキスト
     エンジニアリングを自社 UI 内に閉じ込め、単一プロバイダにルーティングし、
-    会話境界で痕跡が途切れます。Lineage はすべてのターンを再生可能な
+    会話境界で軌跡を途切れさせます。Lineage は、すべてのターンを再生可能な
     アーティファクトとして保存し、その再生に基づいて Agent を進化させ、
-    翌日には基盤モデルを差し替えることもできます。kernel は
-    「セッション越え・プロバイダ越えの連続性」を成立させる中核です。
+    明日には基盤モデルを差し替えることもできます。kernel こそが、
+    「セッション越え・プロバイダ越え・モデル越えの連続性」を本当に成立させている
+    部分です。
 </p>
 </section>
 

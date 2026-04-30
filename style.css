@@ -573,26 +573,29 @@ pre code {
 
 /* ── Callouts (notice / warning) ────────────────────────────────
  * Per no-borders rule: differentiate via background tint + a single
- * left-edge accent line (1 char wide), not a full border box.
+ * left-edge accent line (4px wide, full container height — earlier
+ * inset-bar variant looked stunted, see review round). overflow:hidden
+ * lets the bar sit flush against the rounded container corners
+ * without poking through them.
  */
 .callout {
     background: var(--brand-soft);
-    padding: var(--text-height);
+    padding: calc(0.7 * var(--text-height)) var(--text-height);
     margin: var(--text-height) 0;
     border-radius: var(--radius);
     position: relative;
-    padding-left: calc(var(--text-height) + 6px);
+    padding-left: calc(0.8 * var(--text-height));
+    overflow: hidden;
 }
 
 .callout::before {
     content: "";
     position: absolute;
     left: 0;
-    top: var(--text-height);
-    bottom: var(--text-height);
-    width: 3px;
+    top: 0;
+    bottom: 0;
+    width: 4px;
     background: var(--brand);
-    border-radius: 0 var(--radius) var(--radius) 0;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -633,6 +636,79 @@ pre code {
  * extra weight to stay subtle. */
 @media (prefers-color-scheme: dark) {
     .arch-diagram { color: var(--fg); }
+}
+
+/* ── SVG architecture diagram ───────────────────────────────────────
+ * Vertical-stack layered diagram for the four subsystems. Style
+ * modeled on the user-supplied reference (rounded pastel layer
+ * containers, sub-boxes inside, vertical arrows between layers).
+ * Per-layer hue + fg/bg fill set via class so dark mode can override.
+ */
+.arch-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: var(--text-height) 0;
+}
+
+/* Light-mode layer fills (pastel) and sub-box treatment. */
+.arch-svg .layer--control    { fill: #E0E7FF; }
+.arch-svg .layer--execution  { fill: #DCFCE7; }
+.arch-svg .layer--capability { fill: #FEF3C7; }
+.arch-svg .layer--evolution  { fill: #EDE9FE; }
+
+.arch-svg .sub--control    { fill: #FFFFFF; stroke: #C7D2FE; }
+.arch-svg .sub--execution  { fill: #FFFFFF; stroke: #BBF7D0; }
+.arch-svg .sub--capability { fill: #FFFFFF; stroke: #FDE68A; }
+.arch-svg .sub--evolution  { fill: #FFFFFF; stroke: #DDD6FE; }
+
+.arch-svg .title--control    { fill: #1E1B4B; }
+.arch-svg .title--execution  { fill: #14532D; }
+.arch-svg .title--capability { fill: #78350F; }
+.arch-svg .title--evolution  { fill: #4C1D95; }
+
+.arch-svg .sub-title--control    { fill: #1E1B4B; }
+.arch-svg .sub-title--execution  { fill: #14532D; }
+.arch-svg .sub-title--capability { fill: #78350F; }
+.arch-svg .sub-title--evolution  { fill: #4C1D95; }
+
+.arch-svg .desc--control    { fill: #4338CA; }
+.arch-svg .desc--execution  { fill: #15803D; }
+.arch-svg .desc--capability { fill: #B45309; }
+.arch-svg .desc--evolution  { fill: #6D28D9; }
+
+.arch-svg .arrow-line { stroke: #94A3B8; stroke-width: 2; fill: none; }
+.arch-svg .arrow-head { fill: #94A3B8; }
+
+/* Dark-mode counterparts: deeper layer fills, lighter text. */
+@media (prefers-color-scheme: dark) {
+    .arch-svg .layer--control    { fill: #1E1B4B; }
+    .arch-svg .layer--execution  { fill: #14321E; }
+    .arch-svg .layer--capability { fill: #3B2406; }
+    .arch-svg .layer--evolution  { fill: #2A1854; }
+
+    .arch-svg .sub--control    { fill: #312E81; stroke: #4338CA; }
+    .arch-svg .sub--execution  { fill: #14532D; stroke: #15803D; }
+    .arch-svg .sub--capability { fill: #5C2E04; stroke: #B45309; }
+    .arch-svg .sub--evolution  { fill: #4C1D95; stroke: #6D28D9; }
+
+    .arch-svg .title--control    { fill: #C7D2FE; }
+    .arch-svg .title--execution  { fill: #BBF7D0; }
+    .arch-svg .title--capability { fill: #FDE68A; }
+    .arch-svg .title--evolution  { fill: #DDD6FE; }
+
+    .arch-svg .sub-title--control    { fill: #E0E7FF; }
+    .arch-svg .sub-title--execution  { fill: #DCFCE7; }
+    .arch-svg .sub-title--capability { fill: #FEF3C7; }
+    .arch-svg .sub-title--evolution  { fill: #EDE9FE; }
+
+    .arch-svg .desc--control    { fill: #A5B4FC; }
+    .arch-svg .desc--execution  { fill: #86EFAC; }
+    .arch-svg .desc--capability { fill: #FCD34D; }
+    .arch-svg .desc--evolution  { fill: #C4B5FD; }
+
+    .arch-svg .arrow-line { stroke: #64748B; }
+    .arch-svg .arrow-head { fill: #64748B; }
 }
 
 /* ── Provider + strain definition lists ──────────────────────────────
