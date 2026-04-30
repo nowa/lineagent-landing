@@ -1,28 +1,1003 @@
 <!doctype html>
+<!--
+  Lineage landing site (www.lineagent.ai). Trilingual: en / 中 / 日.
+
+  Strategy: single HTML file with per-element `lang` attribute gating.
+  CSS rule `:root[lang="X"] [lang]:not([lang="X"]) { display: none }`
+  hides any translation block whose lang doesn't match the document's
+  current lang. JS init sets `document.documentElement.lang` based on
+  URL hash → localStorage → navigator.language → default `en`.
+
+  Why not three separate files (`/`, `/zh/`, `/ja/`)?
+  - Single source of truth for IA + design tokens
+  - No build step
+  - Easy to keep structure synced across languages
+  - Trade-off: HTML is bigger; SEO indexes three lang versions on
+    same URL. Acceptable for an Alpha-stage tool's landing page.
+
+  Translation policy:
+  - Domain vocabulary (Strain / Agent / Genome / Evolution / ADR /
+    MLI / etc.) stays in English across all three languages — they
+    are technical identifiers, translating them adds confusion.
+  - Code blocks, command-line examples, URLs, version numbers,
+    file paths: never translated.
+  - Brand mark (5×11 ASCII pixel art) is the same across all three.
+-->
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lineagent — install lineage CLI</title>
-<style>
-  :root { color-scheme: light dark; }
-  body { max-width: 640px; margin: 4rem auto; padding: 0 1rem; font-family: -apple-system, system-ui, sans-serif; line-height: 1.5; }
-  pre { background: #f4f4f4; padding: 1rem; border-radius: 4px; overflow-x: auto; }
-  code { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
-  @media (prefers-color-scheme: dark) { pre { background: #1a1a1a; } }
-  h1 { color: #00DF9A; }
-  a { color: #00DF9A; }
-</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lineage — evolution-native agent runtime</title>
+    <meta name="description" content="Lineage is an evolution-native multi-agent runtime. Agents have parents, generations, and fitness histories. Self-hosted, local-first, evaluation-driven.">
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="alternate" hreflang="en" href="https://www.lineagent.ai/#en">
+    <link rel="alternate" hreflang="zh" href="https://www.lineagent.ai/#zh">
+    <link rel="alternate" hreflang="ja" href="https://www.lineagent.ai/#ja">
+    <link rel="alternate" hreflang="x-default" href="https://www.lineagent.ai/">
+
+    <meta property="og:title" content="Lineage — evolution-native agent runtime">
+    <meta property="og:description" content="Agents with parents, generations, and fitness histories. Self-hosted, local-first, evaluation-driven.">
+    <meta property="og:url" content="https://www.lineagent.ai/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
 </head>
 <body>
-<h1>Lineage</h1>
-<p>Continuously-evolving multi-agent system with traceable, evolvable, selectable agents.</p>
-<h2>Install</h2>
+
+<!-- ─── Sidebar ─────────────────────────────────────────────────── -->
+<aside class="sidebar">
+    <header class="sidebar-header">
+        <a href="#home" aria-label="Lineage home">
+<pre class="sidebar-mark" aria-hidden="true">  ███████
+ ██ █ █ ██
+███████████
+  ███████
+  █  █  █  </pre>
+            <span class="sidebar-sitename">lineage</span>
+            <span class="sidebar-tagline">谱系系统 · lineage system · 系譜システム</span>
+        </a>
+    </header>
+
+    <!-- Language switcher — three buttons, click sets document lang. -->
+    <div class="lang-switcher" role="group" aria-label="Language">
+        <button type="button" data-lang="en" lang="en">EN</button>
+        <button type="button" data-lang="zh" lang="zh">中</button>
+        <button type="button" data-lang="ja" lang="ja">日</button>
+    </div>
+
+    <nav class="sidebar-nav">
+        <ul>
+            <li><a href="#install">
+                <span lang="en">Install</span>
+                <span lang="zh">安装</span>
+                <span lang="ja">インストール</span>
+            </a></li>
+            <li><a href="#what">
+                <span lang="en">What is Lineage?</span>
+                <span lang="zh">Lineage 是什么？</span>
+                <span lang="ja">Lineage とは？</span>
+            </a></li>
+            <li><a href="#quickstart">
+                <span lang="en">Quick start</span>
+                <span lang="zh">快速开始</span>
+                <span lang="ja">クイックスタート</span>
+            </a></li>
+            <li><a href="#self-update">
+                <span lang="en">Self-update</span>
+                <span lang="zh">自更新</span>
+                <span lang="ja">自動更新</span>
+            </a></li>
+            <li><a href="#telemetry">
+                <span lang="en">Telemetry &amp; privacy</span>
+                <span lang="zh">遥测与隐私</span>
+                <span lang="ja">テレメトリとプライバシー</span>
+            </a></li>
+            <li><a href="#faq">
+                <span lang="en">FAQ</span>
+                <span lang="zh">常见问题</span>
+                <span lang="ja">FAQ</span>
+            </a></li>
+        </ul>
+
+        <p class="sidebar-section">
+            <span lang="en">Resources</span>
+            <span lang="zh">资源</span>
+            <span lang="ja">リソース</span>
+        </p>
+        <ul>
+            <li><a class="external" href="https://github.com/nowa/lineage">GitHub</a></li>
+            <li><a class="external" href="https://github.com/nowa/lineage/blob/main/CLAUDE.md">
+                <span lang="en">Architecture</span>
+                <span lang="zh">架构</span>
+                <span lang="ja">アーキテクチャ</span>
+            </a></li>
+            <li><a class="external" href="https://github.com/nowa/lineage/tree/main/specs/adr">ADRs</a></li>
+            <li><a class="external" href="https://github.com/nowa/lineage/blob/main/ROADMAP.md">
+                <span lang="en">Roadmap</span>
+                <span lang="zh">路线图</span>
+                <span lang="ja">ロードマップ</span>
+            </a></li>
+            <li><a class="external" href="https://github.com/nowa/lineage/releases/latest">
+                <span lang="en">Releases</span>
+                <span lang="zh">发布版本</span>
+                <span lang="ja">リリース</span>
+            </a></li>
+        </ul>
+    </nav>
+
+    <footer class="sidebar-footer">
+        <p>MIT-licensed.</p>
+        <p>© 2026 Lineage Contributors.</p>
+    </footer>
+</aside>
+
+<!-- ─── Main content ────────────────────────────────────────────── -->
+<main>
+
+<!-- Hero ─────────────────────────────────────────────────────────── -->
+<section id="home" class="hero">
+<pre class="hero-mark" aria-hidden="true">  ███████
+ ██ █ █ ██
+███████████
+  ███████
+  █  █  █  </pre>
+
+    <h1 class="hero-tagline" lang="en">An evolution-native multi-agent runtime.</h1>
+    <h1 class="hero-tagline" lang="zh">一个原生支持演化的多 Agent 运行时。</h1>
+    <h1 class="hero-tagline" lang="ja">進化をネイティブに扱うマルチエージェント・ランタイム。</h1>
+
+    <p class="hero-sub" lang="en">
+        Agents in Lineage are not disposable config files — they have
+        parents, generations, immutable genome records, and fitness
+        histories. Evaluation drives evolution; poor agents are
+        retired, strong ones reproduce.
+    </p>
+    <p class="hero-sub" lang="zh">
+        Lineage 里的 Agent 不是一次性的配置文件 ——
+        每个 Agent 都有 parent、generation、不可变的 genome 记录、以及 fitness 历史。
+        评估驱动演化：表现差的 Agent 退场，表现好的 Agent 繁衍。
+    </p>
+    <p class="hero-sub" lang="ja">
+        Lineage の Agent は使い捨ての設定ファイルではありません ——
+        親（parent）、世代（generation）、不変な genome レコード、
+        そして fitness 履歴を持ちます。評価が進化を駆動し、
+        パフォーマンスの低い Agent は退場し、優れた Agent が繁殖します。
+    </p>
+
+    <p class="hero-sub" lang="en">
+        Local-first. Self-hosted by default. Rust core + Ratatui TUI.
+        Three-channel install: brew, npm, or curl.
+    </p>
+    <p class="hero-sub" lang="zh">
+        本地优先（local-first）。默认自托管。Rust 核心 + Ratatui TUI。
+        三种安装渠道：brew、npm、curl。
+    </p>
+    <p class="hero-sub" lang="ja">
+        ローカルファースト。デフォルトでセルフホスト。
+        Rust コア + Ratatui TUI。インストール経路は 3 つ：brew、npm、curl。
+    </p>
+
+    <div class="install-line">
+        <code>curl -fsSL https://www.lineagent.ai/install.sh | sh</code>
+        <button type="button" class="copy-btn" data-copy="curl -fsSL https://www.lineagent.ai/install.sh | sh">
+            <span lang="en">copy</span><span lang="zh">复制</span><span lang="ja">コピー</span>
+        </button>
+    </div>
+
+    <p>
+        <a class="button" href="#install">
+            <span lang="en">Install options</span>
+            <span lang="zh">安装方式</span>
+            <span lang="ja">インストール方法</span>
+        </a>
+        <a class="button button--ghost" href="#what">
+            <span lang="en">What is this?</span>
+            <span lang="zh">这是什么？</span>
+            <span lang="ja">これは何？</span>
+        </a>
+    </p>
+</section>
+
+
+<!-- Install ──────────────────────────────────────────────────────── -->
+<section id="install">
+<h2 lang="en">Install<a class="headerlink" href="#install">#</a></h2>
+<h2 lang="zh">安装<a class="headerlink" href="#install">#</a></h2>
+<h2 lang="ja">インストール<a class="headerlink" href="#install">#</a></h2>
+
+<p lang="en">
+    Pick whichever package manager you already use. All three
+    channels ship the same release — same semver, same binary, same
+    self-update behavior. Choose by familiarity.
+</p>
+<p lang="zh">
+    选你已经在用的那个包管理器即可。三条渠道发的是同一个 release ——
+    同一个 semver、同一个二进制、同一套自更新行为。按熟悉程度选就行。
+</p>
+<p lang="ja">
+    すでに使っているパッケージマネージャーを選んでください。3 つのチャンネルは
+    同じリリースを配布します —— 同じ semver、同じバイナリ、同じ自動更新の挙動。
+    慣れているもので構いません。
+</p>
+
+<h3 lang="en">Homebrew (macOS &amp; Linux)</h3>
+<h3 lang="zh">Homebrew（macOS 与 Linux）</h3>
+<h3 lang="ja">Homebrew (macOS / Linux)</h3>
+<pre><code>brew install nowa/lineage/lineage</code></pre>
+
+<h3>npm</h3>
+<pre><code>npm install -g @lineage/cli</code></pre>
+
+<h3 lang="en">Direct (curl)</h3>
+<h3 lang="zh">直装（curl）</h3>
+<h3 lang="ja">直接インストール（curl）</h3>
 <pre><code>curl -fsSL https://www.lineagent.ai/install.sh | sh</code></pre>
-<p>Or via Homebrew / npm:</p>
-<pre><code>brew install nowa/lineage/lineage
-npm install -g @lineage/cli</code></pre>
-<h2>Source</h2>
-<p><a href="https://github.com/nowa/lineage">github.com/nowa/lineage</a></p>
+
+<p lang="en">
+    The installer downloads a per-platform tarball, verifies its
+    SHA-256 against a published <code>checksums.txt</code>, and
+    drops <code>lineage</code> into <code>~/.local/bin</code>. It
+    refuses to run as root and warns you if <code>~/.local/bin</code>
+    isn't on your <code>$PATH</code>.
+</p>
+<p lang="zh">
+    安装脚本会下载对应平台的 tarball，对照公开的 <code>checksums.txt</code>
+    校验 SHA-256，然后把 <code>lineage</code> 放到 <code>~/.local/bin</code>。
+    它拒绝以 root 身份运行；如果 <code>~/.local/bin</code> 不在你的
+    <code>$PATH</code> 里，会给出提示。
+</p>
+<p lang="ja">
+    インストーラーはプラットフォーム別の tarball をダウンロードし、
+    公開されている <code>checksums.txt</code> に対して SHA-256 を検証してから、
+    <code>lineage</code> を <code>~/.local/bin</code> に配置します。
+    root での実行は拒否され、<code>~/.local/bin</code> が
+    <code>$PATH</code> に含まれていない場合は警告します。
+</p>
+
+<p lang="en">Verify:</p>
+<p lang="zh">验证：</p>
+<p lang="ja">確認：</p>
+<pre><code>lineage --version
+lineage status</code></pre>
+
+<div class="callout">
+    <p lang="en"><strong>Windows</strong> is not yet supported. Use WSL 2 with
+    a recent Ubuntu rootfs in the meantime.</p>
+    <p lang="zh"><strong>Windows</strong> 暂未支持。在此之前请用 WSL 2 + 较新的 Ubuntu rootfs。</p>
+    <p lang="ja"><strong>Windows</strong> は未対応です。当面は WSL 2 +
+    最新の Ubuntu rootfs をご利用ください。</p>
+</div>
+</section>
+
+
+<!-- What is Lineage? ─────────────────────────────────────────────── -->
+<section id="what">
+<h2 lang="en">What is Lineage?<a class="headerlink" href="#what">#</a></h2>
+<h2 lang="zh">Lineage 是什么？<a class="headerlink" href="#what">#</a></h2>
+<h2 lang="ja">Lineage とは？<a class="headerlink" href="#what">#</a></h2>
+
+<p lang="en">
+    Lineage is a continuously-evolving multi-agent runtime built around
+    four primitives. The core philosophy: <em>谱系一等公民</em> —
+    every Agent has a <code>parent_id</code>, a <code>generation</code>,
+    a <code>strain_id</code>, a <code>fitness_history</code>, an
+    immutable genome record, and an auditable execution chain.
+</p>
+<p lang="zh">
+    Lineage 是一个持续演化的多 Agent 运行时，围绕四个核心原语构建。
+    核心哲学：<em>谱系一等公民</em> ——
+    每个 Agent 都有 <code>parent_id</code>、<code>generation</code>、
+    <code>strain_id</code>、<code>fitness_history</code>、
+    一份不可变的 genome 记录、以及一条可审计的执行链。
+</p>
+<p lang="ja">
+    Lineage は 4 つのプリミティブを中心に構築された、継続的に進化する
+    マルチエージェント・ランタイムです。コアとなる哲学は
+    <em>谱系一等公民（系譜は第一級市民）</em>——
+    すべての Agent が <code>parent_id</code>、<code>generation</code>、
+    <code>strain_id</code>、<code>fitness_history</code>、
+    不変な genome レコード、そして監査可能な実行チェーンを持ちます。
+</p>
+
+<div class="concept-grid">
+    <div>
+        <h3>Strain</h3>
+        <p lang="en">A domain or task family — email, coding, browser-ops.
+        Defines the eval contract and the boundary of which tools
+        an Agent in this family is allowed to use.</p>
+        <p lang="zh">领域或任务族 —— 邮件、编码、浏览器自动化。
+        定义评估契约，以及该族 Agent 可用工具的边界。</p>
+        <p lang="ja">ドメインまたはタスク・ファミリ ——
+        メール、コーディング、ブラウザ操作など。
+        評価契約と、そのファミリの Agent が使えるツールの境界を定義します。</p>
+    </div>
+    <div>
+        <h3>Agent</h3>
+        <p lang="en">A lineage node. Has a parent, a generation, an immutable
+        genome snapshot, a fitness history, and a 4-state lifecycle
+        (<code>candidate → stable → deprecated ⇄ stable → extinct</code>).</p>
+        <p lang="zh">系谱节点。有 parent、generation、不可变 genome 快照、fitness 历史，
+        以及 4 状态生命周期
+        （<code>candidate → stable → deprecated ⇄ stable → extinct</code>）。</p>
+        <p lang="ja">系譜のノード。親、世代、不変な genome スナップショット、
+        fitness 履歴、そして 4 状態のライフサイクル
+        （<code>candidate → stable → deprecated ⇄ stable → extinct</code>）を持ちます。</p>
+    </div>
+    <div>
+        <h3>Genome</h3>
+        <p lang="en">An immutable JSON capturing prompts, planner config,
+        tool-policy weights. Editing a genome creates a new Agent
+        (a child) — never mutates the parent. Lineage is auditable
+        and replayable because of this.</p>
+        <p lang="zh">不可变的 JSON，记录 prompt、planner 配置、tool-policy 权重等。
+        编辑 genome 会产生一个新 Agent（子代），永远不修改父代。
+        系谱因此可审计、可回放。</p>
+        <p lang="ja">プロンプト、planner 設定、tool-policy の重みなどを記録した
+        不変な JSON。genome を編集すると新しい Agent（子）が生成され、
+        親は決して変更されません。これにより系譜は監査可能かつ再生可能になります。</p>
+    </div>
+    <div>
+        <h3>Evolution</h3>
+        <p lang="en">CUSUM-triggered candidate generation, offline evaluation,
+        Inbox approval, then a Blue-Green swap with a 7-day or
+        20-session observation window. Auto-rollback on regression.</p>
+        <p lang="zh">CUSUM 触发候选生成 → 离线评估 → Inbox 审批 → Blue-Green 切换
+        → 7 天或 20 会话观察窗 → 检测到回归自动回滚。</p>
+        <p lang="ja">CUSUM トリガによる候補生成 → オフライン評価 →
+        Inbox 承認 → Blue-Green 切替 → 7 日または 20 セッションの観察窓 →
+        リグレッション検出時の自動ロールバック。</p>
+    </div>
+</div>
+
+<p lang="en">
+    The runtime is four planes: Control (Gateway + ChannelAdapter),
+    Execution (AgentKernel + Composition), Capability (Skills +
+    browser), and Evolution (CUSUM + Blue-Green promotion). Files
+    are the Source of Truth; the SQLite DB is a materialized index
+    that can be rebuilt from <code>data/</code> at any time.
+</p>
+<p lang="zh">
+    运行时分四个平面：Control（Gateway + ChannelAdapter）、
+    Execution（AgentKernel + Composition）、
+    Capability（Skills + 浏览器）、
+    Evolution（CUSUM + Blue-Green 提升）。
+    文件是 Source of Truth；SQLite DB 只是物化索引，
+    任何时候都可以从 <code>data/</code> 重建。
+</p>
+<p lang="ja">
+    ランタイムは 4 つのプレーンで構成されます：Control（Gateway + ChannelAdapter）、
+    Execution（AgentKernel + Composition）、Capability（Skills + ブラウザ）、
+    Evolution（CUSUM + Blue-Green プロモーション）。
+    ファイルが Source of Truth で、SQLite DB はマテリアライズドなインデックスであり、
+    いつでも <code>data/</code> から再構築できます。
+</p>
+
+<p lang="en">
+    For the full architecture write-up, see
+    <a href="https://github.com/nowa/lineage/blob/main/CLAUDE.md">CLAUDE.md</a>
+    in the repository, the
+    <a href="https://github.com/nowa/lineage/blob/main/knowledge/ARCHITECTURE.md">Architecture document</a>,
+    and the
+    <a href="https://github.com/nowa/lineage/tree/main/specs/adr">ADR catalog</a>
+    (60+ accepted decisions).
+</p>
+<p lang="zh">
+    完整架构文档见仓库中的
+    <a href="https://github.com/nowa/lineage/blob/main/CLAUDE.md">CLAUDE.md</a>、
+    <a href="https://github.com/nowa/lineage/blob/main/knowledge/ARCHITECTURE.md">Architecture 文档</a>，
+    以及
+    <a href="https://github.com/nowa/lineage/tree/main/specs/adr">ADR 目录</a>
+    （60+ 已接受决策）。
+</p>
+<p lang="ja">
+    完全なアーキテクチャ文書はリポジトリ内の
+    <a href="https://github.com/nowa/lineage/blob/main/CLAUDE.md">CLAUDE.md</a>、
+    <a href="https://github.com/nowa/lineage/blob/main/knowledge/ARCHITECTURE.md">Architecture ドキュメント</a>、
+    そして
+    <a href="https://github.com/nowa/lineage/tree/main/specs/adr">ADR カタログ</a>
+    （60 件以上の承認済み決定）をご覧ください。
+</p>
+</section>
+
+
+<!-- Quick start ──────────────────────────────────────────────────── -->
+<section id="quickstart">
+<h2 lang="en">Quick start<a class="headerlink" href="#quickstart">#</a></h2>
+<h2 lang="zh">快速开始<a class="headerlink" href="#quickstart">#</a></h2>
+<h2 lang="ja">クイックスタート<a class="headerlink" href="#quickstart">#</a></h2>
+
+<p lang="en">
+    Lineage is a TUI-first product. Drop into a project directory
+    and run <code>lineage chat</code>:
+</p>
+<p lang="zh">
+    Lineage 是 TUI 优先的产品。进到一个项目目录，跑 <code>lineage chat</code>：
+</p>
+<p lang="ja">
+    Lineage は TUI ファーストのプロダクトです。プロジェクトディレクトリに移動して
+    <code>lineage chat</code> を実行します：
+</p>
+
+<pre><code>$ cd ~/your-project
+$ lineage chat
+∴ lineage 0.117.x — pal ready
+
+Type a message to begin (Ctrl-C to exit).
+&gt; help me understand the auth flow in this codebase</code></pre>
+
+<p lang="en">
+    The first run walks you through provider setup
+    (Anthropic / OpenAI / OpenAI-compat / Codex subscription),
+    asks you to trust the project directory, and then drops into
+    the three-pane chat layout — conversation in the middle,
+    status bar at the bottom, optional context pane on the side.
+</p>
+<p lang="zh">
+    首次运行会引导你完成 provider 配置
+    （Anthropic / OpenAI / OpenAI-compat / Codex 订阅），
+    询问是否信任当前项目目录，然后进入三栏聊天布局 ——
+    中间是会话，底部是状态栏，侧边可选上下文面板。
+</p>
+<p lang="ja">
+    初回起動時はプロバイダ設定
+    （Anthropic / OpenAI / OpenAI 互換 / Codex サブスクリプション）の
+    ウィザードに誘導され、プロジェクトディレクトリを信頼するか確認したのち、
+    3 ペインのチャットレイアウトに入ります ——
+    中央が会話、下部がステータスバー、サイドにコンテキストペイン（任意）。
+</p>
+
+<p lang="en">
+    Sessions are persistent. Run <code>lineage chat --resume</code>
+    to pick up where you left off. Run <code>lineage agents</code>
+    to list lineage trees, <code>lineage cost</code> to see token
+    spend, <code>lineage soul</code> to edit the active strain's
+    personality.
+</p>
+<p lang="zh">
+    会话是持久化的。<code>lineage chat --resume</code> 接续上次对话。
+    <code>lineage agents</code> 列出系谱树；
+    <code>lineage cost</code> 查看 token 花费；
+    <code>lineage soul</code> 编辑当前 strain 的人格设定。
+</p>
+<p lang="ja">
+    セッションは永続化されます。<code>lineage chat --resume</code> で続きから再開できます。
+    <code>lineage agents</code> で系譜ツリーの一覧、
+    <code>lineage cost</code> でトークン使用量、
+    <code>lineage soul</code> で現在の strain のパーソナリティ編集ができます。
+</p>
+</section>
+
+
+<!-- Self-update ──────────────────────────────────────────────────── -->
+<section id="self-update">
+<h2 lang="en">Self-update<a class="headerlink" href="#self-update">#</a></h2>
+<h2 lang="zh">自更新<a class="headerlink" href="#self-update">#</a></h2>
+<h2 lang="ja">自動更新<a class="headerlink" href="#self-update">#</a></h2>
+
+<p lang="en">
+    <code>lineage self-update</code> is channel-aware. If you
+    installed via Homebrew, it redirects you to <code>brew upgrade
+    lineage</code>; npm to <code>npm update -g</code>; Cargo to
+    <code>cargo install lineage --force</code>; snap to
+    <code>sudo snap refresh</code>. Only direct (<code>install.sh</code>)
+    installs do an in-place atomic POSIX rename swap, with a
+    <code>.prev</code> hardlink backup.
+</p>
+<p lang="zh">
+    <code>lineage self-update</code> 是频道感知的。Homebrew 装的会被引导去
+    <code>brew upgrade lineage</code>；npm 装的引导到
+    <code>npm update -g</code>；Cargo 装的引导到
+    <code>cargo install lineage --force</code>；snap 装的引导到
+    <code>sudo snap refresh</code>。
+    只有直装（<code>install.sh</code>）会就地原子 POSIX rename 替换，
+    并带 <code>.prev</code> hardlink 备份。
+</p>
+<p lang="ja">
+    <code>lineage self-update</code> はチャンネルを認識します。
+    Homebrew 経由でインストールされた場合は <code>brew upgrade lineage</code> に、
+    npm の場合は <code>npm update -g</code>、Cargo は
+    <code>cargo install lineage --force</code>、snap は
+    <code>sudo snap refresh</code> にリダイレクトします。
+    直接インストール（<code>install.sh</code>）の場合のみ、その場で
+    POSIX rename によるアトミックな入れ替えを行い、
+    <code>.prev</code> ハードリンクのバックアップを残します。
+</p>
+
+<p lang="en">
+    Background updates are <strong>opt-in</strong>. By default the
+    background updater is in notify-only mode: it checks GitHub
+    every 30 minutes, prints a banner if a new version is available,
+    and stops there. To turn on silent installs, edit
+    <code>~/.config/lineage/lineage.toml</code>:
+</p>
+<p lang="zh">
+    后台自动更新是<strong>主动 opt-in</strong> 的。默认情况下后台只做通知 ——
+    每 30 分钟查一次 GitHub，发现新版本就在启动时打条 banner，仅此而已。
+    要打开静默安装，编辑 <code>~/.config/lineage/lineage.toml</code>：
+</p>
+<p lang="ja">
+    バックグラウンド更新は<strong>オプトイン</strong>です。デフォルトでは通知のみ ——
+    30 分ごとに GitHub をチェックし、新バージョンがあれば起動時にバナーを出すだけです。
+    サイレントインストールを有効にするには、
+    <code>~/.config/lineage/lineage.toml</code> を編集してください：
+</p>
+
+<pre><code>[updates]
+auto_check_enabled = true
+auto_install_enabled = true   # default false
+check_interval_minutes = 30</code></pre>
+
+<p lang="en">
+    See <a href="https://github.com/nowa/lineage/blob/main/specs/adr/ADR-068-lineage-distribution-model.md">ADR-068</a>
+    for the full distribution model.
+</p>
+<p lang="zh">
+    完整分发模型见
+    <a href="https://github.com/nowa/lineage/blob/main/specs/adr/ADR-068-lineage-distribution-model.md">ADR-068</a>。
+</p>
+<p lang="ja">
+    配布モデルの詳細は
+    <a href="https://github.com/nowa/lineage/blob/main/specs/adr/ADR-068-lineage-distribution-model.md">ADR-068</a>
+    をご覧ください。
+</p>
+</section>
+
+
+<!-- Telemetry & privacy ─────────────────────────────────────────── -->
+<section id="telemetry">
+<h2 lang="en">Telemetry &amp; privacy<a class="headerlink" href="#telemetry">#</a></h2>
+<h2 lang="zh">遥测与隐私<a class="headerlink" href="#telemetry">#</a></h2>
+<h2 lang="ja">テレメトリとプライバシー<a class="headerlink" href="#telemetry">#</a></h2>
+
+<p lang="en">
+    Lineage ships anonymous usage telemetry default-on. The data
+    helps prioritize features and catch real regressions. We
+    deliberately skipped the first-run consent prompt — every other
+    consent dialog you've ever seen in a CLI tool taught you to tap
+    "no" on reflex, which means default-off telemetry measures only
+    a self-selected sub-population and biases every product decision.
+    Default-on with a kill-switch gives us a representative sample
+    while keeping you in control.
+</p>
+<p lang="zh">
+    Lineage 默认开启匿名使用遥测。这些数据帮我们优先排功能，也帮我们发现真正的回归。
+    我们刻意没做首启同意对话框 —— 你在每个 CLI 工具里见过的每个"是否同意收集数据"
+    弹窗都在训练你下意识按"否"，这意味着默认 off 的遥测只能采到一群自选样本，
+    每个产品决策都被偏置数据带跑偏。默认 on + 一键关停才能让我们看到代表性样本，
+    同时把控制权留给你。
+</p>
+<p lang="ja">
+    Lineage は匿名の使用テレメトリをデフォルトで有効にして配布します。
+    このデータは機能の優先順位付けと、本当のリグレッションの早期発見に役立ちます。
+    初回同意ダイアログを意図的に排除しました ——
+    あなたがこれまで CLI ツールで目にしてきた同意ダイアログは、
+    すべて反射的に「いいえ」を押すよう訓練してしまっています。
+    つまりデフォルト off のテレメトリは自己選択された部分集団のみを測定し、
+    あらゆる製品判断を歪めます。デフォルト on + キルスイッチであれば、
+    代表的なサンプルを得つつ、コントロールはあなたの手元に残ります。
+</p>
+
+<p lang="en"><strong>What is collected:</strong></p>
+<p lang="zh"><strong>会收集什么：</strong></p>
+<p lang="ja"><strong>収集される情報：</strong></p>
+
+<ul lang="en">
+    <li>Tool-call counts and names (<code>filesystem.read</code>,
+        <code>delegate_wait</code>, etc. — never their arguments).</li>
+    <li>Turn durations, session lengths, error counts.</li>
+    <li>Strain keys (which agents you used).</li>
+    <li>Lineage version + OS/arch.</li>
+    <li>An anonymous UUID v4 client id, generated locally, resettable
+        by deleting <code>$XDG_STATE_HOME/lineage/telemetry/client_id</code>.</li>
+</ul>
+<ul lang="zh">
+    <li>工具调用名和次数（<code>filesystem.read</code>、<code>delegate_wait</code> 等 ——
+        参数永远不传）。</li>
+    <li>每轮时长、会话长度、错误次数。</li>
+    <li>Strain key（你用了哪些 Agent）。</li>
+    <li>Lineage 版本号 + OS / 架构。</li>
+    <li>一个本地生成的匿名 UUID v4 client id —— 删除
+        <code>$XDG_STATE_HOME/lineage/telemetry/client_id</code> 即可重置。</li>
+</ul>
+<ul lang="ja">
+    <li>ツール呼び出し名と回数（<code>filesystem.read</code>、
+        <code>delegate_wait</code> など —— 引数は決して送信しません）。</li>
+    <li>各ターンの所要時間、セッション長、エラー回数。</li>
+    <li>Strain キー（どの Agent を使ったか）。</li>
+    <li>Lineage バージョン + OS / アーキテクチャ。</li>
+    <li>ローカル生成の匿名 UUID v4 client id ——
+        <code>$XDG_STATE_HOME/lineage/telemetry/client_id</code> を削除すればリセットできます。</li>
+</ul>
+
+<p lang="en"><strong>What is NEVER collected:</strong></p>
+<p lang="zh"><strong>永远不会收集什么：</strong></p>
+<p lang="ja"><strong>絶対に収集しない情報：</strong></p>
+
+<ul lang="en">
+    <li>Filesystem paths.</li>
+    <li>Prompts, LLM responses, or any tool input/output.</li>
+    <li>Source-IP addresses (stripped at the Cloudflare edge before
+        reaching the PostHog endpoint).</li>
+    <li>Anything resembling your personal data.</li>
+</ul>
+<ul lang="zh">
+    <li>任何文件系统路径。</li>
+    <li>Prompt、LLM 回复，或任何工具的输入/输出。</li>
+    <li>源 IP 地址（在 Cloudflare 边缘剥离，根本到不了 PostHog）。</li>
+    <li>任何近似你个人数据的东西。</li>
+</ul>
+<ul lang="ja">
+    <li>ファイルシステムパス。</li>
+    <li>プロンプト、LLM の応答、ツールの入出力一切。</li>
+    <li>送信元 IP アドレス（Cloudflare エッジで削除され、PostHog エンドポイントには届きません）。</li>
+    <li>個人データに該当しうるすべての情報。</li>
+</ul>
+
+<p lang="en"><strong>Three opt-out paths:</strong></p>
+<p lang="zh"><strong>三种关掉的方式：</strong></p>
+<p lang="ja"><strong>3 つのオプトアウト経路：</strong></p>
+
+<pre lang="en"><code># 1. Per-process env var (hot-disable for one invocation)
+LINEAGE_DISABLE_TELEMETRY=1 lineage chat
+
+# 2. Per-install (writes to lineage.toml)
+lineage telemetry disable usage
+
+# 3. Per-install for the local JSONL audit log specifically
+LINEAGE_DISABLE_LOCAL_TELEMETRY=1</code></pre>
+<pre lang="zh"><code># 1. 单次进程关闭（环境变量）
+LINEAGE_DISABLE_TELEMETRY=1 lineage chat
+
+# 2. 永久关闭（写到 lineage.toml）
+lineage telemetry disable usage
+
+# 3. 单独关掉本地 JSONL 审计日志
+LINEAGE_DISABLE_LOCAL_TELEMETRY=1</code></pre>
+<pre lang="ja"><code># 1. プロセス単位で無効化（環境変数）
+LINEAGE_DISABLE_TELEMETRY=1 lineage chat
+
+# 2. インストール単位で無効化（lineage.toml に書き込み）
+lineage telemetry disable usage
+
+# 3. ローカル JSONL 監査ログを個別に無効化
+LINEAGE_DISABLE_LOCAL_TELEMETRY=1</code></pre>
+
+<p lang="en">
+    Telemetry uploads land in our own self-hosted PostHog instance
+    at <code>telemetry.lineagent.ai</code> — not PostHog Cloud, not
+    a third party. The full architecture is in
+    <a href="https://github.com/nowa/lineage/blob/main/specs/adr/ADR-066-telemetry-and-privacy.md">ADR-066</a>.
+    The <code>§D4 PII boundary</code> is a hard contract — adding
+    a field that violates it is a stop-ship event.
+</p>
+<p lang="zh">
+    遥测上传到的是我们自己自托管的 PostHog 实例（<code>telemetry.lineagent.ai</code>），
+    不是 PostHog Cloud，也不是任何第三方。完整架构见
+    <a href="https://github.com/nowa/lineage/blob/main/specs/adr/ADR-066-telemetry-and-privacy.md">ADR-066</a>。
+    其中 <code>§D4 PII 边界</code>是硬契约 —— 任何字段一旦违反它，就是 stop-ship 级事件。
+</p>
+<p lang="ja">
+    テレメトリ送信先は自社ホストの PostHog インスタンス
+    （<code>telemetry.lineagent.ai</code>）です ——
+    PostHog Cloud ではなく、サードパーティでもありません。
+    完全なアーキテクチャは
+    <a href="https://github.com/nowa/lineage/blob/main/specs/adr/ADR-066-telemetry-and-privacy.md">ADR-066</a>
+    にあります。<code>§D4 PII 境界</code>はハードコントラクトであり、
+    これに違反するフィールドが追加されることはリリース停止級の事案です。
+</p>
+</section>
+
+
+<!-- FAQ ──────────────────────────────────────────────────────────── -->
+<section id="faq">
+<h2 lang="en">FAQ<a class="headerlink" href="#faq">#</a></h2>
+<h2 lang="zh">常见问题<a class="headerlink" href="#faq">#</a></h2>
+<h2 lang="ja">FAQ<a class="headerlink" href="#faq">#</a></h2>
+
+<dl class="faq">
+
+<dt lang="en">Why Rust?</dt>
+<dt lang="zh">为什么用 Rust？</dt>
+<dt lang="ja">なぜ Rust？</dt>
+<dd lang="en">The Control / Execution / Capability planes need predictable
+    latency and zero GC pauses on the hot path. Tooling is mature
+    enough that we get these for free without paying in
+    productivity. The TUI specifically benefits — Ratatui is
+    extremely fast, and the streaming-tokens-into-three-panes
+    rendering would be hard to keep tear-free in a GC'd runtime.</dd>
+<dd lang="zh">Control / Execution / Capability 三个平面需要可预测的延迟，
+    热路径不能有 GC 停顿。Rust 的工具链够成熟，这些好处不需要在生产力上付代价就能拿到。
+    TUI 尤其受益 —— Ratatui 极快，把流式 token 实时渲染到三个面板，
+    在带 GC 的运行时里很难做到不撕裂。</dd>
+<dd lang="ja">Control / Execution / Capability の各プレーンには予測可能なレイテンシと、
+    ホットパスにおける GC ポーズゼロが必要です。
+    Rust のツーリングは十分に成熟しており、生産性の犠牲なしにこれらが手に入ります。
+    特に TUI が恩恵を受けます —— Ratatui は非常に高速で、
+    トークンを 3 ペインにストリーミング表示するレンダリングを
+    GC 付きランタイムで tear-free に保つのは難しいでしょう。</dd>
+
+<dt lang="en">Where does my data live?</dt>
+<dt lang="zh">我的数据存在哪里？</dt>
+<dt lang="ja">データはどこに保存されますか？</dt>
+<dd lang="en">On your machine. Conversation history is JSONL under
+    <code>data/conversations/</code>. Genomes and strains are
+    YAML/JSON under <code>data/</code>. Memory is JSONL under
+    <code>data/memory/</code>. The SQLite DB is purely an index and
+    can be rebuilt from these files via <code>lineage rebuild-index</code>
+    at any time. Files are the Source of Truth (ADR-010).</dd>
+<dd lang="zh">在你自己的机器上。会话历史是
+    <code>data/conversations/</code> 下的 JSONL；
+    Genome 和 Strain 是 <code>data/</code> 下的 YAML/JSON；
+    记忆是 <code>data/memory/</code> 下的 JSONL。
+    SQLite DB 只是索引，任何时候都可以
+    <code>lineage rebuild-index</code> 重建。文件是 Source of Truth（ADR-010）。</dd>
+<dd lang="ja">あなたのマシン上です。会話履歴は <code>data/conversations/</code> 下の JSONL、
+    Genome と Strain は <code>data/</code> 下の YAML/JSON、
+    メモリは <code>data/memory/</code> 下の JSONL に保存されます。
+    SQLite DB は純粋にインデックスであり、いつでも
+    <code>lineage rebuild-index</code> で再構築可能です。
+    ファイルが Source of Truth です（ADR-010）。</dd>
+
+<dt lang="en">Is the agent autonomous? What about safety?</dt>
+<dt lang="zh">Agent 是自主运行的吗？安全性怎么保证？</dt>
+<dt lang="ja">Agent は自律的に動作しますか？安全性は？</dt>
+<dd lang="en">The Capability Plane runs in a tiered sandbox — Wasm/WASI in
+    MVP, Linux namespace + seccomp + cgroups in Phase 1, MicroVM in
+    Phase 2 (ADR-022). Tool policy is per-strain via genome weights:
+    a strain that doesn't list <code>cli_execute</code> in its
+    allowlist literally cannot shell out. Browser automation goes
+    through a dedicated Chromium profile and binds loopback-only
+    (ADR-045).</dd>
+<dd lang="zh">Capability Plane 跑在分层沙箱里 ——
+    MVP 用 Wasm/WASI，Phase 1 用 Linux namespace + seccomp + cgroups，
+    Phase 2 用 MicroVM（ADR-022）。
+    工具策略是按 strain 走 genome 权重的：一个 strain 如果 allowlist 里没列
+    <code>cli_execute</code>，它字面上就 shell 不出去。
+    浏览器自动化走独立的 Chromium profile，且只绑 loopback（ADR-045）。</dd>
+<dd lang="ja">Capability プレーンは階層化されたサンドボックスで実行されます ——
+    MVP は Wasm/WASI、Phase 1 は Linux namespace + seccomp + cgroups、
+    Phase 2 は MicroVM（ADR-022）。
+    ツールポリシーは strain ごとに genome の重みで管理されます ——
+    allowlist に <code>cli_execute</code> がない strain は文字通りシェルを呼べません。
+    ブラウザ自動化は専用の Chromium プロファイルを使い、ループバックのみにバインドします（ADR-045）。</dd>
+
+<dt lang="en">What's a "genome"?</dt>
+<dt lang="zh">"Genome" 是什么？</dt>
+<dt lang="ja">「genome」とは？</dt>
+<dd lang="en">An immutable JSON snapshot of an Agent's prompts, planner
+    config, and tool-policy weights. Genome is content-addressed by
+    SHA-256; editing one creates a new Agent (a child) and the old
+    one stays archived for replay. This makes the lineage
+    auditable: you can always answer "what changed?" by diffing
+    parent vs child genomes.</dd>
+<dd lang="zh">某个 Agent 的 prompt、planner 配置、tool-policy 权重的不可变 JSON 快照。
+    Genome 用 SHA-256 内容寻址；编辑一个 genome 会产生新 Agent（子代），
+    旧的归档保留以供回放。这让系谱可审计 ——
+    "什么变了？"永远可以通过 diff 父代 vs 子代 genome 答出来。</dd>
+<dd lang="ja">ある Agent のプロンプト、planner 設定、tool-policy の重みの
+    不変 JSON スナップショットです。Genome は SHA-256 によるコンテンツアドレシング ——
+    編集すると新しい Agent（子）が生成され、古い genome は再生用に保管されます。
+    これにより系譜は監査可能になります ——
+    「何が変わったか？」は親と子の genome を diff すれば常に答えられます。</dd>
+
+<dt lang="en">Linux / macOS only?</dt>
+<dt lang="zh">只支持 Linux / macOS？</dt>
+<dt lang="ja">Linux / macOS のみ？</dt>
+<dd lang="en">Yes for now. Path/sandbox conventions assume POSIX (XDG dirs,
+    flock, atomic-rename semantics). Windows lands in Phase 1 if
+    there's demand. WSL 2 works today.</dd>
+<dd lang="zh">目前是。路径和沙箱假设走的都是 POSIX（XDG 目录、flock、原子 rename 语义）。
+    Windows 如果有用户需求，在 Phase 1 加入。WSL 2 现在就能跑。</dd>
+<dd lang="ja">現時点では。パスとサンドボックスの規約はすべて POSIX を前提
+    （XDG ディレクトリ、flock、アトミックな rename セマンティクス）。
+    Windows は需要があれば Phase 1 で対応します。WSL 2 上では現在動作します。</dd>
+
+<dt lang="en">How do I delete everything?</dt>
+<dt lang="zh">怎么彻底删除？</dt>
+<dt lang="ja">完全にアンインストールするには？</dt>
+<dd lang="en">
+    <pre><code>lineage telemetry disable usage --purge
+rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
+       "$XDG_CONFIG_HOME/lineage" "$HOME/.local/bin/lineage"</code></pre>
+    The first command deletes any uploaded events from the central
+    PostHog and disables future uploads. The <code>rm</code> wipes
+    your entire local install (data, state, config, binary) without
+    leaving a single artifact.
+</dd>
+<dd lang="zh">
+    <pre><code>lineage telemetry disable usage --purge
+rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
+       "$XDG_CONFIG_HOME/lineage" "$HOME/.local/bin/lineage"</code></pre>
+    第一条命令删掉中央 PostHog 上你已上传的事件，并关掉未来上传。
+    <code>rm</code> 抹掉你的整个本地安装（数据、状态、配置、二进制），不留一片痕迹。
+</dd>
+<dd lang="ja">
+    <pre><code>lineage telemetry disable usage --purge
+rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
+       "$XDG_CONFIG_HOME/lineage" "$HOME/.local/bin/lineage"</code></pre>
+    最初のコマンドが中央 PostHog にアップロード済みのイベントを削除し、
+    今後のアップロードを無効化します。<code>rm</code> はローカルインストール全体
+    （データ、ステート、設定、バイナリ）をひとつ残らず消去します。
+</dd>
+
+<dt lang="en">Why not just use Claude Code / Cursor / Copilot directly?</dt>
+<dt lang="zh">为什么不直接用 Claude Code / Cursor / Copilot？</dt>
+<dt lang="ja">Claude Code / Cursor / Copilot をそのまま使うのではダメ？</dt>
+<dd lang="en">You can, and you should — they're great. Lineage is for
+    when you want the agents themselves to evolve over time based
+    on evaluation. Claude Code is a tool; a Lineage Agent is a
+    lineage node with a fitness history. If your only need is
+    "edit this file, fix this bug, write this test," you don't
+    need Lineage. If you want to tune which agent personalities
+    succeed at which tasks across weeks, and have that selection
+    happen mechanically rather than by gut, that's where Lineage
+    starts to pay off.</dd>
+<dd lang="zh">完全可以，而且也应该用 —— 它们都很好用。
+    Lineage 适合的是另一个需求：希望 Agent 本身随时间基于评估演化。
+    Claude Code 是一个工具；Lineage 的 Agent 是一个有 fitness 历史的系谱节点。
+    如果你的需求就是"改这个文件、修这个 bug、写这个测试"，
+    你不需要 Lineage。
+    如果你想调试"哪种 Agent 人格在哪类任务上跨周稳定胜出"，并且想让这个筛选机械化、
+    不靠直觉，那才是 Lineage 开始发挥价值的地方。</dd>
+<dd lang="ja">使ってください ——
+    これらは優秀なツールです。Lineage が向くのは別のニーズ ——
+    Agent そのものを評価に基づいて時間とともに進化させたい場合です。
+    Claude Code はツールであり、Lineage の Agent は fitness 履歴を持つ系譜ノードです。
+    必要なのが「このファイルを編集、このバグを修正、このテストを書く」だけなら、
+    Lineage は不要です。「どのエージェント人格がどんなタスクで週単位で安定して勝つか」を
+    機械的に（直感ではなく）選別したい場合、そこから Lineage が真価を発揮します。</dd>
+
+<dt lang="en">Can I run my own Lineage instance with my own telemetry?</dt>
+<dt lang="zh">我可以自己跑一份 Lineage + 自己的遥测后端吗？</dt>
+<dt lang="ja">独自の Lineage インスタンスを独自テレメトリで動かせますか？</dt>
+<dd lang="en">Yes — point <code>[telemetry.usage].endpoint</code> in
+    <code>lineage.toml</code> at your own PostHog instance. The
+    self-hosted operator runbook is at
+    <a href="https://github.com/nowa/lineage/blob/main/docs/operator/posthog-runbook.md">docs/operator/posthog-runbook.md</a>.
+    PostHog is open-source; the docker-compose stack we use is in
+    <code>infra/proposed/homelab-services/posthog/</code>.</dd>
+<dd lang="zh">可以 —— 把 <code>lineage.toml</code> 里
+    <code>[telemetry.usage].endpoint</code> 指向你自己的 PostHog 即可。
+    自托管的 operator runbook 见
+    <a href="https://github.com/nowa/lineage/blob/main/docs/operator/posthog-runbook.md">docs/operator/posthog-runbook.md</a>。
+    PostHog 是开源的；我们用的 docker-compose 在
+    <code>infra/proposed/homelab-services/posthog/</code>。</dd>
+<dd lang="ja">はい ——
+    <code>lineage.toml</code> の <code>[telemetry.usage].endpoint</code> を
+    自前の PostHog インスタンスに向けるだけです。
+    セルフホスト運用 runbook は
+    <a href="https://github.com/nowa/lineage/blob/main/docs/operator/posthog-runbook.md">docs/operator/posthog-runbook.md</a>
+    にあります。PostHog はオープンソースで、私たちが使っている docker-compose スタックは
+    <code>infra/proposed/homelab-services/posthog/</code> にあります。</dd>
+
+</dl>
+</section>
+
+
+<!-- Footer ──────────────────────────────────────────────────────── -->
+<footer class="page-footer">
+    <p lang="en">
+        Source: <a href="https://github.com/nowa/lineage">github.com/nowa/lineage</a> ·
+        License: MIT ·
+        Discussions: <a href="https://github.com/nowa/lineage/discussions">GitHub Discussions</a>
+    </p>
+    <p lang="zh">
+        源代码：<a href="https://github.com/nowa/lineage">github.com/nowa/lineage</a> ·
+        许可证：MIT ·
+        讨论：<a href="https://github.com/nowa/lineage/discussions">GitHub Discussions</a>
+    </p>
+    <p lang="ja">
+        ソース：<a href="https://github.com/nowa/lineage">github.com/nowa/lineage</a> ·
+        ライセンス：MIT ·
+        ディスカッション：<a href="https://github.com/nowa/lineage/discussions">GitHub Discussions</a>
+    </p>
+
+    <p lang="en">
+        Telemetry endpoint: <code>https://telemetry.lineagent.ai</code>
+        (self-hosted, capture-only, allowlist-restricted at edge —
+        see ADR-066 §D6).
+    </p>
+    <p lang="zh">
+        遥测端点：<code>https://telemetry.lineagent.ai</code>
+        （自托管，仅采集端点，边缘 allowlist 限制 —— 详见 ADR-066 §D6）。
+    </p>
+    <p lang="ja">
+        テレメトリエンドポイント：<code>https://telemetry.lineagent.ai</code>
+        （セルフホスト、capture 専用、エッジで allowlist 制限 —— ADR-066 §D6 参照）。
+    </p>
+</footer>
+
+</main>
+
+<!-- Trilingual switcher + copy-button JS ────────────────────────── -->
+<script>
+(function() {
+    'use strict';
+
+    var SUPPORTED = ['en', 'zh', 'ja'];
+    var STORAGE_KEY = 'lineage-lang';
+
+    function pickLang() {
+        // 1. URL hash (e.g. #zh) takes precedence — bookmark / share
+        var hash = (location.hash || '').replace('#', '').toLowerCase();
+        if (SUPPORTED.indexOf(hash) !== -1) return hash;
+
+        // 2. Honor in-page anchor links — if hash is a section id
+        //    (#install, #faq) we shouldn't change language; fall through
+        //    to other signals.
+
+        // 3. localStorage (user's prior choice)
+        try {
+            var saved = localStorage.getItem(STORAGE_KEY);
+            if (SUPPORTED.indexOf(saved) !== -1) return saved;
+        } catch (e) { /* private mode, fall through */ }
+
+        // 4. navigator.language — pick first matching prefix
+        var nav = (navigator.language || 'en').toLowerCase();
+        if (nav.indexOf('zh') === 0) return 'zh';
+        if (nav.indexOf('ja') === 0) return 'ja';
+
+        return 'en';
+    }
+
+    function setLang(lang) {
+        if (SUPPORTED.indexOf(lang) === -1) lang = 'en';
+        document.documentElement.lang = lang;
+        try { localStorage.setItem(STORAGE_KEY, lang); } catch (e) {}
+
+        // Update active state on switcher buttons.
+        document.querySelectorAll('.lang-switcher button').forEach(function(btn) {
+            if (btn.dataset.lang === lang) {
+                btn.setAttribute('aria-current', 'true');
+            } else {
+                btn.removeAttribute('aria-current');
+            }
+        });
+    }
+
+    // Initial language pick on DOMContentLoaded.
+    function init() {
+        setLang(pickLang());
+
+        // Wire up switcher buttons.
+        document.querySelectorAll('.lang-switcher button').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                setLang(btn.dataset.lang);
+                // Don't push to URL hash — leave hash for in-page anchors.
+            });
+        });
+
+        // Wire copy buttons.
+        document.querySelectorAll('.copy-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var text = btn.dataset.copy;
+                navigator.clipboard.writeText(text).then(function() {
+                    var original = btn.innerHTML;
+                    btn.innerHTML = '<span lang="' + document.documentElement.lang + '">' +
+                        ({en: 'copied', zh: '已复制', ja: 'コピー済み'}[document.documentElement.lang]) +
+                        '</span>';
+                    setTimeout(function() { btn.innerHTML = original; setLang(document.documentElement.lang); }, 1500);
+                }).catch(function() {
+                    // Selection fallback when clipboard API unavailable.
+                    var code = btn.parentElement.querySelector('code');
+                    var range = document.createRange();
+                    range.selectNode(code);
+                    getSelection().removeAllRanges();
+                    getSelection().addRange(range);
+                });
+            });
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+</script>
+
 </body>
 </html>

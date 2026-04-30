@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Lineage favicon — direct rasterization of the 5×11 ASCII brand mark
+  (crates/lineage/src/tui/theme.rs::LOGO_ROWS).
+
+  Each `█` cell becomes a 2×2 unit rect. The grid is 11 wide × 5 tall
+  in 2-unit cells = 22×10 viewBox units. Padded to 32×32 (5 units
+  pad each side, 6 vertical) to leave breathing room at small sizes.
+
+  Color: brand mint #00DF9A (the canonical Lineage primary).
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+    <rect width="32" height="32" fill="none"/>
+    <g fill="#00DF9A">
+        <!-- row 0:   ███████   (cols 2-8 inclusive → 7 cells) -->
+        <rect x="9"  y="11" width="2" height="2"/>
+        <rect x="11" y="11" width="2" height="2"/>
+        <rect x="13" y="11" width="2" height="2"/>
+        <rect x="15" y="11" width="2" height="2"/>
+        <rect x="17" y="11" width="2" height="2"/>
+        <rect x="19" y="11" width="2" height="2"/>
+        <rect x="21" y="11" width="2" height="2"/>
+
+        <!-- row 1:  ██ █ █ ██  (cols 1,2 4 6 8,9) -->
+        <rect x="7"  y="13" width="2" height="2"/>
+        <rect x="9"  y="13" width="2" height="2"/>
+        <rect x="13" y="13" width="2" height="2"/>
+        <rect x="17" y="13" width="2" height="2"/>
+        <rect x="21" y="13" width="2" height="2"/>
+        <rect x="23" y="13" width="2" height="2"/>
+
+        <!-- row 2: ███████████ (all 11 cols filled) -->
+        <rect x="5"  y="15" width="2" height="2"/>
+        <rect x="7"  y="15" width="2" height="2"/>
+        <rect x="9"  y="15" width="2" height="2"/>
+        <rect x="11" y="15" width="2" height="2"/>
+        <rect x="13" y="15" width="2" height="2"/>
+        <rect x="15" y="15" width="2" height="2"/>
+        <rect x="17" y="15" width="2" height="2"/>
+        <rect x="19" y="15" width="2" height="2"/>
+        <rect x="21" y="15" width="2" height="2"/>
+        <rect x="23" y="15" width="2" height="2"/>
+        <rect x="25" y="15" width="2" height="2"/>
+
+        <!-- row 3:   ███████   (same as row 0) -->
+        <rect x="9"  y="17" width="2" height="2"/>
+        <rect x="11" y="17" width="2" height="2"/>
+        <rect x="13" y="17" width="2" height="2"/>
+        <rect x="15" y="17" width="2" height="2"/>
+        <rect x="17" y="17" width="2" height="2"/>
+        <rect x="19" y="17" width="2" height="2"/>
+        <rect x="21" y="17" width="2" height="2"/>
+
+        <!-- row 4:   █  █  █   (cols 2, 5, 8) -->
+        <rect x="9"  y="19" width="2" height="2"/>
+        <rect x="15" y="19" width="2" height="2"/>
+        <rect x="21" y="19" width="2" height="2"/>
+    </g>
+</svg>

@@ -1,0 +1,668 @@
+/*
+ * Lineage landing site (www.lineagent.ai)
+ *
+ * Structure modeled on toltec-dev.org (sticky-sidebar + single-column main,
+ * single-page anchor nav, dense text-first layout, no hero billboards).
+ *
+ * Visual identity differs:
+ *   - Brand color: mint #00DF9A (Lineage canonical, see crates/lineage/src/tui/theme.rs)
+ *     Toltec uses warm amber #e09e53. We swap for Lineage's color and
+ *     keep the rest of the type/spacing system close to Toltec's
+ *     calm-readable defaults.
+ *   - Typography: sans-serif body (system stack) + monospace for code,
+ *     ASCII brand mark, and product/binary-name chips. Reinforces the
+ *     CLI-native identity without making prose hard to read.
+ *   - Borderless aesthetic: per Lineage TUI rule (no bordered/boxed
+ *     widgets — see CLAUDE.md memory feedback_no_borders), boxes here
+ *     are differentiated by background tint and spacing rather than
+ *     stroke. Code blocks and the sidebar use bg tint, never borders.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ── Trilingual gating ──────────────────────────────────────────────
+ * Per-element `lang` attribute is the single switch. The active
+ * language is set on `<html lang="...">` at runtime by the JS in
+ * index.html (URL hash → localStorage → navigator.language → "en").
+ *
+ * Rule: hide any element with a `lang` attribute that doesn't match
+ * the document language. The lang switcher buttons themselves are
+ * exempt (`.lang-switcher [lang]`) so all three buttons stay visible.
+ * Element types that carry literal language content but no translation
+ * (e.g. <code>, <pre> in command examples) deliberately omit `lang=`,
+ * so they show in every mode.
+ */
+:root[lang="en"] [lang]:not([lang="en"]):not(.lang-switcher *):not(.lang-switcher) { display: none; }
+:root[lang="zh"] [lang]:not([lang="zh"]):not(.lang-switcher *):not(.lang-switcher) { display: none; }
+:root[lang="ja"] [lang]:not([lang="ja"]):not(.lang-switcher *):not(.lang-switcher) { display: none; }
+
+:root {
+    /* ── Scaling ───────────────────────────────────────────────────
+     * Toltec's trick: the entire page can scale up on big monitors
+     * via media queries at the bottom of this file. Default 1.
+     */
+    --scaling: 1;
+
+    /* ── Fonts ──────────────────────────────────────────────────────
+     * Sans stack includes CJK fallbacks AFTER the Latin choices so
+     * mixed-language content (e.g. an English paragraph that mentions
+     * 谱系) picks Latin font for ASCII glyphs and an OS-native CJK
+     * font for the kanji/hangul/kana glyphs. The CJK fallbacks listed
+     * are the system defaults on each platform — no web-font load
+     * required. Hiragino on macOS, "Microsoft YaHei" on Windows-via-
+     * WSL, "Noto Sans CJK SC/JP" on Linux.
+     *
+     * Mono stack stays Latin-first; CJK in code blocks is rare and
+     * the default mono has acceptable CJK glyphs in modern OS builds.
+     */
+    --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont,
+        "Inter", "Helvetica Neue", system-ui,
+        "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC",
+        "Microsoft YaHei", "Hiragino Kaku Gothic ProN",
+        "Noto Sans CJK JP", "Yu Gothic UI", sans-serif;
+    --font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo,
+        Monaco, "Cascadia Code", "Source Code Pro", monospace;
+
+    /* ── Brand (light mode) ─────────────────────────────────────────
+     * Brand primary is fixed across modes — it's the canonical
+     * Lineage mark color, mirrored from
+     * crates/lineage/src/tui/theme.rs::ACCENT_BRAND = RGB(0, 223, 154).
+     * `-strong` darkens for AA contrast on light bg (used for links).
+     * `-soft` is a 95%-tint for subtle highlight backgrounds.
+     */
+    --brand: #00DF9A;
+    --brand-strong: #00B27A;        /* link color on light bg, hover for dark bg */
+    --brand-soft: #E6FBF4;          /* light tint for callout backgrounds */
+
+    /* ── Neutrals (light mode default) ─────────────────────────────
+     * Cool grays — keeps the mint accent crisp without
+     * the warm-cream interaction Toltec gets with amber.
+     */
+    --bg: #FBFBFC;                  /* page background */
+    --bg-dim: #F2F4F5;              /* sidebar background, code chip background */
+    --bg-inv: #0F1115;              /* code-block background (near-black, slight blue) */
+
+    --fg: #11161A;                  /* body text */
+    --fg-dim: #5F6B72;              /* secondary / metadata text */
+    --fg-inv: #FBFBFC;              /* text on dark bg */
+
+    --border: transparent;          /* per no-borders policy; keep as token for opt-in usage */
+    --hairline: rgba(17, 22, 26, 0.08); /* used only for the rare necessary divider */
+
+    /* ── Semantic ───────────────────────────────────────────────── */
+    --link: var(--brand-strong);
+    --link-hover: #008F61;
+    --code-fg: var(--fg);
+    --code-bg: var(--bg-dim);
+
+    /* ── Type scale ─────────────────────────────────────────────── */
+    --text-size: calc(var(--scaling) * 17px);
+    --text-height: calc(var(--scaling) * 26px);
+    --h3-size: calc(var(--scaling) * 19px);
+    --h3-height: calc(var(--scaling) * 26px);
+    --h2-size: calc(var(--scaling) * 24px);
+    --h2-height: calc(var(--scaling) * 32px);
+    --h1-size: calc(var(--scaling) * 32px);
+    --h1-height: calc(var(--scaling) * 40px);
+    --small-size: calc(var(--scaling) * 14px);
+
+    /* ── Layout ─────────────────────────────────────────────────── */
+    --page-width: calc(var(--scaling) * 1024px);
+    --sidebar-width: calc(var(--scaling) * 240px);
+    --page-spacing: calc(var(--scaling) * 40px);
+    --content-width: calc(var(--page-width)
+        - var(--sidebar-width) - 4 * var(--page-spacing));
+
+    /* Used by the html-level split-background gradient (sidebar tint
+     * extends to the page edge on wide screens, like Toltec). */
+    --sidebar-seam: calc(50% - var(--page-width) / 2
+        + var(--sidebar-width) + 2 * var(--page-spacing));
+
+    --transition: 0.15s ease-out;
+    --radius: calc(var(--scaling) * 4px);
+}
+
+/* ── Dark mode ──────────────────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #0F1115;
+        --bg-dim: #15181D;          /* sidebar, slightly lighter than page */
+        --bg-inv: #FBFBFC;
+
+        --fg: #E1E5E8;
+        --fg-dim: #8A9298;
+        --fg-inv: #11161A;
+
+        --hairline: rgba(225, 229, 232, 0.08);
+
+        --code-fg: var(--fg);
+        --code-bg: #1A1E24;          /* slightly raised from sidebar */
+
+        /* Brand pops on dark bg — use full saturation, not -strong */
+        --link: var(--brand);
+        --link-hover: #5DEABF;
+    }
+}
+
+/* ── Reset / base ───────────────────────────────────────────────── */
+html {
+    font-size: var(--text-size);
+    line-height: var(--text-height);
+    font-family: var(--font-sans);
+    color: var(--fg);
+    scroll-behavior: smooth;
+
+    /* Toltec-style split background: sidebar tint extends to page edge
+     * on wide screens. On narrow screens we revert to a single bg
+     * (see @media at bottom). */
+    background: linear-gradient(
+        to right,
+        var(--bg-dim) 0,
+        var(--bg-dim) var(--sidebar-seam),
+        var(--bg) var(--sidebar-seam),
+        var(--bg) 100%
+    );
+    background-attachment: fixed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+}
+
+body {
+    margin: 0;
+    display: flex;
+    width: var(--page-width);
+    margin: 0 auto;
+    padding: calc(2 * var(--page-spacing)) 0;
+    flex-direction: row;
+    justify-content: center;
+}
+
+main {
+    flex: 1;
+    min-width: 0;
+    margin: 0 var(--page-spacing);
+    max-width: var(--content-width);
+}
+
+/* ── Sidebar ────────────────────────────────────────────────────── */
+.sidebar {
+    position: sticky;
+    top: var(--page-spacing);
+    align-self: flex-start;
+    flex: 0 0 var(--sidebar-width);
+    margin: 0 var(--page-spacing);
+}
+
+.sidebar-header > a {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    margin-bottom: calc(1.5 * var(--text-height));
+}
+
+/* Brand mark in sidebar — small version of the same 5×11 ASCII pixel
+ * art used by the TUI (theme::logo()). Rendered as <pre> so column
+ * alignment survives whatever monospace font the OS picks. */
+.sidebar-mark {
+    font-family: var(--font-mono);
+    color: var(--brand);
+    font-weight: bold;
+    font-size: calc(var(--scaling) * 9px);
+    line-height: calc(var(--scaling) * 9px);
+    letter-spacing: 0;
+    margin: 0 0 calc(0.5 * var(--text-height)) 0;
+    white-space: pre;
+    user-select: none;
+}
+
+.sidebar-sitename {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--h3-size);
+    font-weight: bold;
+    letter-spacing: -0.01em;
+    color: var(--fg);
+}
+
+.sidebar-tagline {
+    display: block;
+    font-size: var(--small-size);
+    color: var(--fg-dim);
+    margin-top: 4px;
+}
+
+/* Language switcher — sits between sidebar header and nav.
+ * Three small buttons (EN / 中 / 日), pill-grouped, no border.
+ * Active language gets the brand color background. */
+.lang-switcher {
+    display: flex;
+    gap: 4px;
+    margin: 0 0 calc(1.2 * var(--text-height)) 0;
+    padding: 4px;
+    background: var(--bg);
+    border-radius: var(--radius);
+    width: fit-content;
+}
+
+@media (prefers-color-scheme: dark) {
+    .lang-switcher { background: var(--bg-inv); }
+}
+
+.lang-switcher button {
+    background: transparent;
+    color: var(--fg-dim);
+    border: 0;
+    padding: 4px 10px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: bold;
+    border-radius: calc(var(--radius) - 1px);
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition);
+    line-height: 1.2;
+}
+
+.lang-switcher button:hover {
+    color: var(--fg);
+    background: var(--bg-dim);
+}
+
+.lang-switcher button[aria-current="true"] {
+    background: var(--brand);
+    color: #00362A;        /* dark-mint text on bright-mint bg, AA */
+}
+
+.lang-switcher button[aria-current="true"]:hover {
+    background: var(--brand-strong);
+    color: var(--fg-inv);
+}
+
+.sidebar-nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sidebar-nav li {
+    margin: calc(0.4 * var(--text-height)) 0;
+    font-size: var(--small-size);
+    line-height: 1.4;
+}
+
+.sidebar-nav a {
+    color: var(--fg);
+    text-decoration: none;
+    display: block;
+    padding: 4px 0;
+    transition: color var(--transition);
+}
+
+.sidebar-nav a:hover { color: var(--link); }
+
+.sidebar-nav .external::after {
+    content: "↗";
+    margin-left: 0.4em;
+    color: var(--fg-dim);
+    font-size: 0.85em;
+}
+
+.sidebar-section {
+    margin-top: calc(1.5 * var(--text-height));
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--fg-dim);
+    margin-bottom: calc(0.3 * var(--text-height));
+}
+
+.sidebar-footer {
+    margin-top: calc(2.5 * var(--text-height));
+    font-size: var(--small-size);
+    color: var(--fg-dim);
+}
+
+.sidebar-footer p { margin: calc(0.3 * var(--text-height)) 0; }
+
+/* ── Headings ───────────────────────────────────────────────────── */
+h1, h2, h3 {
+    font-family: var(--font-sans);
+    font-weight: bold;
+    color: var(--fg);
+    letter-spacing: -0.01em;
+}
+
+h1 {
+    font-size: var(--h1-size);
+    line-height: var(--h1-height);
+    margin: 0 0 var(--h1-height) 0;
+}
+
+h2 {
+    font-size: var(--h2-size);
+    line-height: var(--h2-height);
+    margin: calc(2 * var(--h2-height)) 0 calc(0.6 * var(--h2-height)) 0;
+}
+
+h3 {
+    font-size: var(--h3-size);
+    line-height: var(--h3-height);
+    margin: calc(1.6 * var(--h3-height)) 0 calc(0.4 * var(--h3-height)) 0;
+}
+
+/* Anchor link icon — Toltec pattern. Hidden by default, revealed
+ * on hover. */
+.headerlink {
+    margin-left: 0.5em;
+    color: var(--fg-dim);
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity var(--transition);
+}
+h1:hover .headerlink, h2:hover .headerlink, h3:hover .headerlink {
+    opacity: 1;
+}
+
+/* ── Body text ──────────────────────────────────────────────────── */
+p { margin: 0 0 var(--text-height) 0; }
+
+a {
+    color: var(--link);
+    text-decoration-thickness: 0.05rem;
+    text-underline-offset: 0.18rem;
+    transition: color var(--transition);
+}
+
+a:hover {
+    color: var(--link-hover);
+    text-decoration-thickness: 0.1rem;
+}
+
+ul, ol { margin: 0 0 var(--text-height) 1.4em; padding: 0; }
+li { margin: 0.3em 0; }
+
+dl { margin: 0 0 var(--text-height) 0; }
+dt { font-weight: bold; margin-top: var(--text-height); }
+dd { margin: 0 0 calc(0.5 * var(--text-height)) 0; }
+
+/* ── Code ───────────────────────────────────────────────────────── */
+code {
+    font-family: var(--font-mono);
+    font-size: 0.92em;
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: 0.12em 0.36em;
+    border-radius: var(--radius);
+}
+
+pre {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    line-height: 1.55;
+    background: var(--bg-inv);
+    color: var(--fg-inv);
+    padding: var(--text-height);
+    margin: var(--text-height) 0;
+    border-radius: var(--radius);
+    overflow-x: auto;
+    /* Ensure code inside <pre> doesn't get the inline chip background. */
+}
+
+pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    border-radius: 0;
+    font-size: inherit;
+}
+
+/* ── Hero block (top of main) ───────────────────────────────────── */
+.hero {
+    margin: 0 0 calc(2 * var(--text-height)) 0;
+}
+
+/* The 5×11 ASCII brand mark — same glyphs as crates/lineage/src/tui/theme.rs
+ * LOGO_ROWS, scaled up. Center-aligned in the hero block.
+ * Important: white-space: pre + monospace + letter-spacing 0 to
+ * preserve the pixel-grid alignment. */
+.hero-mark {
+    font-family: var(--font-mono);
+    color: var(--brand);
+    font-weight: bold;
+    font-size: calc(var(--scaling) * 28px);
+    line-height: calc(var(--scaling) * 28px);
+    letter-spacing: 0;
+    margin: 0 0 calc(1.2 * var(--text-height)) 0;
+    white-space: pre;
+    user-select: none;
+}
+
+.hero-tagline {
+    font-size: var(--h2-size);
+    line-height: var(--h2-height);
+    color: var(--fg);
+    margin: 0 0 var(--text-height) 0;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.hero-sub {
+    color: var(--fg-dim);
+    margin-bottom: var(--text-height);
+}
+
+/* ── Install command bar (one-line copy-paste) ─────────────────── */
+.install-line {
+    display: flex;
+    align-items: stretch;
+    background: var(--bg-inv);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: var(--text-height) 0;
+}
+
+.install-line code {
+    flex: 1;
+    background: transparent;
+    color: var(--fg-inv);
+    padding: 14px 16px;
+    font-size: 0.95rem;
+    user-select: all;
+    overflow-x: auto;
+}
+
+.install-line .copy-btn {
+    background: transparent;
+    color: var(--fg-inv);
+    border: 0;
+    padding: 0 16px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity var(--transition);
+}
+
+.install-line .copy-btn:hover { opacity: 1; }
+
+/* ── Buttons ────────────────────────────────────────────────────── */
+.button {
+    display: inline-block;
+    background: var(--brand);
+    color: #00362A;                /* dark-mint text on bright-mint bg for AA contrast */
+    text-decoration: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius);
+    font-weight: 600;
+    transition: background var(--transition);
+}
+
+.button:hover {
+    background: var(--brand-strong);
+    color: #FBFBFC;
+}
+
+.button--ghost {
+    background: transparent;
+    color: var(--fg);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+}
+
+.button--ghost:hover {
+    background: var(--bg-dim);
+    color: var(--fg);
+}
+
+/* ── Concept grid (Strain / Agent / Genome / Evolution) ──────── */
+.concept-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: calc(1.2 * var(--text-height));
+    margin: var(--text-height) 0;
+}
+
+.concept-grid h3 {
+    margin-top: 0;
+    margin-bottom: 0.4em;
+    color: var(--brand-strong);
+}
+
+@media (prefers-color-scheme: dark) {
+    .concept-grid h3 { color: var(--brand); }
+}
+
+.concept-grid p {
+    margin: 0;
+    color: var(--fg-dim);
+    font-size: var(--small-size);
+    line-height: 1.55;
+}
+
+/* ── Callouts (notice / warning) ────────────────────────────────
+ * Per no-borders rule: differentiate via background tint + a single
+ * left-edge accent line (1 char wide), not a full border box.
+ */
+.callout {
+    background: var(--brand-soft);
+    padding: var(--text-height);
+    margin: var(--text-height) 0;
+    border-radius: var(--radius);
+    position: relative;
+    padding-left: calc(var(--text-height) + 6px);
+}
+
+.callout::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: var(--text-height);
+    bottom: var(--text-height);
+    width: 3px;
+    background: var(--brand);
+    border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .callout {
+        background: rgba(0, 223, 154, 0.08);
+        color: var(--fg);
+    }
+}
+
+.callout p:last-child { margin-bottom: 0; }
+
+.callout--warn {
+    background: rgba(245, 158, 11, 0.10);
+}
+.callout--warn::before { background: #F59E0B; }
+
+/* ── FAQ ────────────────────────────────────────────────────────── */
+.faq dt {
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: var(--text-size);
+    line-height: var(--text-height);
+}
+
+.faq dt::before {
+    content: "Q. ";
+    color: var(--brand-strong);
+    font-weight: bold;
+}
+
+.faq dd {
+    color: var(--fg-dim);
+    margin-left: 1.5em;
+    margin-top: 0.3em;
+}
+
+@media (prefers-color-scheme: dark) {
+    .faq dt::before { color: var(--brand); }
+}
+
+/* ── Footer ─────────────────────────────────────────────────────── */
+footer.page-footer {
+    margin-top: calc(3 * var(--text-height));
+    padding-top: var(--text-height);
+    border-top: 1px solid var(--hairline);
+    color: var(--fg-dim);
+    font-size: var(--small-size);
+    line-height: 1.55;
+}
+
+footer.page-footer p { margin: 0.4em 0; }
+
+/* ── Responsive: small screens (stack sidebar, single-column) ─── */
+@media (max-width: 1024px) {
+    html {
+        background: var(--bg);
+    }
+
+    body {
+        flex-direction: column;
+        margin: 0;
+        width: 100%;
+        padding: 0;
+    }
+
+    .sidebar {
+        background: var(--bg-dim);
+        position: static;
+        margin: 0;
+        width: 100%;
+        padding: var(--page-spacing);
+    }
+
+    main {
+        margin: 0 auto;
+        padding: var(--page-spacing);
+        width: 100%;
+        max-width: calc(var(--content-width) + 2 * var(--page-spacing));
+    }
+
+    .concept-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── Responsive: large screens upscale the whole page ─────────── */
+@media (min-width: 1696px) { :root { --scaling: 1.20; } }
+@media (min-width: 1952px) { :root { --scaling: 1.40; } }
+@media (min-width: 2208px) { :root { --scaling: 1.60; } }
+@media (min-width: 2464px) { :root { --scaling: 1.80; } }
+@media (min-width: 2720px) { :root { --scaling: 2.00; } }
+
+/* ── Selection ─────────────────────────────────────────────────── */
+::selection {
+    background: var(--brand);
+    color: #00362A;
+}
+
+@media (prefers-color-scheme: dark) {
+    ::selection {
+        background: var(--brand);
+        color: #00362A;
+    }
+}
