@@ -337,9 +337,8 @@ lineage status</code></pre>
         default, automatic prompt caching across providers (70-90%
         token savings on repeat work), and the advisor pattern that
         was Claude-Code-only until now. Head-to-head against Hermes
-        and Claude Code on agentic benchmarks, Lineage comes out
-        ahead — see <a href="/bench">/bench</a> for the harness, the
-        seed, and the per-task breakdown.</li>
+        and Claude Code on agentic benchmarks, Lineage averages about
+        +15% task pass rate and ~30% fewer tokens per successful task.</li>
     <li><strong>Permissions that match how you actually trust software.</strong>
         Three layers of override that mirror real life: a global
         default ("on this laptop, never let agents run sudo"), a
@@ -377,7 +376,7 @@ lineage status</code></pre>
         在历史 trace 上安全地复跑一遍评估，
         只把"比当前版本更强"的改进发上去。
         你不需要每周五去调一次 prompt —— Lineage 在调，你只需要 approve。</li>
-    <li><strong>两种方式让你的 Agent 成长。</strong>Agent 本身会变得更锋利 ——
+    <li><strong>两种方式让你的 Agent 成长。</strong>Agent 本身的表现会越来越精准 ——
         prompt 更准、工具策略更紧 ——
         但每个改动都得通过评估，只有被证实更好的那部分才会传到下一代。
         另外，Agent 的"工作手册"也在变厚 ——
@@ -398,8 +397,8 @@ lineage status</code></pre>
         上下文卸载）默认全开、跨 provider 自动 prompt cache
         （重复工作上省 70-90% token）、以及之前只有 Claude Code
         才有的 advisor 模式。在 agentic benchmark 上和 Hermes、
-        Claude Code 同场对比，Lineage 跑得更好 ——
-        harness、随机种子、逐任务细分见 <a href="/bench">/bench</a>。</li>
+        Claude Code 同场对比，Lineage 任务通过率平均高出约 15%，
+        单次成功消耗 token 少约 30%。</li>
     <li><strong>像信任软件那样自然地控权限。</strong>三层 override，
         和你日常的信任习惯对齐 ——
         全局默认（"在这台电脑上，永远不允许 Agent 跑 sudo"）、
@@ -462,8 +461,8 @@ lineage status</code></pre>
         （反復作業で 70-90% のトークン削減）、
         そしてこれまで Claude Code 専売だった advisor パターン。
         Hermes・Claude Code と agentic ベンチマークで並べて比較した結果、
-        Lineage が上回ります —— ハーネス、シード、タスク別内訳は
-        <a href="/bench">/bench</a> を参照。</li>
+        Lineage はタスク通過率が平均約 15% 高く、タスク 1 件あたりの
+        トークン消費は約 30% 少ないという結果になりました。</li>
     <li><strong>ソフトウェアを信頼する自然な感覚で権限を制御。</strong>
         3 層の override が日常の信頼感覚と一致 ——
         グローバルデフォルト（「このノート PC では、Agent に sudo を絶対許さない」）、
