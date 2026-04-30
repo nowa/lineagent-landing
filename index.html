@@ -80,6 +80,11 @@
                 <span lang="zh">Lineage 是什么？</span>
                 <span lang="ja">Lineage とは？</span>
             </a></li>
+            <li><a href="#models">
+                <span lang="en">Models &amp; Strains</span>
+                <span lang="zh">模型与 Strain</span>
+                <span lang="ja">モデルと Strain</span>
+            </a></li>
             <li><a href="#quickstart">
                 <span lang="en">Quick start</span>
                 <span lang="zh">快速开始</span>
@@ -279,15 +284,20 @@ lineage status</code></pre>
     </div>
     <div>
         <h3>Agent</h3>
-        <p lang="en">A lineage node. Has a parent, a generation, an immutable
-        genome snapshot, a fitness history, and a 4-state lifecycle
-        (<code>candidate → stable → deprecated ⇄ stable → extinct</code>).</p>
-        <p lang="zh">系谱节点。有 parent、generation、不可变 genome 快照、fitness 历史，
-        以及 4 状态生命周期
-        （<code>candidate → stable → deprecated ⇄ stable → extinct</code>）。</p>
-        <p lang="ja">系譜のノード。親、世代、不変な genome スナップショット、
-        fitness 履歴、そして 4 状態のライフサイクル
-        （<code>candidate → stable → deprecated ⇄ stable → extinct</code>）を持ちます。</p>
+        <p lang="en">An individual instance within a Strain. Carries its own
+        immutable genome snapshot, parent reference, generation number,
+        and fitness history; runs through the 4-state lifecycle
+        <code>candidate → stable → deprecated ⇄ stable → extinct</code>.
+        Multiple Agents can coexist within one Strain — each with its
+        own evolution path.</p>
+        <p lang="zh">某个 Strain 下的具体个体。带着自己的不可变 genome 快照、parent
+        引用、世代号和 fitness 历史，按 4 状态生命周期运行
+        （<code>candidate → stable → deprecated ⇄ stable → extinct</code>）。
+        同一个 Strain 下可以并存多个 Agent，各自走各自的演化路径。</p>
+        <p lang="ja">ある Strain に属する個体です。自身の不変な genome スナップショット、
+        親（parent）への参照、世代番号、fitness 履歴を持ち、4 状態のライフサイクル
+        （<code>candidate → stable → deprecated ⇄ stable → extinct</code>）を辿ります。
+        同じ Strain の中に複数の Agent が共存し、それぞれ独自の進化経路を進みます。</p>
     </div>
     <div>
         <h3>Genome</h3>
@@ -338,31 +348,185 @@ lineage status</code></pre>
     いつでも <code>data/</code> から再構築できます。
 </p>
 
+</section>
+
+
+<!-- Models & built-in Agents ─────────────────────────────────────── -->
+<section id="models">
+<h2 lang="en">Models &amp; built-in Strains<a class="headerlink" href="#models">#</a></h2>
+<h2 lang="zh">支持的模型与内置 Strain<a class="headerlink" href="#models">#</a></h2>
+<h2 lang="ja">対応モデルと内蔵 Strain<a class="headerlink" href="#models">#</a></h2>
+
+<h3 lang="en">Supported model providers</h3>
+<h3 lang="zh">支持的模型 provider</h3>
+<h3 lang="ja">対応する LLM プロバイダ</h3>
+
 <p lang="en">
-    For the full architecture write-up, see
-    <a href="https://github.com/nowa/lineage/blob/main/CLAUDE.md">CLAUDE.md</a>
-    in the repository, the
-    <a href="https://github.com/nowa/lineage/blob/main/knowledge/ARCHITECTURE.md">Architecture document</a>,
-    and the
-    <a href="https://github.com/nowa/lineage/tree/main/specs/adr">ADR catalog</a>
-    (60+ accepted decisions).
+    Lineage talks to LLMs through a multi-provider registry. You
+    configure any subset; routing happens by model-name prefix.
+    Mix and match per Strain — pal can run on Claude Sonnet while
+    explore runs on a cheaper Qwen, all in the same session.
 </p>
 <p lang="zh">
-    完整架构文档见仓库中的
-    <a href="https://github.com/nowa/lineage/blob/main/CLAUDE.md">CLAUDE.md</a>、
-    <a href="https://github.com/nowa/lineage/blob/main/knowledge/ARCHITECTURE.md">Architecture 文档</a>，
-    以及
-    <a href="https://github.com/nowa/lineage/tree/main/specs/adr">ADR 目录</a>
-    （60+ 已接受决策）。
+    Lineage 通过多 provider 注册表对接 LLM。你配置哪些 provider 都行，
+    路由按模型名前缀走。一个 Strain 用一种模型 —— 比如 pal 跑 Claude Sonnet，
+    explore 跑更便宜的 Qwen，同一个会话里混搭。
 </p>
 <p lang="ja">
-    完全なアーキテクチャ文書はリポジトリ内の
-    <a href="https://github.com/nowa/lineage/blob/main/CLAUDE.md">CLAUDE.md</a>、
-    <a href="https://github.com/nowa/lineage/blob/main/knowledge/ARCHITECTURE.md">Architecture ドキュメント</a>、
-    そして
-    <a href="https://github.com/nowa/lineage/tree/main/specs/adr">ADR カタログ</a>
-    （60 件以上の承認済み決定）をご覧ください。
+    Lineage はマルチプロバイダ・レジストリを通じて LLM と対話します。
+    必要なプロバイダだけを設定し、ルーティングはモデル名のプレフィックスで決まります。
+    Strain ごとに別々のモデルを使うこともでき ——
+    pal は Claude Sonnet、explore は安価な Qwen、というように同一セッション内で混在可能です。
 </p>
+
+<dl class="provider-list">
+    <dt><code>claude-*</code></dt>
+    <dd lang="en">Anthropic — Claude Opus / Sonnet / Haiku 4.x family.</dd>
+    <dd lang="zh">Anthropic —— Claude Opus / Sonnet / Haiku 4.x 系列。</dd>
+    <dd lang="ja">Anthropic —— Claude Opus / Sonnet / Haiku 4.x ファミリ。</dd>
+
+    <dt><code>gpt-*</code> / <code>o3-*</code> / <code>o4-*</code></dt>
+    <dd lang="en">OpenAI — Chat Completions and Responses API. Plus
+        OpenAI Codex subscription with native attribution
+        (browser-OAuth pairing, no API key needed).</dd>
+    <dd lang="zh">OpenAI —— Chat Completions 与 Responses API。
+        外加 OpenAI Codex 订阅（原生归属，浏览器 OAuth 配对，
+        不需要 API key）。</dd>
+    <dd lang="ja">OpenAI —— Chat Completions と Responses API。
+        さらに OpenAI Codex サブスクリプション（ネイティブ帰属、
+        ブラウザ OAuth ペアリング、API キー不要）にも対応。</dd>
+
+    <dt><code>deepseek-*</code></dt>
+    <dd lang="en">DeepSeek — V3 / R1 family.</dd>
+    <dd lang="zh">DeepSeek —— V3 / R1 系列。</dd>
+    <dd lang="ja">DeepSeek —— V3 / R1 ファミリ。</dd>
+
+    <dt><code>qwen*</code></dt>
+    <dd lang="en">Qwen via DashScope — Qwen 3 / Qwen Max / Qwen Coder.</dd>
+    <dd lang="zh">Qwen（走 DashScope）—— Qwen 3 / Qwen Max / Qwen Coder。</dd>
+    <dd lang="ja">Qwen（DashScope 経由）—— Qwen 3 / Qwen Max / Qwen Coder。</dd>
+
+    <dt><code>moonshot-*</code> / <code>kimi-*</code></dt>
+    <dd lang="en">Moonshot — Kimi K2 / Kimi Latest.</dd>
+    <dd lang="zh">Moonshot —— Kimi K2 / Kimi Latest。</dd>
+    <dd lang="ja">Moonshot —— Kimi K2 / Kimi Latest。</dd>
+
+    <dt><code>groq</code> / <code>llama-*</code> / <code>mixtral-*</code></dt>
+    <dd lang="en">Groq — Llama / Mixtral / DeepSeek hosted with
+        Groq's LPU inference (very fast).</dd>
+    <dd lang="zh">Groq —— Llama / Mixtral / DeepSeek 在 Groq LPU 上托管（速度非常快）。</dd>
+    <dd lang="ja">Groq —— Llama / Mixtral / DeepSeek を Groq LPU
+        ホスティングで提供（非常に高速）。</dd>
+
+    <dt><code>openrouter/*</code></dt>
+    <dd lang="en">OpenRouter — meta-router for 200+ models from
+        Anthropic / OpenAI / Google / Meta / Mistral / etc.</dd>
+    <dd lang="zh">OpenRouter —— 200+ 模型的元路由（Anthropic / OpenAI /
+        Google / Meta / Mistral 等）。</dd>
+    <dd lang="ja">OpenRouter —— 200+ モデルのメタルーター
+        （Anthropic / OpenAI / Google / Meta / Mistral など）。</dd>
+
+    <dt><code>minimax-*</code> / <code>fireworks-*</code></dt>
+    <dd lang="en">MiniMax (M2, abab) and Fireworks AI (DeepSeek,
+        Llama, Qwen on Fireworks infra).</dd>
+    <dd lang="zh">MiniMax（M2、abab）和 Fireworks AI（DeepSeek / Llama / Qwen
+        on Fireworks 基础设施）。</dd>
+    <dd lang="ja">MiniMax（M2、abab）と Fireworks AI（DeepSeek / Llama / Qwen
+        を Fireworks インフラで提供）。</dd>
+</dl>
+
+<h3 lang="en">Built-in Strains</h3>
+<h3 lang="zh">内置 Strain</h3>
+<h3 lang="ja">内蔵 Strain</h3>
+
+<p lang="en">
+    Lineage ships with six built-in Strains. Each has an immutable
+    seed genome you can fork to create your own variants. Three are
+    user-facing; three live inside the evolution pipeline.
+</p>
+<p lang="zh">
+    Lineage 出厂内置六个 Strain。每个都有一份不可变的 seed genome，
+    你可以 fork 它来派生自己的变体。其中三个面向用户，三个跑在演化管线内部。
+</p>
+<p lang="ja">
+    Lineage には 6 つの Strain が組み込まれています。それぞれに不変な
+    seed genome があり、fork して独自のバリアントを作れます。
+    ユーザー向けが 3 つ、進化パイプライン内部で動くのが 3 つです。
+</p>
+
+<p class="strain-group" lang="en"><strong>User-facing</strong></p>
+<p class="strain-group" lang="zh"><strong>面向用户</strong></p>
+<p class="strain-group" lang="ja"><strong>ユーザー向け</strong></p>
+
+<dl class="strain-list">
+    <dt><code>pal</code></dt>
+    <dd lang="en">Your primary agent. Every request flows through
+        pal first — it handles tasks directly when it can, and
+        delegates to specialists when domain expertise is needed.</dd>
+    <dd lang="zh">你的主 Agent。所有请求先到 pal —— 能自己处理就自己处理，
+        需要领域专长时再委派给专家。</dd>
+    <dd lang="ja">あなたのメインエージェント。すべてのリクエストはまず
+        pal を通り —— 自分で処理できる場合は直接、ドメイン専門性が必要な場合は
+        スペシャリストに委譲します。</dd>
+
+    <dt><code>explore</code></dt>
+    <dd lang="en">Read-only codebase navigator. Fast at finding
+        patterns, generating reports, and answering "where is X
+        defined?" without modifying anything.</dd>
+    <dd lang="zh">只读代码库导航专家。擅长找模式、生成报告、回答
+        "X 定义在哪里？"之类的问题 —— 不改任何文件。</dd>
+    <dd lang="ja">読み取り専用のコードベース・ナビゲータ。
+        パターンの発見、レポートの生成、「X はどこで定義されている？」
+        といった問いへの回答が速く、ファイルは一切変更しません。</dd>
+
+    <dt><code>founder</code></dt>
+    <dd lang="en">System engineer. Designs new Strains, bootstraps
+        Agents, imports Skills. Use when you want to extend
+        Lineage's agent ecosystem itself.</dd>
+    <dd lang="zh">系统工程师。设计新 Strain、引导新 Agent、导入 Skill。
+        当你想扩展 Lineage 的 Agent 生态本身时使用。</dd>
+    <dd lang="ja">システムエンジニア。新しい Strain の設計、Agent の
+        ブートストラップ、Skill のインポートを行います。Lineage の
+        エージェント・エコシステム自体を拡張したいときに使います。</dd>
+</dl>
+
+<p class="strain-group" lang="en"><strong>Evolution pipeline</strong></p>
+<p class="strain-group" lang="zh"><strong>演化管线</strong></p>
+<p class="strain-group" lang="ja"><strong>進化パイプライン</strong></p>
+
+<dl class="strain-list">
+    <dt><code>analyzer</code></dt>
+    <dd lang="en">Diagnostic engine. Examines evaluation results to
+        find patterns aggregate scores hide, attributes failures to
+        root causes, and decides which mutation operators the
+        evolution pipeline applies next.</dd>
+    <dd lang="zh">诊断引擎。检查评估结果，找出聚合分数遮蔽的模式，
+        把失败归因到根因，决定演化管线下一步用哪个 mutation operator。</dd>
+    <dd lang="ja">診断エンジン。評価結果を検査して集約スコアでは見えない
+        パターンを見つけ、失敗を根本原因に帰属させ、進化パイプラインが
+        次にどの mutation operator を適用するかを決定します。</dd>
+
+    <dt><code>grader</code></dt>
+    <dd lang="en">Evaluation oracle. Scores Agent outputs against
+        EvalContract dimensions with cited evidence. Drives
+        evolution decisions — accuracy is everything.</dd>
+    <dd lang="zh">评估神谕。按 EvalContract 维度给 Agent 输出打分，
+        必须提供证据。驱动演化决策 —— 准确性高于一切。</dd>
+    <dd lang="ja">評価のオラクル。EvalContract の各次元に対して Agent の
+        出力を採点し、根拠を必ず示します。進化の意思決定を駆動 ——
+        正確性がすべてです。</dd>
+
+    <dt><code>comparator</code></dt>
+    <dd lang="en">Blind judge. Compares two Agent outputs WITHOUT
+        knowing which is the champion and which is the candidate.
+        Bias toward either side corrupts the entire pipeline.</dd>
+    <dd lang="zh">盲审法官。比较两个 Agent 的输出，
+        <em>不知道</em>哪个是 champion、哪个是 candidate。
+        任何一侧的偏见都会污染整条管线。</dd>
+    <dd lang="ja">ブラインド・ジャッジ。2 つの Agent 出力を比較しますが、
+        どちらがチャンピオンでどちらが候補かは<em>知りません</em>。
+        どちらかへのバイアスはパイプライン全体を汚染します。</dd>
+</dl>
 </section>
 
 
@@ -492,20 +656,6 @@ Type a message to begin (Ctrl-C to exit).
 auto_check_enabled = true
 auto_install_enabled = true   # default false
 check_interval_minutes = 30</code></pre>
-
-<p lang="en">
-    See <a href="https://github.com/nowa/lineage/blob/main/specs/adr/ADR-068-lineage-distribution-model.md">ADR-068</a>
-    for the full distribution model.
-</p>
-<p lang="zh">
-    完整分发模型见
-    <a href="https://github.com/nowa/lineage/blob/main/specs/adr/ADR-068-lineage-distribution-model.md">ADR-068</a>。
-</p>
-<p lang="ja">
-    配布モデルの詳細は
-    <a href="https://github.com/nowa/lineage/blob/main/specs/adr/ADR-068-lineage-distribution-model.md">ADR-068</a>
-    をご覧ください。
-</p>
 </section>
 
 
@@ -631,24 +781,19 @@ LINEAGE_DISABLE_LOCAL_TELEMETRY=1</code></pre>
 <p lang="en">
     Telemetry uploads land in our own self-hosted PostHog instance
     at <code>telemetry.lineagent.ai</code> — not PostHog Cloud, not
-    a third party. The full architecture is in
-    <a href="https://github.com/nowa/lineage/blob/main/specs/adr/ADR-066-telemetry-and-privacy.md">ADR-066</a>.
-    The <code>§D4 PII boundary</code> is a hard contract — adding
-    a field that violates it is a stop-ship event.
+    a third party. The PII boundary is a hard contract — adding a
+    field that violates it is a stop-ship event.
 </p>
 <p lang="zh">
     遥测上传到的是我们自己自托管的 PostHog 实例（<code>telemetry.lineagent.ai</code>），
-    不是 PostHog Cloud，也不是任何第三方。完整架构见
-    <a href="https://github.com/nowa/lineage/blob/main/specs/adr/ADR-066-telemetry-and-privacy.md">ADR-066</a>。
-    其中 <code>§D4 PII 边界</code>是硬契约 —— 任何字段一旦违反它，就是 stop-ship 级事件。
+    不是 PostHog Cloud，也不是任何第三方。
+    PII 边界是硬契约 —— 任何字段一旦违反它，就是 stop-ship 级事件。
 </p>
 <p lang="ja">
     テレメトリ送信先は自社ホストの PostHog インスタンス
     （<code>telemetry.lineagent.ai</code>）です ——
     PostHog Cloud ではなく、サードパーティでもありません。
-    完全なアーキテクチャは
-    <a href="https://github.com/nowa/lineage/blob/main/specs/adr/ADR-066-telemetry-and-privacy.md">ADR-066</a>
-    にあります。<code>§D4 PII 境界</code>はハードコントラクトであり、
+    PII 境界はハードコントラクトであり、
     これに違反するフィールドが追加されることはリリース停止級の事案です。
 </p>
 </section>
@@ -690,42 +835,41 @@ LINEAGE_DISABLE_LOCAL_TELEMETRY=1</code></pre>
     YAML/JSON under <code>data/</code>. Memory is JSONL under
     <code>data/memory/</code>. The SQLite DB is purely an index and
     can be rebuilt from these files via <code>lineage rebuild-index</code>
-    at any time. Files are the Source of Truth (ADR-010).</dd>
+    at any time. Files are the Source of Truth.</dd>
 <dd lang="zh">在你自己的机器上。会话历史是
     <code>data/conversations/</code> 下的 JSONL；
     Genome 和 Strain 是 <code>data/</code> 下的 YAML/JSON；
     记忆是 <code>data/memory/</code> 下的 JSONL。
     SQLite DB 只是索引，任何时候都可以
-    <code>lineage rebuild-index</code> 重建。文件是 Source of Truth（ADR-010）。</dd>
+    <code>lineage rebuild-index</code> 重建。文件是 Source of Truth。</dd>
 <dd lang="ja">あなたのマシン上です。会話履歴は <code>data/conversations/</code> 下の JSONL、
     Genome と Strain は <code>data/</code> 下の YAML/JSON、
     メモリは <code>data/memory/</code> 下の JSONL に保存されます。
     SQLite DB は純粋にインデックスであり、いつでも
     <code>lineage rebuild-index</code> で再構築可能です。
-    ファイルが Source of Truth です（ADR-010）。</dd>
+    ファイルが Source of Truth です。</dd>
 
 <dt lang="en">Is the agent autonomous? What about safety?</dt>
 <dt lang="zh">Agent 是自主运行的吗？安全性怎么保证？</dt>
 <dt lang="ja">Agent は自律的に動作しますか？安全性は？</dt>
 <dd lang="en">The Capability Plane runs in a tiered sandbox — Wasm/WASI in
     MVP, Linux namespace + seccomp + cgroups in Phase 1, MicroVM in
-    Phase 2 (ADR-022). Tool policy is per-strain via genome weights:
+    Phase 2. Tool policy is per-strain via genome weights:
     a strain that doesn't list <code>cli_execute</code> in its
     allowlist literally cannot shell out. Browser automation goes
-    through a dedicated Chromium profile and binds loopback-only
-    (ADR-045).</dd>
+    through a dedicated Chromium profile and binds loopback-only.</dd>
 <dd lang="zh">Capability Plane 跑在分层沙箱里 ——
     MVP 用 Wasm/WASI，Phase 1 用 Linux namespace + seccomp + cgroups，
-    Phase 2 用 MicroVM（ADR-022）。
+    Phase 2 用 MicroVM。
     工具策略是按 strain 走 genome 权重的：一个 strain 如果 allowlist 里没列
     <code>cli_execute</code>，它字面上就 shell 不出去。
-    浏览器自动化走独立的 Chromium profile，且只绑 loopback（ADR-045）。</dd>
+    浏览器自动化走独立的 Chromium profile，且只绑 loopback。</dd>
 <dd lang="ja">Capability プレーンは階層化されたサンドボックスで実行されます ——
     MVP は Wasm/WASI、Phase 1 は Linux namespace + seccomp + cgroups、
-    Phase 2 は MicroVM（ADR-022）。
+    Phase 2 は MicroVM。
     ツールポリシーは strain ごとに genome の重みで管理されます ——
     allowlist に <code>cli_execute</code> がない strain は文字通りシェルを呼べません。
-    ブラウザ自動化は専用の Chromium プロファイルを使い、ループバックのみにバインドします（ADR-045）。</dd>
+    ブラウザ自動化は専用の Chromium プロファイルを使い、ループバックのみにバインドします。</dd>
 
 <dt lang="en">What's a "genome"?</dt>
 <dt lang="zh">"Genome" 是什么？</dt>
@@ -817,24 +961,19 @@ rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
 <dt lang="zh">我可以自己跑一份 Lineage + 自己的遥测后端吗？</dt>
 <dt lang="ja">独自の Lineage インスタンスを独自テレメトリで動かせますか？</dt>
 <dd lang="en">Yes — point <code>[telemetry.usage].endpoint</code> in
-    <code>lineage.toml</code> at your own PostHog instance. The
-    self-hosted operator runbook is at
-    <a href="https://github.com/nowa/lineage/blob/main/docs/operator/posthog-runbook.md">docs/operator/posthog-runbook.md</a>.
-    PostHog is open-source; the docker-compose stack we use is in
-    <code>infra/proposed/homelab-services/posthog/</code>.</dd>
+    <code>lineage.toml</code> at your own PostHog instance.
+    PostHog is open-source; PostHog's Hobby docker-compose stack
+    works fine. Lineage clients will upload to the endpoint you
+    configure.</dd>
 <dd lang="zh">可以 —— 把 <code>lineage.toml</code> 里
     <code>[telemetry.usage].endpoint</code> 指向你自己的 PostHog 即可。
-    自托管的 operator runbook 见
-    <a href="https://github.com/nowa/lineage/blob/main/docs/operator/posthog-runbook.md">docs/operator/posthog-runbook.md</a>。
-    PostHog 是开源的；我们用的 docker-compose 在
-    <code>infra/proposed/homelab-services/posthog/</code>。</dd>
+    PostHog 是开源的；用它官方的 Hobby docker-compose 即可。
+    Lineage 客户端会上传到你配置的 endpoint。</dd>
 <dd lang="ja">はい ——
     <code>lineage.toml</code> の <code>[telemetry.usage].endpoint</code> を
     自前の PostHog インスタンスに向けるだけです。
-    セルフホスト運用 runbook は
-    <a href="https://github.com/nowa/lineage/blob/main/docs/operator/posthog-runbook.md">docs/operator/posthog-runbook.md</a>
-    にあります。PostHog はオープンソースで、私たちが使っている docker-compose スタックは
-    <code>infra/proposed/homelab-services/posthog/</code> にあります。</dd>
+    PostHog はオープンソースで、公式の Hobby 用 docker-compose で十分動きます。
+    Lineage クライアントは設定したエンドポイントへアップロードします。</dd>
 
 </dl>
 </section>
@@ -842,28 +981,9 @@ rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
 
 <!-- Footer ──────────────────────────────────────────────────────── -->
 <footer class="page-footer">
-    <p lang="en">
-        © 2026 Lineage. All rights reserved.
-    </p>
-    <p lang="zh">
-        © 2026 Lineage。保留所有权利。
-    </p>
-    <p lang="ja">
-        © 2026 Lineage. All rights reserved.
-    </p>
-
-    <p lang="en">
-        Telemetry endpoint: <code>https://telemetry.lineagent.ai</code>
-        (self-hosted, capture-only, allowlist-restricted at edge).
-    </p>
-    <p lang="zh">
-        遥测端点：<code>https://telemetry.lineagent.ai</code>
-        （自托管，仅采集端点，边缘 allowlist 限制）。
-    </p>
-    <p lang="ja">
-        テレメトリエンドポイント：<code>https://telemetry.lineagent.ai</code>
-        （セルフホスト、capture 専用、エッジで allowlist 制限）。
-    </p>
+    <p lang="en">© 2026 Lineage. All rights reserved.</p>
+    <p lang="zh">© 2026 Lineage。保留所有权利。</p>
+    <p lang="ja">© 2026 Lineage. All rights reserved.</p>
 </footer>
 
 </main>

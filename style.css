@@ -609,6 +609,59 @@ pre code {
 }
 .callout--warn::before { background: #F59E0B; }
 
+/* ── Provider + strain definition lists ──────────────────────────────
+ * Used in the Models & Strains section. Compact dt/dd pairing with
+ * the dt rendered as a code chip (model prefix or strain id) and
+ * the dd as a 1-2-line description in fg-dim. Two-column layout on
+ * wide viewports; stacked on narrow. */
+.provider-list, .strain-list {
+    display: grid;
+    grid-template-columns: minmax(140px, 0.4fr) 1fr;
+    column-gap: var(--text-height);
+    row-gap: calc(0.5 * var(--text-height));
+    margin: var(--text-height) 0;
+}
+
+.provider-list dt, .strain-list dt {
+    margin: 0;
+    font-weight: normal;
+    line-height: var(--text-height);
+}
+
+.provider-list dt code, .strain-list dt code {
+    font-size: 0.95em;
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: 0.12em 0.36em;
+    border-radius: var(--radius);
+    white-space: nowrap;
+}
+
+.provider-list dd, .strain-list dd {
+    margin: 0;
+    color: var(--fg-dim);
+    font-size: var(--small-size);
+    line-height: 1.55;
+}
+
+.strain-group {
+    margin: calc(1.4 * var(--text-height)) 0 calc(0.4 * var(--text-height)) 0;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 12px;
+    color: var(--fg-dim);
+}
+
+@media (max-width: 1024px) {
+    .provider-list, .strain-list {
+        grid-template-columns: 1fr;
+        row-gap: calc(0.3 * var(--text-height));
+    }
+    .provider-list dt, .strain-list dt {
+        margin-top: calc(0.4 * var(--text-height));
+    }
+}
+
 /* ── FAQ ────────────────────────────────────────────────────────── */
 .faq dt {
     color: var(--fg);
