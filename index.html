@@ -43,6 +43,25 @@
     <meta property="og:url" content="https://www.lineagent.ai/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary">
+
+    <!-- FOUC-prevention: resolve theme synchronously before stylesheet
+         applies. Reads localStorage (lineage-theme: 'auto' | 'light' |
+         'dark') + system preference, sets data-theme on <html>.
+         Skipping this would flash light-mode content briefly even when
+         the user's persisted choice is dark. -->
+    <script>
+    (function() {
+        try {
+            var t = localStorage.getItem('lineage-theme') || 'auto';
+            var resolved = t === 'auto'
+                ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+                : t;
+            document.documentElement.setAttribute('data-theme', resolved);
+        } catch (e) {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    })();
+    </script>
 </head>
 <body>
 
@@ -66,6 +85,14 @@
         <button type="button" data-lang="en" lang="en">EN</button>
         <button type="button" data-lang="zh" lang="zh">中</button>
         <button type="button" data-lang="ja" lang="ja">日</button>
+    </div>
+
+    <!-- Theme switcher — Light / Auto / Dark. Auto follows OS pref
+         and listens for live system-theme changes. -->
+    <div class="theme-switcher" role="group" aria-label="Theme">
+        <button type="button" data-theme-set="light" aria-label="Light theme" title="Light">☀</button>
+        <button type="button" data-theme-set="auto" aria-label="Auto / system theme" title="Auto">◐</button>
+        <button type="button" data-theme-set="dark" aria-label="Dark theme" title="Dark">☾</button>
     </div>
 
     <nav class="sidebar-nav">
@@ -1899,9 +1926,62 @@ rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
         });
     }
 
+    // Theme switcher — three states: 'auto' / 'light' / 'dark'.
+    // 'auto' resolves against system preference at apply time AND
+    // re-resolves whenever the system flips (so a user with Auto
+    // selected sees the page change live when they toggle macOS dark
+    // mode). The FOUC-prevention <script> in <head> already set the
+    // initial data-theme; this code keeps it in sync going forward.
+    var THEME_KEY = 'lineage-theme';
+    var THEME_SUPPORTED = ['auto', 'light', 'dark'];
+
+    function getThemeChoice() {
+        try {
+            var t = localStorage.getItem(THEME_KEY);
+            return THEME_SUPPORTED.indexOf(t) === -1 ? 'auto' : t;
+        } catch (e) { return 'auto'; }
+    }
+
+    function resolveTheme(choice) {
+        if (choice === 'auto') {
+            return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        return choice;
+    }
+
+    function applyTheme(choice) {
+        if (THEME_SUPPORTED.indexOf(choice) === -1) choice = 'auto';
+        document.documentElement.setAttribute('data-theme', resolveTheme(choice));
+        try { localStorage.setItem(THEME_KEY, choice); } catch (e) {}
+        document.querySelectorAll('.theme-switcher button').forEach(function(btn) {
+            if (btn.dataset.themeSet === choice) {
+                btn.setAttribute('aria-current', 'true');
+            } else {
+                btn.removeAttribute('aria-current');
+            }
+        });
+    }
+
     // Initial language pick on DOMContentLoaded.
     function init() {
         setLang(pickLang());
+
+        // Restore active state on theme buttons (data-theme on <html>
+        // was already set by the inline FOUC script). Wire clicks.
+        applyTheme(getThemeChoice());
+        document.querySelectorAll('.theme-switcher button').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                applyTheme(btn.dataset.themeSet);
+            });
+        });
+
+        // When a user picks Auto, react to OS-level theme changes.
+        var darkMq = matchMedia('(prefers-color-scheme: dark)');
+        var onSystemChange = function() {
+            if (getThemeChoice() === 'auto') applyTheme('auto');
+        };
+        if (darkMq.addEventListener) darkMq.addEventListener('change', onSystemChange);
+        else if (darkMq.addListener) darkMq.addListener(onSystemChange); /* Safari < 14 */
 
         // Wire up switcher buttons.
         document.querySelectorAll('.lang-switcher button').forEach(function(btn) {

@@ -125,9 +125,8 @@
 }
 
 /* ── Dark mode ──────────────────────────────────────────────────── */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg: #0F1115;
+:root[data-theme="dark"] {
+    --bg: #0F1115;
         --bg-dim: #15181D;          /* sidebar, slightly lighter than page */
         --bg-inv: #FBFBFC;
 
@@ -143,7 +142,6 @@
         /* Brand pops on dark bg — use full saturation, not -strong */
         --link: var(--brand);
         --link-hover: #5DEABF;
-    }
 }
 
 /* ── Reset / base ───────────────────────────────────────────────── */
@@ -274,8 +272,8 @@ main {
     width: fit-content;
 }
 
-@media (prefers-color-scheme: dark) {
-    .lang-switcher { background: var(--bg-inv); }
+:root[data-theme="dark"] .lang-switcher {
+    background: var(--bg-inv);
 }
 
 .lang-switcher button {
@@ -560,8 +558,8 @@ pre code {
     color: var(--brand-strong);
 }
 
-@media (prefers-color-scheme: dark) {
-    .concept-grid h3 { color: var(--brand); }
+:root[data-theme="dark"] .concept-grid h3 {
+    color: var(--brand);
 }
 
 .concept-grid p {
@@ -598,11 +596,9 @@ pre code {
     background: var(--brand);
 }
 
-@media (prefers-color-scheme: dark) {
-    .callout {
-        background: rgba(0, 223, 154, 0.08);
+:root[data-theme="dark"] .callout {
+    background: rgba(0, 223, 154, 0.08);
         color: var(--fg);
-    }
 }
 
 .callout p:last-child { margin-bottom: 0; }
@@ -634,8 +630,8 @@ pre code {
 /* The subsystem name lines render slightly bolder so the boxes
  * stand out from the connector lines. Uses currentColor + no
  * extra weight to stay subtle. */
-@media (prefers-color-scheme: dark) {
-    .arch-diagram { color: var(--fg); }
+:root[data-theme="dark"] .arch-diagram {
+    color: var(--fg);
 }
 
 /* ── SVG architecture diagram ───────────────────────────────────────
@@ -681,34 +677,92 @@ pre code {
 .arch-svg .arrow-head { fill: #94A3B8; }
 
 /* Dark-mode counterparts: deeper layer fills, lighter text. */
-@media (prefers-color-scheme: dark) {
-    .arch-svg .layer--control    { fill: #1E1B4B; }
-    .arch-svg .layer--execution  { fill: #14321E; }
-    .arch-svg .layer--capability { fill: #3B2406; }
-    .arch-svg .layer--evolution  { fill: #2A1854; }
+:root[data-theme="dark"] .arch-svg .layer--control {
+    fill: #1E1B4B;
+}
 
-    .arch-svg .sub--control    { fill: #312E81; stroke: #4338CA; }
-    .arch-svg .sub--execution  { fill: #14532D; stroke: #15803D; }
-    .arch-svg .sub--capability { fill: #5C2E04; stroke: #B45309; }
-    .arch-svg .sub--evolution  { fill: #4C1D95; stroke: #6D28D9; }
+:root[data-theme="dark"] .arch-svg .layer--execution {
+    fill: #14321E;
+}
 
-    .arch-svg .title--control    { fill: #C7D2FE; }
-    .arch-svg .title--execution  { fill: #BBF7D0; }
-    .arch-svg .title--capability { fill: #FDE68A; }
-    .arch-svg .title--evolution  { fill: #DDD6FE; }
+:root[data-theme="dark"] .arch-svg .layer--capability {
+    fill: #3B2406;
+}
 
-    .arch-svg .sub-title--control    { fill: #E0E7FF; }
-    .arch-svg .sub-title--execution  { fill: #DCFCE7; }
-    .arch-svg .sub-title--capability { fill: #FEF3C7; }
-    .arch-svg .sub-title--evolution  { fill: #EDE9FE; }
+:root[data-theme="dark"] .arch-svg .layer--evolution {
+    fill: #2A1854;
+}
 
-    .arch-svg .desc--control    { fill: #A5B4FC; }
-    .arch-svg .desc--execution  { fill: #86EFAC; }
-    .arch-svg .desc--capability { fill: #FCD34D; }
-    .arch-svg .desc--evolution  { fill: #C4B5FD; }
+:root[data-theme="dark"] .arch-svg .sub--control {
+    fill: #312E81; stroke: #4338CA;
+}
 
-    .arch-svg .arrow-line { stroke: #64748B; }
-    .arch-svg .arrow-head { fill: #64748B; }
+:root[data-theme="dark"] .arch-svg .sub--execution {
+    fill: #14532D; stroke: #15803D;
+}
+
+:root[data-theme="dark"] .arch-svg .sub--capability {
+    fill: #5C2E04; stroke: #B45309;
+}
+
+:root[data-theme="dark"] .arch-svg .sub--evolution {
+    fill: #4C1D95; stroke: #6D28D9;
+}
+
+:root[data-theme="dark"] .arch-svg .title--control {
+    fill: #C7D2FE;
+}
+
+:root[data-theme="dark"] .arch-svg .title--execution {
+    fill: #BBF7D0;
+}
+
+:root[data-theme="dark"] .arch-svg .title--capability {
+    fill: #FDE68A;
+}
+
+:root[data-theme="dark"] .arch-svg .title--evolution {
+    fill: #DDD6FE;
+}
+
+:root[data-theme="dark"] .arch-svg .sub-title--control {
+    fill: #E0E7FF;
+}
+
+:root[data-theme="dark"] .arch-svg .sub-title--execution {
+    fill: #DCFCE7;
+}
+
+:root[data-theme="dark"] .arch-svg .sub-title--capability {
+    fill: #FEF3C7;
+}
+
+:root[data-theme="dark"] .arch-svg .sub-title--evolution {
+    fill: #EDE9FE;
+}
+
+:root[data-theme="dark"] .arch-svg .desc--control {
+    fill: #A5B4FC;
+}
+
+:root[data-theme="dark"] .arch-svg .desc--execution {
+    fill: #86EFAC;
+}
+
+:root[data-theme="dark"] .arch-svg .desc--capability {
+    fill: #FCD34D;
+}
+
+:root[data-theme="dark"] .arch-svg .desc--evolution {
+    fill: #C4B5FD;
+}
+
+:root[data-theme="dark"] .arch-svg .arrow-line {
+    stroke: #64748B;
+}
+
+:root[data-theme="dark"] .arch-svg .arrow-head {
+    fill: #64748B;
 }
 
 /* ── Provider + strain definition lists ──────────────────────────────
@@ -784,8 +838,8 @@ pre code {
     margin-top: 0.3em;
 }
 
-@media (prefers-color-scheme: dark) {
-    .faq dt::before { color: var(--brand); }
+:root[data-theme="dark"] .faq dt::before {
+    color: var(--brand);
 }
 
 /* ── Footer ─────────────────────────────────────────────────────── */
@@ -846,9 +900,56 @@ footer.page-footer p { margin: 0.4em 0; }
     color: #00362A;
 }
 
-@media (prefers-color-scheme: dark) {
-    ::selection {
-        background: var(--brand);
+:root[data-theme="dark"] ::selection {
+    background: var(--brand);
         color: #00362A;
-    }
+}
+
+
+/* ── Theme switcher (☀ Auto ☾) ─────────────────────────────────────
+ * Sits next to the language switcher in the sidebar. Three buttons:
+ * Light / Auto / Dark. JS resolves "auto" against the OS preference
+ * via matchMedia('(prefers-color-scheme: dark)') and listens for
+ * changes — so when a user picks Auto, switching the system theme
+ * updates the page live. The choice is stored in localStorage; an
+ * inline <head> script applies it before paint to avoid FOUC. */
+.theme-switcher {
+    display: flex;
+    gap: 4px;
+    margin: 0 0 calc(1.2 * var(--text-height)) 0;
+    padding: 4px;
+    background: var(--bg);
+    border-radius: var(--radius);
+    width: fit-content;
+}
+
+:root[data-theme="dark"] .theme-switcher { background: var(--bg-inv); }
+
+.theme-switcher button {
+    background: transparent;
+    color: var(--fg-dim);
+    border: 0;
+    padding: 4px 10px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    border-radius: calc(var(--radius) - 1px);
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition);
+    line-height: 1.2;
+    min-width: 28px;
+}
+
+.theme-switcher button:hover {
+    color: var(--fg);
+    background: var(--bg-dim);
+}
+
+.theme-switcher button[aria-current="true"] {
+    background: var(--brand);
+    color: #00362A;
+}
+
+.theme-switcher button[aria-current="true"]:hover {
+    background: var(--brand-strong);
+    color: var(--fg-inv);
 }
