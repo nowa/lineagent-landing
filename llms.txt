@@ -45,9 +45,11 @@ on day 1. Lineage flips it — agents are products that compound.
 ## What Lineage is NOT
 
 - Not a managed cloud service. Lineage is local-first; you self-host.
-- Not a closed agent ecosystem. Strain definitions, genomes, and
-  traces are JSON / YAML / JSONL on your disk — you can fork, share,
-  and re-import.
+- Not a closed agent ecosystem. Your own Strain definitions, genomes,
+  traces, and agent outputs are JSON / YAML / JSONL on your disk — you
+  can fork, share, and re-import those artifacts. This does not grant
+  redistribution, modification, or derivative-work rights to Lineage
+  source code, bundled seed assets, or official binaries.
 - Not Windows-native (yet). Linux and macOS only as of MVP-A; WSL 2
   works today; Windows native lands in Phase 1 if there's demand.
 - Not a thin wrapper around one LLM. Multi-provider by default with
@@ -81,7 +83,7 @@ lineage status
 ```bash
 $ cd ~/your-project
 $ lineage chat
-∴ lineage 0.117.x — pal ready
+∴ lineage 0.123.x — pal ready
 
 > review the auth middleware for timing-attack risks
 
@@ -249,8 +251,8 @@ LINEAGE_DISABLE_TELEMETRY=1 lineage chat
 # 2. Per-install (writes to lineage.toml)
 lineage telemetry disable usage
 
-# 3. Disable the local JSONL audit log specifically
-LINEAGE_DISABLE_LOCAL_TELEMETRY=1
+# 3. Per-process local JSONL audit log kill-switch
+LINEAGE_DISABLE_LOCAL_TELEMETRY=1 lineage chat
 ```
 
 Telemetry uploads land in our self-hosted PostHog instance at
@@ -260,8 +262,10 @@ telemetry.lineagent.ai — not PostHog Cloud, not a third party.
 
 ```bash
 lineage telemetry disable usage --purge
-rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
-       "$XDG_CONFIG_HOME/lineage" "$HOME/.local/bin/lineage"
+rm -rf "${XDG_DATA_HOME:-$HOME/.local/share}/lineage" \
+       "${XDG_STATE_HOME:-$HOME/.local/state}/lineage" \
+       "${XDG_CONFIG_HOME:-$HOME/.config}/lineage" \
+       "$HOME/.local/bin/lineage"
 ```
 
 ## FAQ snippets

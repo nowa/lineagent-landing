@@ -243,7 +243,7 @@ main {
     font-size: var(--h1-size);
     line-height: calc(5 * var(--scaling) * 8px);   /* match mark height */
     font-weight: bold;
-    letter-spacing: -0.02em;
+    letter-spacing: 0;
     color: var(--fg);
     flex: 0 0 auto;
 }
@@ -302,7 +302,7 @@ h1, h2, h3 {
     font-family: var(--font-sans);
     font-weight: bold;
     color: var(--fg);
-    letter-spacing: -0.01em;
+    letter-spacing: 0;
 }
 
 h1 {
@@ -404,7 +404,7 @@ pre code {
     color: var(--fg);
     margin: 0 0 var(--text-height) 0;
     font-weight: bold;
-    letter-spacing: -0.02em;
+    letter-spacing: 0;
 }
 
 /* The 5×11 ASCII brand mark, sized so 5 rows have similar visual
@@ -757,7 +757,7 @@ pre code {
 .strain-group {
     margin: calc(1.4 * var(--text-height)) 0 calc(0.4 * var(--text-height)) 0;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0;
     font-size: 12px;
     color: var(--fg-dim);
 }

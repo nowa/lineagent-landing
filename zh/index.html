@@ -2,18 +2,14 @@
 <!--
   Lineage landing site (www.lineagent.ai). Trilingual: en / 中 / 日.
 
-  Strategy: single HTML file with per-element `lang` attribute gating.
-  CSS rule `:root[lang="X"] [lang]:not([lang="X"]) { display: none }`
-  hides any translation block whose lang doesn't match the document's
-  current lang. JS init sets `document.documentElement.lang` based on
-  URL hash → localStorage → navigator.language → default `en`.
+  Strategy: keep one source HTML file with per-element `lang`
+  attribute gating, then run build.py to publish three real URLs:
+  `/`, `/zh/`, and `/ja/`. This keeps IA/design tokens in one place
+  while giving crawlers one canonical language per URL.
 
-  Why not three separate files (`/`, `/zh/`, `/ja/`)?
-  - Single source of truth for IA + design tokens
-  - No build step
-  - Easy to keep structure synced across languages
-  - Trade-off: HTML is bigger; SEO indexes three lang versions on
-    same URL. Acceptable for an Alpha-stage tool's landing page.
+  Direct source preview still works: CSS hides non-active language
+  blocks, and JS sets `<html lang>` from URL hash → localStorage →
+  navigator.language → default `en`.
 
   Translation policy:
   - Domain vocabulary (Strain / Agent / Genome / Evolution / ADR /
@@ -27,8 +23,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Lineage — Self-Hosted Multi-Agent Runtime in Rust</title>
-    <meta name="description" content="Self-hosted multi-agent runtime where Agents evolve over time. Founder Agent designs from fuzzy ideas. Rust core, 9 LLM providers, local-first, files on disk.">
+    <title>Lineage — Rust 自托管多 Agent 运行时</title>
+    <meta name="description" content="原生支持演化的自托管多 Agent 运行时。Founder Agent 从模糊目标设计 Agent，Rust 核心，支持 9 个 LLM provider，本地优先，文件在你的磁盘上。">
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="/style.css">
@@ -47,20 +43,20 @@
     <link rel="alternate" hreflang="ja" href="https://www.lineagent.ai/ja/">
     <link rel="alternate" hreflang="x-default" href="https://www.lineagent.ai/">
 
-    <meta property="og:title" content="Lineage — Self-Hosted Multi-Agent Runtime in Rust">
-    <meta property="og:description" content="Agents that evolve over time. Founder Agent designs from a fuzzy idea. Runs across 9 LLM providers including local open-source models.">
+    <meta property="og:title" content="Lineage — Rust 自托管多 Agent 运行时">
+    <meta property="og:description" content="会随时间演化的 Agent。Founder Agent 从模糊想法设计 Agent，支持 9 个 LLM provider，包括本地开源模型。">
     <meta property="og:url" content="https://www.lineagent.ai/zh/">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Lineage">
-    <meta property="og:image" content="https://www.lineagent.ai/og-image.svg">
+    <meta property="og:image" content="https://www.lineagent.ai/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Lineage — Self-Hosted Multi-Agent Runtime in Rust. ASCII brand mark in mint on a dark background, with the install one-liner: curl -fsSL lineagent.ai/install.sh | sh">
+    <meta property="og:image:alt" content="Lineage — Rust 自托管多 Agent 运行时。深色背景上的薄荷绿色 ASCII 品牌标识，并展示安装命令：curl -fsSL lineagent.ai/install.sh | sh">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Lineage — Self-Hosted Multi-Agent Runtime in Rust">
-    <meta name="twitter:description" content="Agents that evolve over time. Founder Agent designs from a fuzzy idea. Runs across 9 LLM providers including local open-source models.">
-    <meta name="twitter:image" content="https://www.lineagent.ai/og-image.svg">
-    <meta name="twitter:image:alt" content="Lineage — Self-Hosted Multi-Agent Runtime in Rust">
+    <meta name="twitter:title" content="Lineage — Rust 自托管多 Agent 运行时">
+    <meta name="twitter:description" content="会随时间演化的 Agent。Founder Agent 从模糊想法设计 Agent，支持 9 个 LLM provider，包括本地开源模型。">
+    <meta name="twitter:image" content="https://www.lineagent.ai/og-image.png">
+    <meta name="twitter:image:alt" content="Lineage — Rust 自托管多 Agent 运行时">
 
     <!-- FOUC-prevention: resolve theme synchronously before stylesheet
          applies. Reads localStorage (lineage-theme: 'auto' | 'light' |
@@ -91,17 +87,21 @@
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
         "name": "Lineage",
-        "alternateName": ["Lineage Agent Runtime", "lineagent"],
+        "alternateName": [
+            "Lineage Agent Runtime",
+            "lineagent"
+        ],
         "applicationCategory": "DeveloperApplication",
         "applicationSubCategory": "AI Agent Runtime",
         "operatingSystem": "macOS, Linux",
-        "description": "Self-hosted multi-agent runtime where Agents evolve over time through evaluation. Founder Agent designs new Agents from a fuzzy goal, runs an offline evaluation, and ships a validated Agent. Each conversation produces evidence; only proven changes are promoted to the next generation. Rust core, 9 LLM providers, local-first.",
-        "url": "https://www.lineagent.ai/",
+        "description": "原生支持评估驱动演化的自托管多 Agent 运行时。Founder Agent 从模糊目标设计新 Agent，运行离线评估，然后交付已验证的 Agent。每次对话都会留下可评估证据；只有被证明优于当前版本的改动才会晋升到下一代。Rust 核心，支持 9 个 LLM provider，本地优先。",
+        "url": "https://www.lineagent.ai/zh/",
         "downloadUrl": "https://www.lineagent.ai/install.sh",
-        "softwareVersion": "0.117.x",
+        "softwareVersion": "0.123.x",
         "programmingLanguage": "Rust",
         "license": "https://github.com/nowa/lineage/blob/main/COPYRIGHT.md",
-        "image": "https://www.lineagent.ai/og-image.svg",
+        "image": "https://www.lineagent.ai/og-image.png",
+        "inLanguage": "zh",
         "offers": {
             "@type": "Offer",
             "price": "0",
@@ -132,61 +132,62 @@
     {
         "@context": "https://schema.org",
         "@type": "FAQPage",
+        "inLanguage": "zh",
         "mainEntity": [
             {
                 "@type": "Question",
-                "name": "Why Rust?",
+                "name": "为什么用 Rust？",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "The Control / Execution / Capability planes need predictable latency and zero GC pauses on the hot path. Tooling is mature enough to get these without paying in productivity. The TUI specifically benefits — Ratatui is extremely fast, and streaming-tokens-into-three-panes rendering would be hard to keep tear-free in a GC'd runtime."
+                    "text": "Control / Execution / Capability 三个平面需要可预测的延迟，热路径不能有 GC 停顿。Rust 工具链足够成熟，可以在不牺牲生产力的情况下拿到这些收益。TUI 尤其受益：Ratatui 很快，把流式 token 实时渲染到三个面板，在带 GC 的运行时里很难做到不撕裂。"
                 }
             },
             {
                 "@type": "Question",
-                "name": "Where does my data live?",
+                "name": "我的数据存在哪里？",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "On your machine. Conversation history is JSONL under data/conversations/. Genomes and Strains are YAML/JSON under data/. Memory is JSONL under data/memory/. The SQLite DB is purely an index and can be rebuilt from these files via lineage rebuild-index at any time. Files are the Source of Truth."
+                    "text": "在你自己的机器上。会话历史是 data/conversations/ 下的 JSONL；Genome 和 Strain 是 data/ 下的 YAML/JSON；记忆是 data/memory/ 下的 JSONL。SQLite DB 只是索引，任何时候都可以通过 lineage rebuild-index 从这些文件重建。文件是 Source of Truth。"
                 }
             },
             {
                 "@type": "Question",
-                "name": "Is the agent autonomous? What about safety?",
+                "name": "Agent 是自主运行的吗？安全性怎么保证？",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "The Capability Plane runs in a tiered sandbox — Wasm/WASI in MVP, Linux namespace + seccomp + cgroups in Phase 1, MicroVM in Phase 2. Tool policy is per-Strain via genome weights: a Strain that doesn't list cli_execute in its allowlist literally cannot shell out. Browser automation goes through a dedicated Chromium profile and binds loopback-only."
+                    "text": "Capability Plane 跑在分层沙箱里：MVP 用 Wasm/WASI，Phase 1 用 Linux namespace + seccomp + cgroups，Phase 2 用 MicroVM。工具策略按 Strain 的 genome 权重控制；一个 Strain 如果 allowlist 里没有 cli_execute，它字面上就 shell 不出去。浏览器自动化使用独立的 Chromium profile，并且只绑定 loopback。"
                 }
             },
             {
                 "@type": "Question",
-                "name": "What is a genome in Lineage?",
+                "name": "Genome 是什么？",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "An immutable JSON snapshot of an Agent's prompts, planner config, and tool-policy weights. Genome is content-addressed by SHA-256; editing one creates a new Agent (a child) and the old one stays archived for replay. This makes the lineage auditable: you can always answer 'what changed?' by diffing parent vs child genomes."
+                    "text": "某个 Agent 的 prompt、planner 配置、tool-policy 权重的不可变 JSON 快照。Genome 用 SHA-256 内容寻址；编辑一个 genome 会产生新 Agent（子代），旧版本会归档保留以供回放。"
                 }
             },
             {
                 "@type": "Question",
-                "name": "Linux and macOS only?",
+                "name": "只支持 Linux / macOS？",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Yes for now. Path/sandbox conventions assume POSIX (XDG dirs, flock, atomic-rename semantics). Windows lands in Phase 1 if there is demand. WSL 2 works today."
+                    "text": "目前是。路径和沙箱约定都基于 POSIX：XDG 目录、flock、原子 rename 语义。Windows 如果有用户需求，会在 Phase 1 加入。WSL 2 现在就能跑。"
                 }
             },
             {
                 "@type": "Question",
-                "name": "How do I delete everything Lineage stored?",
+                "name": "怎么彻底删除？",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Run: lineage telemetry disable usage --purge ; rm -rf $XDG_DATA_HOME/lineage $XDG_STATE_HOME/lineage $XDG_CONFIG_HOME/lineage $HOME/.local/bin/lineage. The first command deletes any uploaded events from the central PostHog and disables future uploads. The rm wipes your entire local install (data, state, config, binary) without leaving a single artifact."
+                    "text": "运行：lineage telemetry disable usage --purge; rm -rf \"${XDG_DATA_HOME:-$HOME/.local/share}/lineage\" \"${XDG_STATE_HOME:-$HOME/.local/state}/lineage\" \"${XDG_CONFIG_HOME:-$HOME/.config}/lineage\" \"$HOME/.local/bin/lineage\"。第一条命令会删除已上传的 telemetry 事件并关闭未来上传。rm 命令在 XDG 变量未设置时会使用默认目录，因此会删掉真实的本地数据、状态、配置和二进制路径。"
                 }
             },
             {
                 "@type": "Question",
-                "name": "Why not just use Claude Code, Cursor, or Copilot directly?",
+                "name": "为什么不直接用 Claude Code、Cursor 或 Copilot？",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "You can, and you should — they are great. Lineage is for when you want the agents themselves to evolve over time based on evaluation. Claude Code is a tool; a Lineage Agent is a lineage node with a fitness history. If your only need is 'edit this file, fix this bug, write this test,' you don't need Lineage. If you want to tune which agent personalities succeed at which tasks across weeks, and have that selection happen mechanically rather than by gut, that is where Lineage starts to pay off."
+                    "text": "完全可以，而且也应该用，它们都很好用。Lineage 适合的是另一个需求：希望 Agent 本身随时间基于评估演化。Claude Code 是一个工具；Lineage 的 Agent 是一个有 fitness 历史的系谱节点。"
                 }
             }
         ]
@@ -794,7 +795,7 @@ lineage status</code></pre>
 
 <pre><code>$ cd ~/your-project
 $ lineage chat
-∴ lineage 0.117.x — pal ready
+∴ lineage 0.123.x — pal ready
 
 &gt; review the auth middleware for timing-attack risks
 
@@ -1199,9 +1200,7 @@ $ lineage chat
 <p lang="zh">
     <code>lineage self-update</code> 是频道感知的。Homebrew 装的会被引导去
     <code>brew upgrade lineage</code>；npm 装的引导到
-    <code>npm update -g</code>；Cargo 装的引导到
-    <code>cargo install lineage --force</code>；snap 装的引导到
-    <code>sudo snap refresh</code>。
+    <code>npm update -g @lineage/cli</code>。
     只有直装（<code>install.sh</code>）会就地原子 POSIX rename 替换，
     并带 <code>.prev</code> hardlink 备份。
 </p>
@@ -1276,8 +1275,8 @@ LINEAGE_DISABLE_TELEMETRY=1 lineage chat
 # 2. 永久关闭（写到 lineage.toml）
 lineage telemetry disable usage
 
-# 3. 单独关掉本地 JSONL 审计日志
-LINEAGE_DISABLE_LOCAL_TELEMETRY=1</code></pre>
+# 3. 单次进程关掉本地 JSONL 审计日志
+LINEAGE_DISABLE_LOCAL_TELEMETRY=1 lineage chat</code></pre>
 
 
 
@@ -1355,10 +1354,13 @@ LINEAGE_DISABLE_LOCAL_TELEMETRY=1</code></pre>
 
 <dd lang="zh">
     <pre><code>lineage telemetry disable usage --purge
-rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
-       "$XDG_CONFIG_HOME/lineage" "$HOME/.local/bin/lineage"</code></pre>
+rm -rf "${XDG_DATA_HOME:-$HOME/.local/share}/lineage" \
+       "${XDG_STATE_HOME:-$HOME/.local/state}/lineage" \
+       "${XDG_CONFIG_HOME:-$HOME/.config}/lineage" \
+       "$HOME/.local/bin/lineage"</code></pre>
     第一条命令删掉中央 PostHog 上你已上传的事件，并关掉未来上传。
-    <code>rm</code> 抹掉你的整个本地安装（数据、状态、配置、二进制），不留一片痕迹。
+    <code>rm</code> 在 XDG 变量没设时会使用默认目录，因此会删掉真实的本地数据、
+    状态、配置和二进制路径。
 </dd>
 
 
@@ -1488,7 +1490,10 @@ rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
 
     // Initial language pick on DOMContentLoaded.
     function init() {
-        setLang(pickLang());
+        // This page is already the zh language URL;
+        // keep it stable regardless of browser locale or
+        // prior localStorage from another language page.
+        setLang('zh');
 
         // Restore active state on theme buttons (data-theme on <html>
         // was already set by the inline FOUC script). Wire clicks.
@@ -1556,20 +1561,26 @@ rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
         document.querySelectorAll('.copy-btn').forEach(function(btn) {
             btn.addEventListener('click', function() {
                 var text = btn.dataset.copy;
+                var fallback = function() {
+                    var code = btn.parentElement.querySelector('code');
+                    var range = document.createRange();
+                    range.selectNode(code);
+                    var selection = getSelection();
+                    if (!selection) return;
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                };
+                if (!navigator.clipboard || !navigator.clipboard.writeText) {
+                    fallback();
+                    return;
+                }
                 navigator.clipboard.writeText(text).then(function() {
                     var original = btn.innerHTML;
                     btn.innerHTML = '<span lang="' + document.documentElement.lang + '">' +
                         ({en: 'copied', zh: '已复制', ja: 'コピー済み'}[document.documentElement.lang]) +
                         '</span>';
                     setTimeout(function() { btn.innerHTML = original; setLang(document.documentElement.lang); }, 1500);
-                }).catch(function() {
-                    // Selection fallback when clipboard API unavailable.
-                    var code = btn.parentElement.querySelector('code');
-                    var range = document.createRange();
-                    range.selectNode(code);
-                    getSelection().removeAllRanges();
-                    getSelection().addRange(range);
-                });
+                }).catch(fallback);
             });
         });
     }

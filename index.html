@@ -2,18 +2,14 @@
 <!--
   Lineage landing site (www.lineagent.ai). Trilingual: en / 中 / 日.
 
-  Strategy: single HTML file with per-element `lang` attribute gating.
-  CSS rule `:root[lang="X"] [lang]:not([lang="X"]) { display: none }`
-  hides any translation block whose lang doesn't match the document's
-  current lang. JS init sets `document.documentElement.lang` based on
-  URL hash → localStorage → navigator.language → default `en`.
+  Strategy: keep one source HTML file with per-element `lang`
+  attribute gating, then run build.py to publish three real URLs:
+  `/`, `/zh/`, and `/ja/`. This keeps IA/design tokens in one place
+  while giving crawlers one canonical language per URL.
 
-  Why not three separate files (`/`, `/zh/`, `/ja/`)?
-  - Single source of truth for IA + design tokens
-  - No build step
-  - Easy to keep structure synced across languages
-  - Trade-off: HTML is bigger; SEO indexes three lang versions on
-    same URL. Acceptable for an Alpha-stage tool's landing page.
+  Direct source preview still works: CSS hides non-active language
+  blocks, and JS sets `<html lang>` from URL hash → localStorage →
+  navigator.language → default `en`.
 
   Translation policy:
   - Domain vocabulary (Strain / Agent / Genome / Evolution / ADR /
@@ -52,14 +48,14 @@
     <meta property="og:url" content="https://www.lineagent.ai/">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Lineage">
-    <meta property="og:image" content="https://www.lineagent.ai/og-image.svg">
+    <meta property="og:image" content="https://www.lineagent.ai/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Lineage — Self-Hosted Multi-Agent Runtime in Rust. ASCII brand mark in mint on a dark background, with the install one-liner: curl -fsSL lineagent.ai/install.sh | sh">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Lineage — Self-Hosted Multi-Agent Runtime in Rust">
     <meta name="twitter:description" content="Agents that evolve over time. Founder Agent designs from a fuzzy idea. Runs across 9 LLM providers including local open-source models.">
-    <meta name="twitter:image" content="https://www.lineagent.ai/og-image.svg">
+    <meta name="twitter:image" content="https://www.lineagent.ai/og-image.png">
     <meta name="twitter:image:alt" content="Lineage — Self-Hosted Multi-Agent Runtime in Rust">
 
     <!-- FOUC-prevention: resolve theme synchronously before stylesheet
@@ -91,17 +87,21 @@
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
         "name": "Lineage",
-        "alternateName": ["Lineage Agent Runtime", "lineagent"],
+        "alternateName": [
+            "Lineage Agent Runtime",
+            "lineagent"
+        ],
         "applicationCategory": "DeveloperApplication",
         "applicationSubCategory": "AI Agent Runtime",
         "operatingSystem": "macOS, Linux",
         "description": "Self-hosted multi-agent runtime where Agents evolve over time through evaluation. Founder Agent designs new Agents from a fuzzy goal, runs an offline evaluation, and ships a validated Agent. Each conversation produces evidence; only proven changes are promoted to the next generation. Rust core, 9 LLM providers, local-first.",
         "url": "https://www.lineagent.ai/",
         "downloadUrl": "https://www.lineagent.ai/install.sh",
-        "softwareVersion": "0.117.x",
+        "softwareVersion": "0.123.x",
         "programmingLanguage": "Rust",
         "license": "https://github.com/nowa/lineage/blob/main/COPYRIGHT.md",
-        "image": "https://www.lineagent.ai/og-image.svg",
+        "image": "https://www.lineagent.ai/og-image.png",
+        "inLanguage": "en",
         "offers": {
             "@type": "Offer",
             "price": "0",
@@ -132,13 +132,14 @@
     {
         "@context": "https://schema.org",
         "@type": "FAQPage",
+        "inLanguage": "en",
         "mainEntity": [
             {
                 "@type": "Question",
                 "name": "Why Rust?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "The Control / Execution / Capability planes need predictable latency and zero GC pauses on the hot path. Tooling is mature enough to get these without paying in productivity. The TUI specifically benefits — Ratatui is extremely fast, and streaming-tokens-into-three-panes rendering would be hard to keep tear-free in a GC'd runtime."
+                    "text": "The Control / Execution / Capability planes need predictable latency and zero GC pauses on the hot path. Tooling is mature enough to get these without paying in productivity. The TUI specifically benefits: Ratatui is extremely fast, and streaming tokens into three panes would be hard to keep tear-free in a GC'd runtime."
                 }
             },
             {
@@ -154,7 +155,7 @@
                 "name": "Is the agent autonomous? What about safety?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "The Capability Plane runs in a tiered sandbox — Wasm/WASI in MVP, Linux namespace + seccomp + cgroups in Phase 1, MicroVM in Phase 2. Tool policy is per-Strain via genome weights: a Strain that doesn't list cli_execute in its allowlist literally cannot shell out. Browser automation goes through a dedicated Chromium profile and binds loopback-only."
+                    "text": "The Capability Plane runs in a tiered sandbox: Wasm/WASI in MVP, Linux namespace + seccomp + cgroups in Phase 1, MicroVM in Phase 2. Tool policy is per-Strain via genome weights: a Strain that doesn't list cli_execute in its allowlist literally cannot shell out. Browser automation uses a dedicated Chromium profile and binds loopback-only."
                 }
             },
             {
@@ -162,7 +163,7 @@
                 "name": "What is a genome in Lineage?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "An immutable JSON snapshot of an Agent's prompts, planner config, and tool-policy weights. Genome is content-addressed by SHA-256; editing one creates a new Agent (a child) and the old one stays archived for replay. This makes the lineage auditable: you can always answer 'what changed?' by diffing parent vs child genomes."
+                    "text": "An immutable JSON snapshot of an Agent's prompts, planner config, and tool-policy weights. Genome is content-addressed by SHA-256; editing one creates a new Agent (a child), and the old one stays archived for replay."
                 }
             },
             {
@@ -170,7 +171,7 @@
                 "name": "Linux and macOS only?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Yes for now. Path/sandbox conventions assume POSIX (XDG dirs, flock, atomic-rename semantics). Windows lands in Phase 1 if there is demand. WSL 2 works today."
+                    "text": "Yes for now. Path and sandbox conventions assume POSIX: XDG dirs, flock, and atomic rename semantics. Windows lands in Phase 1 if there is demand. WSL 2 works today."
                 }
             },
             {
@@ -178,7 +179,7 @@
                 "name": "How do I delete everything Lineage stored?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Run: lineage telemetry disable usage --purge ; rm -rf $XDG_DATA_HOME/lineage $XDG_STATE_HOME/lineage $XDG_CONFIG_HOME/lineage $HOME/.local/bin/lineage. The first command deletes any uploaded events from the central PostHog and disables future uploads. The rm wipes your entire local install (data, state, config, binary) without leaving a single artifact."
+                    "text": "Run: lineage telemetry disable usage --purge; rm -rf \"${XDG_DATA_HOME:-$HOME/.local/share}/lineage\" \"${XDG_STATE_HOME:-$HOME/.local/state}/lineage\" \"${XDG_CONFIG_HOME:-$HOME/.config}/lineage\" \"$HOME/.local/bin/lineage\". The first command deletes uploaded telemetry events and disables future uploads. The rm command uses XDG defaults when the XDG variables are unset, so it removes the real local data, state, config, and binary paths."
                 }
             },
             {
@@ -186,7 +187,7 @@
                 "name": "Why not just use Claude Code, Cursor, or Copilot directly?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "You can, and you should — they are great. Lineage is for when you want the agents themselves to evolve over time based on evaluation. Claude Code is a tool; a Lineage Agent is a lineage node with a fitness history. If your only need is 'edit this file, fix this bug, write this test,' you don't need Lineage. If you want to tune which agent personalities succeed at which tasks across weeks, and have that selection happen mechanically rather than by gut, that is where Lineage starts to pay off."
+                    "text": "You can, and you should: they are great. Lineage is for when you want the agents themselves to evolve over time based on evaluation. Claude Code is a tool; a Lineage Agent is a lineage node with a fitness history."
                 }
             }
         ]
@@ -824,7 +825,7 @@ lineage status</code></pre>
 
 <pre><code>$ cd ~/your-project
 $ lineage chat
-∴ lineage 0.117.x — pal ready
+∴ lineage 0.123.x — pal ready
 
 &gt; review the auth middleware for timing-attack risks
 
@@ -1270,10 +1271,9 @@ $ lineage chat
 <p lang="en">
     <code>lineage self-update</code> is channel-aware. If you
     installed via Homebrew, it redirects you to <code>brew upgrade
-    lineage</code>; npm to <code>npm update -g</code>; Cargo to
-    <code>cargo install lineage --force</code>; snap to
-    <code>sudo snap refresh</code>. Only direct (<code>install.sh</code>)
-    installs do an in-place atomic POSIX rename swap, with a
+    lineage</code>; npm to <code>npm update -g @lineage/cli</code>.
+    Only direct (<code>install.sh</code>) installs do an in-place
+    atomic POSIX rename swap, with a
     <code>.prev</code> hardlink backup.
 </p>
 
@@ -1353,8 +1353,8 @@ LINEAGE_DISABLE_TELEMETRY=1 lineage chat
 # 2. Per-install (writes to lineage.toml)
 lineage telemetry disable usage
 
-# 3. Per-install for the local JSONL audit log specifically
-LINEAGE_DISABLE_LOCAL_TELEMETRY=1</code></pre>
+# 3. Per-process for the local JSONL audit log specifically
+LINEAGE_DISABLE_LOCAL_TELEMETRY=1 lineage chat</code></pre>
 
 
 
@@ -1438,12 +1438,14 @@ LINEAGE_DISABLE_LOCAL_TELEMETRY=1</code></pre>
 
 <dd lang="en">
     <pre><code>lineage telemetry disable usage --purge
-rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
-       "$XDG_CONFIG_HOME/lineage" "$HOME/.local/bin/lineage"</code></pre>
+rm -rf "${XDG_DATA_HOME:-$HOME/.local/share}/lineage" \
+       "${XDG_STATE_HOME:-$HOME/.local/state}/lineage" \
+       "${XDG_CONFIG_HOME:-$HOME/.config}/lineage" \
+       "$HOME/.local/bin/lineage"</code></pre>
     The first command deletes any uploaded events from the central
-    PostHog and disables future uploads. The <code>rm</code> wipes
-    your entire local install (data, state, config, binary) without
-    leaving a single artifact.
+    PostHog and disables future uploads. The <code>rm</code> uses
+    XDG defaults when the XDG variables are unset, so it removes the
+    real local data, state, config, and binary paths.
 </dd>
 
 
@@ -1647,20 +1649,26 @@ rm -rf "$XDG_DATA_HOME/lineage" "$XDG_STATE_HOME/lineage" \
         document.querySelectorAll('.copy-btn').forEach(function(btn) {
             btn.addEventListener('click', function() {
                 var text = btn.dataset.copy;
+                var fallback = function() {
+                    var code = btn.parentElement.querySelector('code');
+                    var range = document.createRange();
+                    range.selectNode(code);
+                    var selection = getSelection();
+                    if (!selection) return;
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                };
+                if (!navigator.clipboard || !navigator.clipboard.writeText) {
+                    fallback();
+                    return;
+                }
                 navigator.clipboard.writeText(text).then(function() {
                     var original = btn.innerHTML;
                     btn.innerHTML = '<span lang="' + document.documentElement.lang + '">' +
                         ({en: 'copied', zh: '已复制', ja: 'コピー済み'}[document.documentElement.lang]) +
                         '</span>';
                     setTimeout(function() { btn.innerHTML = original; setLang(document.documentElement.lang); }, 1500);
-                }).catch(function() {
-                    // Selection fallback when clipboard API unavailable.
-                    var code = btn.parentElement.querySelector('code');
-                    var range = document.createRange();
-                    range.selectNode(code);
-                    getSelection().removeAllRanges();
-                    getSelection().addRange(range);
-                });
+                }).catch(fallback);
             });
         });
     }

@@ -6,10 +6,10 @@
   Mirrors the hero of the live site so social previews feel like
   the same product.
 
-  NOTE: Slack / Discord / Telegram render SVG og:image fine. X
-  (Twitter) and LinkedIn prefer PNG/JPG; for those, generate a
-  rasterized 1200×630 PNG from this file and reference that
-  instead. Until then SVG is a no-cost upgrade vs no image at all.
+  NOTE: This SVG is the editable source. The published Open Graph /
+  Twitter Card metadata points at og-image.png because X/Twitter
+  does not support SVG card images and other crawlers are more
+  consistent with raster social previews.
 -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
     <!-- Background: near-black with a subtle vertical gradient -->
@@ -75,7 +75,7 @@
          match the CLI-native identity; sans-serif for tagline prose. -->
     <text x="500" y="240" fill="#FBFBFC"
           font-family="ui-monospace, 'JetBrains Mono', 'SF Mono', Menlo, monospace"
-          font-size="100" font-weight="700" letter-spacing="-2">lineage</text>
+          font-size="100" font-weight="700" letter-spacing="0">lineage</text>
 
     <text x="500" y="290" fill="#5DEABF"
           font-family="ui-sans-serif, system-ui, -apple-system, sans-serif"
