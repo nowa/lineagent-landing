@@ -1280,10 +1280,13 @@ $ lineage chat
 
 
 <p lang="en">
-    Background updates are <strong>opt-in</strong>. By default the
-    background updater is in notify-only mode: it checks GitHub
-    every 30 minutes, prints a banner if a new version is available,
-    and stops there. To turn on silent installs, edit
+    Background updates are enabled by default for direct installs.
+    <code>lineage chat</code> and <code>lineage serve</code> check
+    GitHub every 30 minutes; when a compatible release is available,
+    Lineage downloads it, verifies <code>checksums.txt</code>, and
+    stages the new binary silently. The current process keeps running
+    on the old inode; the new version activates the next time you
+    start Lineage. To disable silent installs, edit
     <code>~/.config/lineage/lineage.toml</code>:
 </p>
 
@@ -1291,7 +1294,7 @@ $ lineage chat
 
 <pre><code>[updates]
 auto_check_enabled = true
-auto_install_enabled = true   # default false
+auto_install_enabled = false  # disable silent installs
 check_interval_minutes = 30</code></pre>
 </section>
 

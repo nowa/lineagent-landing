@@ -1278,15 +1278,18 @@ $ lineage chat
 
 
 <p lang="ja">
-    バックグラウンド更新は<strong>オプトイン</strong>です。デフォルトでは通知のみ ——
-    30 分ごとに GitHub をチェックし、新バージョンがあれば起動時にバナーを出すだけです。
-    サイレントインストールを有効にするには、
+    直接インストールでは、バックグラウンド更新がデフォルトで有効です。
+    <code>lineage chat</code> と <code>lineage serve</code> は 30 分ごとに
+    GitHub を確認し、互換性のあるリリースがあればダウンロードして
+    <code>checksums.txt</code> を検証し、新しいバイナリを静かにステージします。
+    現在のプロセスは古い inode のまま動き続け、次回 Lineage を起動したときに
+    新しいバージョンが有効になります。サイレントインストールを無効にするには、
     <code>~/.config/lineage/lineage.toml</code> を編集してください：
 </p>
 
 <pre><code>[updates]
 auto_check_enabled = true
-auto_install_enabled = true   # default false
+auto_install_enabled = false  # disable silent installs
 check_interval_minutes = 30</code></pre>
 </section>
 

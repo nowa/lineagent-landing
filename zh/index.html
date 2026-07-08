@@ -1208,15 +1208,17 @@ $ lineage chat
 
 
 <p lang="zh">
-    后台自动更新是<strong>主动 opt-in</strong> 的。默认情况下后台只做通知 ——
-    每 30 分钟查一次 GitHub，发现新版本就在启动时打条 banner，仅此而已。
-    要打开静默安装，编辑 <code>~/.config/lineage/lineage.toml</code>：
+    对直装版本，后台自动更新默认开启。<code>lineage chat</code> 和
+    <code>lineage serve</code> 都会每 30 分钟检查一次 GitHub；如果有兼容版本，
+    Lineage 会下载、校验 <code>checksums.txt</code>，并静默暂存新的二进制。
+    当前进程继续运行旧 inode；下次启动 Lineage 时才激活新版本。
+    如果要关闭静默安装，编辑 <code>~/.config/lineage/lineage.toml</code>：
 </p>
 
 
 <pre><code>[updates]
 auto_check_enabled = true
-auto_install_enabled = true   # default false
+auto_install_enabled = false  # disable silent installs
 check_interval_minutes = 30</code></pre>
 </section>
 
