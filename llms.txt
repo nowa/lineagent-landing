@@ -65,7 +65,7 @@ ship the same release.
 brew install nowa/lineage/lineage
 
 # npm
-npm install -g @lineage/cli
+npm install -g @lineagent/cli
 
 # Direct (curl)
 curl -fsSL https://www.lineagent.ai/install.sh | sh
